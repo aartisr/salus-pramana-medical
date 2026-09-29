@@ -37,6 +37,7 @@ import {
   Clock,
   History,
   Trash2,
+  BellRing,
 } from 'lucide-react';
 import { PersonaMode, MedicalCondition, TreatmentEvidence } from '../types/salus';
 import { medicalConditions, treatmentEvidenceList } from '../data/salusRepositoryData';
@@ -48,6 +49,8 @@ import {
   clearRecentSearches,
   RecentSearchItem,
 } from '../services/recentSearchesDb';
+import { exportEvidenceToCSV, exportEvidenceToJSON } from '../services/evidenceExportService';
+import { EvidenceNotificationModal } from './EvidenceNotificationModal';
 import confetti from 'canvas-confetti';
 
 interface ResearchHomepageProps {
@@ -66,6 +69,8 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
   const [isMathModalOpen, setIsMathModalOpen] = useState<boolean>(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState<boolean>(false);
+  const [exportedFormat, setExportedFormat] = useState<string | null>(null);
   const [recentSearches, setRecentSearches] = useState<RecentSearchItem[]>([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1);
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
@@ -406,6 +411,24 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
             </a>
           </div>
 
+          {/* Hero Notification CTA */}
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <button
+              onClick={() => setIsNotificationModalOpen(true)}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-indigo-500/20 hover:from-amber-500/30 hover:to-indigo-500/30 border border-amber-500/50 hover:border-amber-400 px-3.5 py-1.5 text-xs font-mono font-semibold text-amber-300 transition shadow-lg shadow-amber-500/10 group"
+            >
+              <BellRing className="h-3.5 w-3.5 text-amber-400 animate-pulse group-hover:scale-110 transition-transform" />
+              <span>Get Notified of New Evidence</span>
+              {searchQuery.trim() ? (
+                <span className="rounded bg-slate-900/90 px-1.5 py-0.5 text-[10px] text-amber-200 border border-amber-500/30 font-sans">
+                  for "{searchQuery}"
+                </span>
+              ) : (
+                <span className="text-[10px] text-slate-400 font-sans">(Email Alerts)</span>
+              )}
+            </button>
+          </div>
+
           {/* GLOBAL EVIDENCE SEARCH BAR */}
           <div ref={searchContainerRef} className="relative w-full max-w-3xl pt-2 space-y-2">
             <div className={`relative flex items-center rounded-2xl border transition-all duration-300 shadow-2xl ${
@@ -525,28 +548,40 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                 ))}
               </div>
 
-              {/* Instant Share Button */}
-              <button
-                onClick={handleShareResearch}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-mono font-medium transition border ${
-                  copiedShareLink
-                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-md shadow-emerald-500/20'
-                    : 'bg-slate-900/90 hover:bg-slate-800 text-amber-300 border-amber-500/30 hover:border-amber-400'
-                }`}
-                title="Copy shareable deep-link with current query and parameters"
-              >
-                {copiedShareLink ? (
-                  <>
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Deep-Link Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="h-3.5 w-3.5 text-amber-400" />
-                    <span>Share Query</span>
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Quick Get Notified button */}
+                <button
+                  onClick={() => setIsNotificationModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-mono font-medium transition border bg-slate-900/90 hover:bg-slate-800 text-amber-300 border-amber-500/30 hover:border-amber-400"
+                  title="Subscribe to email alerts for this clinical search query"
+                >
+                  <BellRing className="h-3.5 w-3.5 text-amber-400" />
+                  <span>Get Notified</span>
+                </button>
+
+                {/* Instant Share Button */}
+                <button
+                  onClick={handleShareResearch}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-mono font-medium transition border ${
+                    copiedShareLink
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-md shadow-emerald-500/20'
+                      : 'bg-slate-900/90 hover:bg-slate-800 text-amber-300 border-amber-500/30 hover:border-amber-400'
+                  }`}
+                  title="Copy shareable deep-link with current query and parameters"
+                >
+                  {copiedShareLink ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Deep-Link Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="h-3.5 w-3.5 text-amber-400" />
+                      <span>Share Query</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* SEARCH RESULTS DROPDOWN MODAL */}
@@ -597,11 +632,60 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                   </div>
                 )}
 
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-xs font-mono">
-                  <span className="text-amber-300 font-semibold">
-                    Found {totalResultsCount} Verified Registry Matches for "{searchQuery}"
-                  </span>
-                  <span className="text-slate-500">SALUS Repository Ledger</span>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2 text-xs font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="text-amber-300 font-semibold">
+                      Found {totalResultsCount} Verified Registry Matches for "{searchQuery}"
+                    </span>
+                  </div>
+
+                  {/* Offline Academic Export & Notification Actions */}
+                  {totalResultsCount > 0 && (
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {/* Download CSV button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          exportEvidenceToCSV(searchResults.treatments, searchResults.conditions, searchQuery);
+                          setExportedFormat('CSV');
+                          setTimeout(() => setExportedFormat(null), 3000);
+                        }}
+                        className="inline-flex items-center gap-1 rounded-md bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 px-2 py-0.5 text-[11px] font-mono text-emerald-300 hover:text-white transition shadow"
+                        title="Download evidence dataset with 95% CIs and registry links as structured CSV for Excel / R / Python"
+                      >
+                        <FileSpreadsheet className="h-3 w-3 text-emerald-400" />
+                        <span>{exportedFormat === 'CSV' ? 'Downloaded CSV!' : 'Download CSV'}</span>
+                      </button>
+
+                      {/* Download JSON button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          exportEvidenceToJSON(searchResults.treatments, searchResults.conditions, searchQuery);
+                          setExportedFormat('JSON');
+                          setTimeout(() => setExportedFormat(null), 3000);
+                        }}
+                        className="inline-flex items-center gap-1 rounded-md bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/50 px-2 py-0.5 text-[11px] font-mono text-indigo-300 hover:text-white transition shadow"
+                        title="Download structured JSON payload with confidence intervals for offline computational analysis"
+                      >
+                        <Download className="h-3 w-3 text-indigo-400" />
+                        <span>{exportedFormat === 'JSON' ? 'Downloaded JSON!' : 'Download JSON'}</span>
+                      </button>
+
+                      {/* Alert button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsNotificationModalOpen(true);
+                        }}
+                        className="inline-flex items-center gap-1 rounded-md bg-amber-950/80 hover:bg-amber-900 border border-amber-500/50 px-2 py-0.5 text-[11px] font-mono text-amber-300 hover:text-white transition shadow"
+                        title="Subscribe to email alerts for this query"
+                      >
+                        <BellRing className="h-3 w-3 text-amber-400" />
+                        <span>Get Alerts</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {totalResultsCount === 0 ? (
@@ -763,6 +847,14 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
             >
               <Activity className="h-4 w-4 text-indigo-400" />
               Launch Cross-System Studio
+            </button>
+
+            <button
+              onClick={() => setIsNotificationModalOpen(true)}
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-500/40 hover:border-amber-400 px-5 py-3 text-xs sm:text-sm font-semibold transition shadow-md"
+            >
+              <BellRing className="h-4 w-4 text-amber-400" />
+              <span>Get Notified of New Evidence</span>
             </button>
 
             <button
@@ -1270,6 +1362,13 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
       <MathFoundationsModal
         isOpen={isMathModalOpen}
         onClose={() => setIsMathModalOpen(false)}
+      />
+
+      {/* Evidence Alert Notification Modal */}
+      <EvidenceNotificationModal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setIsNotificationModalOpen(false)}
+        currentSearchQuery={searchQuery}
       />
     </div>
   );
