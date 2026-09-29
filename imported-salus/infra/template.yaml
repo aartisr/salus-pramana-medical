@@ -1,0 +1,496 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: "SALUS — The evidence behind every path to healing. Serverless baseline on AWS."
+
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+  AlertEmail:
+    Type: String
+    Default: alerts@example.com
+  WebAppUrl:
+    Type: String
+    Default: http://localhost:5173
+    Description: Canonical HTTPS web application URL (set this for non-local stages).
+  AllowedCorsOrigins:
+    Type: CommaDelimitedList
+    Default: http://localhost:5173,http://localhost:5174
+    Description: Explicit browser origins allowed to call the API. Never use a wildcard in production.
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    MemorySize: 256
+    Timeout: 15
+    Tracing: Active
+    Environment:
+      Variables:
+        DYNAMODB_TABLE: !Ref EvidenceTable
+        CONDITIONS_TABLE: !Ref ConditionsTable
+        AUDIT_TABLE: !Ref AuditTable
+        MONITORING_TABLE: !Ref MonitoringTable
+        COGNITO_ISSUER: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${EvidenceUserPool}
+        COGNITO_AUDIENCE: !Ref EvidenceUserPoolClient
+        CORS_ALLOWED_ORIGINS: !Join [",", !Ref AllowedCorsOrigins]
+        NODE_ENV: production
+
+Resources:
+  EvidenceApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../services/api/dist
+      Handler: lambda.handler
+      ReservedConcurrentExecutions: 5
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EvidenceTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ConditionsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AuditTable
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+            !Ref AllowedCorsOrigins
+
+  SeedDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../services/api/dist
+      Handler: seed.handler
+      Timeout: 60
+      ReservedConcurrentExecutions: 1
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EvidenceTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ConditionsTable
+
+  DriftMonitorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../services/api/dist
+      Handler: drift-monitor.handler
+      Timeout: 120
+      ReservedConcurrentExecutions: 1
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EvidenceTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ConditionsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MonitoringTable
+      Events:
+        DailySnapshot:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(0 4 * * ? *)
+            RetryPolicy:
+              MaximumRetryAttempts: 2
+
+  EvidenceApiLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${EvidenceApiFunction}
+      RetentionInDays: 7
+
+  PubMedIngestorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../services/ingestion/dist
+      Handler: pubmed-ingestor.handler
+      Timeout: 300
+      ReservedConcurrentExecutions: 1
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EvidenceTable
+      Events:
+        WeeklySchedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(0 2 ? * SUN *)
+            RetryPolicy:
+              MaximumRetryAttempts: 2
+
+  ClinicalTrialsIngestorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../services/ingestion/dist
+      Handler: clinicaltrials-ingestor.handler
+      Timeout: 300
+      ReservedConcurrentExecutions: 1
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EvidenceTable
+      Events:
+        WeeklySchedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(30 2 ? * SUN *)
+            RetryPolicy:
+              MaximumRetryAttempts: 2
+
+  AyushIngestorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../services/ingestion/dist
+      Handler: ayush-ingestor.handler
+      Timeout: 300
+      ReservedConcurrentExecutions: 1
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EvidenceTable
+      Events:
+        WeeklySchedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(0 3 ? * SUN *)
+            RetryPolicy:
+              MaximumRetryAttempts: 2
+
+  CtriIngestorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../services/ingestion/dist
+      Handler: ctri-ingestor.handler
+      Timeout: 300
+      ReservedConcurrentExecutions: 1
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EvidenceTable
+      Events:
+        WeeklySchedule:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(30 3 ? * SUN *)
+            RetryPolicy:
+              MaximumRetryAttempts: 2
+
+  EvidenceTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: evidenceId
+          AttributeType: S
+        - AttributeName: conditionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: evidenceId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: byCondition
+          KeySchema:
+            - AttributeName: conditionId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  ConditionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: conditionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: conditionId
+          KeyType: HASH
+
+  AuditTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: auditId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: auditId
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+  MonitoringTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      AttributeDefinitions:
+        - AttributeName: snapshotId
+          AttributeType: S
+        - AttributeName: conditionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: snapshotId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: byCondition
+          KeySchema:
+            - AttributeName: conditionId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  SeedDataCustomResource:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !GetAtt SeedDataFunction.Arn
+    DependsOn:
+      - EvidenceTable
+      - ConditionsTable
+
+  EvidenceUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub evidence-platform-${Stage}
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      MfaConfiguration: OPTIONAL
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 14
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+          TemporaryPasswordValidityDays: 3
+
+  EvidenceUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: web-client
+      UserPoolId: !Ref EvidenceUserPool
+      GenerateSecret: false
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+      CallbackURLs:
+        - !Ref WebAppUrl
+        - !Sub ${WebAppUrl}/auth/callback
+      LogoutURLs:
+        - !Ref WebAppUrl
+      SupportedIdentityProviders:
+        - COGNITO
+
+  EvidenceUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Sub salus-evidence-${Stage}-${AWS::AccountId}
+      UserPoolId: !Ref EvidenceUserPool
+
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: AbortIncompleteMultipartUpload
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 1
+
+  FrontendOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub evidence-oac-${Stage}
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  FrontendDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        WebACLId: !GetAtt EvidenceWebAcl.Arn
+        DefaultRootObject: index.html
+        Origins:
+          - Id: webS3Origin
+            DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            S3OriginConfig: {}
+            OriginAccessControlId: !GetAtt FrontendOAC.Id
+        DefaultCacheBehavior:
+          TargetOriginId: webS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD, OPTIONS]
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          ResponseHeadersPolicyId: !Ref SecurityHeadersPolicy
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+        PriceClass: PriceClass_100
+
+  SecurityHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub salus-security-headers-${Stage}
+        SecurityHeadersConfig:
+          ContentTypeOptions:
+            Override: true
+          FrameOptions:
+            FrameOption: DENY
+            Override: true
+          ReferrerPolicy:
+            ReferrerPolicy: strict-origin-when-cross-origin
+            Override: true
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: true
+            Override: true
+
+  EvidenceWebAcl:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      Name: !Sub evidence-web-acl-${Stage}
+      Scope: CLOUDFRONT
+      DefaultAction:
+        Allow: {}
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        MetricName: !Sub evidence-web-acl-${Stage}
+        SampledRequestsEnabled: true
+      Rules:
+        - Name: AWSManagedCommonRuleSet
+          Priority: 1
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub common-rules-${Stage}
+            SampledRequestsEnabled: true
+        - Name: BasicRateLimit
+          Priority: 2
+          Action:
+            Block: {}
+          Statement:
+            RateBasedStatement:
+              AggregateKeyType: IP
+              Limit: 100
+          VisibilityConfig:
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub basic-rate-limit-${Stage}
+            SampledRequestsEnabled: true
+
+  EvidenceBudget1:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: !Sub evidence-budget-1usd-${Stage}
+        BudgetLimit:
+          Amount: 1
+          Unit: USD
+        TimeUnit: MONTHLY
+        BudgetType: COST
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: 80
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref AlertEmail
+
+  EvidenceBudget5:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: !Sub evidence-budget-5usd-${Stage}
+        BudgetLimit:
+          Amount: 5
+          Unit: USD
+        TimeUnit: MONTHLY
+        BudgetType: COST
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: 80
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref AlertEmail
+
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub ${FrontendBucket.Arn}/*
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}
+
+Outputs:
+  FunctionUrl:
+    Value: !GetAtt EvidenceApiFunctionUrl.FunctionUrl
+  TableName:
+    Value: !Ref EvidenceTable
+  ConditionsTableName:
+    Value: !Ref ConditionsTable
+  AuditTableName:
+    Value: !Ref AuditTable
+  BucketName:
+    Value: !Ref FrontendBucket
+  CloudFrontDomain:
+    Value: !GetAtt FrontendDistribution.DomainName
+  UserPoolId:
+    Value: !Ref EvidenceUserPool
+  UserPoolClientId:
+    Value: !Ref EvidenceUserPoolClient
+  UserPoolDomain:
+    Value: !Sub https://${EvidenceUserPoolDomain}.auth.${AWS::Region}.amazoncognito.com

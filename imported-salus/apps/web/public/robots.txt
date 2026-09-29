@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Replace this with the deployed canonical URL before publishing.
+# Sitemap: https://your-domain.example/sitemap.xml

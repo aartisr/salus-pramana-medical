@@ -1,0 +1,179 @@
+@page {
+  size: A4;
+  margin: 16mm 14mm 16mm 14mm;
+}
+
+:root {
+  --text: #0f172a;
+  --muted: #475569;
+  --rule: #dbe3ef;
+  --brand: #0f766e;
+  --tableHead: #f1f5f9;
+  --tableAlt: #f8fafc;
+}
+
+html,
+body {
+  color: var(--text);
+  font-family: "Avenir Next", "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.52;
+}
+
+body {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Avenir Next", "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+  color: #0b3a59;
+  line-height: 1.25;
+  margin-top: 1.1em;
+  margin-bottom: 0.45em;
+  page-break-after: avoid;
+}
+
+h1 {
+  font-size: 23pt;
+  letter-spacing: 0.2px;
+  border-bottom: 2px solid var(--rule);
+  padding-bottom: 8px;
+}
+
+h2 {
+  font-size: 16pt;
+  border-left: 4px solid var(--brand);
+  padding-left: 10px;
+}
+
+h3 {
+  font-size: 13pt;
+}
+
+h4 {
+  font-size: 11.5pt;
+}
+
+p,
+li {
+  orphans: 3;
+  widows: 3;
+}
+
+a {
+  color: #0b5fa5;
+  text-decoration: none;
+}
+
+blockquote {
+  margin: 0.9em 0;
+  padding: 0.6em 0.9em;
+  border-left: 4px solid #4f46e5;
+  background: #f8faff;
+  color: #1e293b;
+}
+
+code,
+pre {
+  font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+code {
+  font-size: 0.92em;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.08em 0.28em;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #0b1020;
+  color: #e2e8f0;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 9.7pt;
+  line-height: 1.35;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 9.6pt;
+  margin: 0.9em 0 1.2em;
+}
+
+th,
+td {
+  border: 1px solid var(--rule);
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--tableHead);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--tableAlt);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 1.3em 0;
+}
+
+ul,
+ol {
+  margin-top: 0.35em;
+  margin-bottom: 0.8em;
+}
+
+li {
+  margin-bottom: 0.24em;
+}
+
+.math.display,
+.MathJax_Display,
+.katex-display {
+  overflow-wrap: anywhere;
+  page-break-inside: avoid;
+  margin-top: 0.55em;
+  margin-bottom: 0.65em;
+}
+
+.katex,
+.math.inline {
+  font-size: 1.02em;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+@media print {
+  h1,
+  h2,
+  h3,
+  h4,
+  table,
+  pre,
+  blockquote {
+    page-break-inside: avoid;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    color: var(--muted);
+    font-size: 8.7pt;
+  }
+}

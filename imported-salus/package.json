@@ -1,0 +1,28 @@
+{
+  "name": "evidence-medical-platform",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SALUS — The evidence behind every path to healing.",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run build -w packages/domain && npm-run-all --parallel dev:web dev:api",
+    "dev:web": "npm run dev -w apps/web",
+    "dev:api": "npm run dev -w services/api",
+    "build": "npm run build -w packages/domain && npm run build -w services/api && npm run build -w services/ingestion && npm run build -w apps/web",
+    "test": "npm run test -w packages/domain && npm run test -w services/api && npm run test -w services/ingestion && npm run test -w apps/web",
+    "lint": "npm run lint -w packages/domain && npm run lint -w services/api && npm run lint -w services/ingestion && npm run lint -w apps/web",
+    "calibration:report": "npm run calibration:report -w services/api",
+    "drift:snapshot": "npm run drift:snapshot -w services/api",
+    "verify:editor-role": "node scripts/verify-editor-role.mjs",
+    "docs:pdf": "npm run docs:pdf:academic && npm run docs:pdf:executive",
+    "docs:pdf:academic": "pandoc docs/CALCULUS_MATH_SPEC.md --standalone --mathml --css docs/pdf-print-academic.css -o docs/CALCULUS_MATH_SPEC.academic.html && npx --yes md-to-pdf docs/CALCULUS_MATH_SPEC.academic.html --page-media-type print --pdf-options '{\"format\":\"A4\",\"printBackground\":true}' && mv -f docs/CALCULUS_MATH_SPEC.academic.pdf docs/CALCULUS_MATH_SPEC.pdf && rm -f docs/CALCULUS_MATH_SPEC.academic.html",
+    "docs:pdf:executive": "pandoc docs/CALCULUS_MATH_SPEC.md --standalone --mathml --css docs/pdf-print-executive.css -o docs/CALCULUS_MATH_SPEC.executive.html && npx --yes md-to-pdf docs/CALCULUS_MATH_SPEC.executive.html --page-media-type print --pdf-options '{\"format\":\"A4\",\"printBackground\":true}' && rm -f docs/CALCULUS_MATH_SPEC.executive.html"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

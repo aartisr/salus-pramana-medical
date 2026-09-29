@@ -1,0 +1,9 @@
+{
+  "name": "SALUS — Evidence Medical Platform",
+  "short_name": "SALUS",
+  "description": "Transparent, source-linked evidence for integrative healthcare.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef3f8",
+  "theme_color": "#0f766e"
+}

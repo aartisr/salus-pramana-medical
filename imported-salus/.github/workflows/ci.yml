@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test
+
+  deploy-dev:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build-test
+    env:
+      DEV_STACK_NAME: salus-dev
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      DEV_WEB_BUCKET: ${{ secrets.DEV_WEB_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: aws-actions/setup-sam@v2
+      - run: npm ci
+      - run: npm run build
+      - name: Validate SAM template (dry run)
+        run: sam validate -t infra/template.yaml --lint
+      - name: Build SAM template
+        run: sam build -t infra/template.yaml
+      - name: Configure AWS credentials
+        if: env.AWS_ROLE_TO_ASSUME != '' && env.AWS_REGION != ''
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Deploy dev stack
+        if: env.AWS_ROLE_TO_ASSUME != '' && env.AWS_REGION != '' && env.DEV_WEB_BUCKET != ''
+        run: |
+          sam deploy \
+            --stack-name "$DEV_STACK_NAME" \
+            --resolve-s3 \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --capabilities CAPABILITY_IAM \
+            --region "$AWS_REGION" \
+            --parameter-overrides "WebBucketName=${{ env.DEV_WEB_BUCKET }}"
+      - name: Skip deploy when secrets are missing
+        if: env.AWS_ROLE_TO_ASSUME == '' || env.AWS_REGION == '' || env.DEV_WEB_BUCKET == ''
+        run: echo "Skipping deploy-dev stage because required secrets are missing (AWS_ROLE_TO_ASSUME, AWS_REGION, DEV_WEB_BUCKET)."

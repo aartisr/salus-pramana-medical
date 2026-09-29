@@ -1,0 +1,6 @@
+{
+  "name": "SALUS Pramana: Nobel-Cadre Clinical Intelligence & Repository Evaluation",
+  "description": "Comprehensive Nobel-cadre evaluation and interactive clinical intelligence workstation for SALUS Pramana Medical, pioneering cross-tradition evidence calculus, ODE interaction dynamics, and global healthcare equity.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
