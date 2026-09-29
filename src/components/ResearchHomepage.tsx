@@ -67,6 +67,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
   const [isMathModalOpen, setIsMathModalOpen] = useState<boolean>(false);
   const [recentSearches, setRecentSearches] = useState<RecentSearchItem[]>([]);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1);
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Load Recent Searches from IndexedDB
@@ -86,6 +87,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
   const handleSelectQuery = async (query: string) => {
     setSearchQuery(query);
     setIsSearchFocused(true);
+    setSelectedSuggestionIndex(-1);
     if (query.trim().length >= 2) {
       await saveRecentSearch(query);
       await refreshRecentSearches();
@@ -129,11 +131,120 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
     const handleClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
         setIsSearchFocused(false);
+        setSelectedSuggestionIndex(-1);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Auto-Complete Suggestions Computation
+  const autoCompleteSuggestions = useMemo(() => {
+    if (!searchQuery.trim() || searchQuery.trim().length < 1) return [];
+    const q = searchQuery.toLowerCase().trim();
+    const suggestions: {
+      id: string;
+      name: string;
+      type: 'condition' | 'treatment' | 'ontology';
+      categoryOrSystem: string;
+      badge: string;
+      badgeColor: string;
+      meta: string;
+      queryToFill: string;
+    }[] = [];
+    const seenNames = new Set<string>();
+
+    // 1. Conditions matching standard name, ICD-11 code, or category
+    medicalConditions.forEach((c) => {
+      if (
+        c.standardName.toLowerCase().includes(q) ||
+        c.icd11Code.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q)
+      ) {
+        const key = c.standardName.toLowerCase();
+        if (!seenNames.has(key)) {
+          seenNames.add(key);
+          suggestions.push({
+            id: `cond-${c.conditionId}`,
+            name: c.standardName,
+            type: 'condition',
+            categoryOrSystem: c.category,
+            badge: `ICD-11: ${c.icd11Code}`,
+            badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
+            meta: `Condition • ${c.category} • ${c.globalPrevalence}`,
+            queryToFill: c.standardName,
+          });
+        }
+      }
+
+      // Traditional equivalents (Ayurveda / Siddha)
+      if (c.ayurvedicEquivalent && c.ayurvedicEquivalent.toLowerCase().includes(q)) {
+        const key = `ayur-${c.ayurvedicEquivalent.toLowerCase()}`;
+        if (!seenNames.has(key)) {
+          seenNames.add(key);
+          suggestions.push({
+            id: `ont-ayur-${c.conditionId}`,
+            name: c.ayurvedicEquivalent,
+            type: 'ontology',
+            categoryOrSystem: 'Ayurvedic Nosology',
+            badge: 'Ayurveda',
+            badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+            meta: `Traditional equivalent for ${c.standardName}`,
+            queryToFill: c.ayurvedicEquivalent,
+          });
+        }
+      }
+
+      if (c.siddhaEquivalent && c.siddhaEquivalent.toLowerCase().includes(q)) {
+        const key = `sid-${c.siddhaEquivalent.toLowerCase()}`;
+        if (!seenNames.has(key)) {
+          seenNames.add(key);
+          suggestions.push({
+            id: `ont-sid-${c.conditionId}`,
+            name: c.siddhaEquivalent,
+            type: 'ontology',
+            categoryOrSystem: 'Siddha Nosology',
+            badge: 'Siddha',
+            badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
+            meta: `Traditional equivalent for ${c.standardName}`,
+            queryToFill: c.siddhaEquivalent,
+          });
+        }
+      }
+    });
+
+    // 2. Treatments matching name, registry ID, or active ingredients
+    treatmentEvidenceList.forEach((t) => {
+      const isMatch =
+        t.interventionName.toLowerCase().includes(q) ||
+        t.registryIdentifier.toLowerCase().includes(q) ||
+        (t.activeIngredients && t.activeIngredients.some((ing) => ing.toLowerCase().includes(q)));
+
+      if (isMatch) {
+        const key = t.interventionName.toLowerCase();
+        if (!seenNames.has(key)) {
+          seenNames.add(key);
+          let badgeColor = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+          if (t.medicalSystem === 'Ayurveda') badgeColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+          if (t.medicalSystem === 'Siddha') badgeColor = 'bg-teal-500/20 text-teal-300 border-teal-500/30';
+          if (t.medicalSystem === 'Naturopathy') badgeColor = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+
+          suggestions.push({
+            id: `treat-${t.evidenceId}`,
+            name: t.interventionName,
+            type: 'treatment',
+            categoryOrSystem: t.medicalSystem,
+            badge: `${t.medicalSystem} • Grade ${t.evidenceGrade}`,
+            badgeColor,
+            meta: `${t.studyMethodology} • ${t.registryIdentifier}`,
+            queryToFill: t.interventionName,
+          });
+        }
+      }
+    });
+
+    return suggestions.slice(0, 7); // Top 7 high-confidence suggestions
+  }, [searchQuery]);
 
   // Search Results Computation
   const searchResults = useMemo(() => {
@@ -312,10 +423,33 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setIsSearchFocused(true);
+                  setSelectedSuggestionIndex(-1);
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && searchQuery.trim()) {
-                    handleSelectQuery(searchQuery.trim());
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setSelectedSuggestionIndex((prev) =>
+                      autoCompleteSuggestions.length > 0 ? (prev + 1) % autoCompleteSuggestions.length : -1
+                    );
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setSelectedSuggestionIndex((prev) =>
+                      autoCompleteSuggestions.length > 0
+                        ? prev <= 0
+                          ? autoCompleteSuggestions.length - 1
+                          : prev - 1
+                        : -1
+                    );
+                  } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (selectedSuggestionIndex >= 0 && autoCompleteSuggestions[selectedSuggestionIndex]) {
+                      handleSelectQuery(autoCompleteSuggestions[selectedSuggestionIndex].queryToFill);
+                    } else if (searchQuery.trim()) {
+                      handleSelectQuery(searchQuery.trim());
+                    }
+                  } else if (e.key === 'Escape') {
+                    setIsSearchFocused(false);
+                    setSelectedSuggestionIndex(-1);
                   }
                 }}
                 placeholder="Search any condition (e.g. Diabetes, BA00) or treatment (Metformin, Berberine, Ashwagandha)..."
@@ -417,7 +551,52 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
 
             {/* SEARCH RESULTS DROPDOWN MODAL */}
             {isSearchFocused && searchQuery.trim() !== '' && (
-              <div className="absolute top-full left-0 right-0 z-50 mt-2 max-h-[480px] overflow-y-auto rounded-2xl border border-amber-500/40 bg-slate-950/95 p-4 shadow-2xl backdrop-blur-xl space-y-4">
+              <div className="absolute top-full left-0 right-0 z-50 mt-2 max-h-[500px] overflow-y-auto rounded-2xl border border-amber-500/40 bg-slate-950/95 p-4 shadow-2xl backdrop-blur-xl space-y-4">
+                {/* AUTO-COMPLETE SUGGESTIONS HEADER */}
+                {autoCompleteSuggestions.length > 0 && (
+                  <div className="rounded-xl border border-indigo-500/30 bg-slate-900/90 p-3 space-y-2">
+                    <div className="flex items-center justify-between text-[11px] font-mono">
+                      <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                        <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                        <span>Auto-Complete Suggestions ({autoCompleteSuggestions.length})</span>
+                      </span>
+                      <span className="text-[10px] text-slate-400">Press ↑ / ↓ to select • Enter to apply</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                      {autoCompleteSuggestions.map((item, idx) => {
+                        const isSelected = selectedSuggestionIndex === idx;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => handleSelectQuery(item.queryToFill)}
+                            className={`flex items-center justify-between gap-2 rounded-lg p-2 text-left transition border ${
+                              isSelected
+                                ? 'bg-indigo-600/40 border-amber-400 text-white shadow-lg ring-1 ring-amber-400/50'
+                                : 'bg-slate-950/70 hover:bg-slate-800/80 border-slate-800/80 text-slate-200'
+                            }`}
+                          >
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-semibold text-xs text-white truncate">
+                                  {item.name}
+                                </span>
+                                <span className={`rounded px-1.5 py-0.5 text-[9px] font-mono font-bold border shrink-0 ${item.badgeColor}`}>
+                                  {item.badge}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-slate-400 truncate mt-0.5 font-sans">
+                                {item.meta}
+                              </p>
+                            </div>
+                            <ChevronRight className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-xs font-mono">
                   <span className="text-amber-300 font-semibold">
                     Found {totalResultsCount} Verified Registry Matches for "{searchQuery}"
