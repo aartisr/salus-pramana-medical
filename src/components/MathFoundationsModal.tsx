@@ -341,7 +341,17 @@ export const MathFoundationsModal: React.FC<MathFoundationsModalProps> = ({
 
         {/* Footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-800 pt-4 text-xs text-slate-400">
-          <span>SALUS Mathematical Whitepaper • Authored by Aarti S Ravikumar</span>
+          <span>
+            SALUS Mathematical Whitepaper • Authored by{' '}
+            <a
+              href="https://ai-aarti.com"
+              target="_blank"
+              rel="noreferrer"
+              className="text-amber-300 underline hover:text-amber-200"
+            >
+              Aarti S Ravikumar
+            </a>
+          </span>
           <button
             onClick={onClose}
             className="rounded-xl bg-slate-800 hover:bg-slate-700 px-4 py-2 text-white font-semibold transition"

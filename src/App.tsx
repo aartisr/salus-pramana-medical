@@ -116,7 +116,16 @@ export default function App() {
               S
             </div>
             <span>
-              SALUS Pramana: Evidence Behind Every Path to Healing • Author: Aarti S Ravikumar (Pioneer Charter School of Science II)
+              SALUS Pramana: Evidence Behind Every Path to Healing • Author:{' '}
+              <a
+                href="https://ai-aarti.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-amber-300 underline hover:text-amber-200 font-medium"
+              >
+                Aarti S Ravikumar
+              </a>{' '}
+              (Pioneer Charter School of Science II)
             </span>
           </div>
 

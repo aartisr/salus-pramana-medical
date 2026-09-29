@@ -59,8 +59,25 @@ export const NobelEvaluationSuite: React.FC<NobelEvaluationSuiteProps> = ({
             </h2>
 
             <p className="text-sm md:text-base leading-relaxed text-slate-300 font-sans">
-              Author: <strong className="text-white">Aarti S Ravikumar</strong> (Pioneer Charter School of Science II) • 
-              Repository: <a href="https://github.com/aartisr/salus-pramana-medical.git" target="_blank" rel="noreferrer" className="text-indigo-400 underline hover:text-indigo-300 inline-flex items-center gap-0.5 ml-1">salus-pramana-medical <ExternalLink className="h-3 w-3" /></a>
+              Author:{' '}
+              <a
+                href="https://ai-aarti.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-amber-300 font-bold hover:text-amber-200 underline inline-flex items-center gap-0.5"
+              >
+                Aarti S Ravikumar
+                <ExternalLink className="h-3 w-3" />
+              </a>{' '}
+              (Pioneer Charter School of Science II) • Repository:{' '}
+              <a
+                href="https://github.com/aartisr/salus-pramana-medical.git"
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-400 underline hover:text-indigo-300 inline-flex items-center gap-0.5 ml-1"
+              >
+                salus-pramana-medical <ExternalLink className="h-3 w-3" />
+              </a>
             </p>
           </div>
 

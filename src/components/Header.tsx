@@ -49,7 +49,15 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
             <span className="hidden lg:inline text-slate-400">|</span>
             <span className="hidden lg:inline text-slate-300">
-              Repository: <strong className="text-amber-200">salus-pramana-medical</strong> by Aarti S Ravikumar
+              Repository: <strong className="text-amber-200">salus-pramana-medical</strong> by{' '}
+              <a
+                href="https://ai-aarti.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-amber-300 underline hover:text-amber-200 font-medium"
+              >
+                Aarti S Ravikumar
+              </a>
             </span>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-3 text-slate-300 shrink-0">

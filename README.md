@@ -6,12 +6,12 @@
 [![Gold-Standard Score](https://img.shields.io/badge/Gold--Standard%20Audit-9.92%20%2F%2010.0-f59e0b?style=for-the-badge)](https://github.com/aartisr/salus-pramana-medical)
 [![Verified Registries](https://img.shields.io/badge/Verified%20Registries-14%20Federated%20Databases-10b981?style=for-the-badge)](https://pubmed.ncbi.nlm.nih.gov)
 [![Deterministic Proofs](https://img.shields.io/badge/Architecture-100%25%20Deterministic%20RK4-6366f1?style=for-the-badge)](https://github.com/aartisr/salus-pramana-medical)
-[![Author](https://img.shields.io/badge/Author-Aarti%20S%20Ravikumar-38bdf8?style=for-the-badge)](https://github.com/aartisr)
+[![Author](https://img.shields.io/badge/Author-Aarti%20S%20Ravikumar-38bdf8?style=for-the-badge)](https://ai-aarti.com)
 
 **"The Evidence Behind Every Path to Healing"**  
 *Unifying Allopathy, Ayurveda, Siddha, and Naturopathy through Continuous Evidence Calculus, 4th-Order Runge-Kutta Pharmacokinetics, and Global Health Equity.*
 
-[Live Medical Workstation](https://github.com/aartisr/salus-pramana-medical) • [Mathematical Specification](#-formal-mathematical-specification) • [Author's Letter to the Community](#-authors-letter-to-the-global-community) • [Clinical Evidence Matrix](#-verified-clinical-evidence-matrix) • [Contributing](#-join-our-global-mission)
+[Live Medical Workstation](https://github.com/aartisr/salus-pramana-medical) • [Author's Portfolio](https://ai-aarti.com) • [Mathematical Specification](#-formal-mathematical-specification) • [Author's Letter to the Community](#-authors-letter-to-the-global-community) • [Clinical Evidence Matrix](#-verified-clinical-evidence-matrix) • [Contributing](#-join-our-global-mission)
 
 </div>
 
@@ -241,7 +241,7 @@ We welcome physicians, Vaidyas, Siddha practitioners, pharmacognosists, data sci
 
 <div align="center">
 
-**SALUS Pramana Medical** • Authored with care by **Aarti S Ravikumar**  
+**SALUS Pramana Medical** • Authored with care by [**Aarti S Ravikumar**](https://ai-aarti.com)  
 *Pioneer Charter School of Science II*  
 *Licensed under the Apache 2.0 Open Source License.*
 

@@ -34,10 +34,20 @@ import {
   Check,
   Copy,
   Link2,
+  Clock,
+  History,
+  Trash2,
 } from 'lucide-react';
 import { PersonaMode, MedicalCondition, TreatmentEvidence } from '../types/salus';
 import { medicalConditions, treatmentEvidenceList } from '../data/salusRepositoryData';
 import { globalHealthEquitySummary } from '../data/globalHealthEquityData';
+import {
+  getRecentSearches,
+  saveRecentSearch,
+  deleteRecentSearch,
+  clearRecentSearches,
+  RecentSearchItem,
+} from '../services/recentSearchesDb';
 import confetti from 'canvas-confetti';
 
 interface ResearchHomepageProps {
@@ -56,7 +66,42 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
   const [isMathModalOpen, setIsMathModalOpen] = useState<boolean>(false);
+  const [recentSearches, setRecentSearches] = useState<RecentSearchItem[]>([]);
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Load Recent Searches from IndexedDB
+  const refreshRecentSearches = async () => {
+    try {
+      const items = await getRecentSearches();
+      setRecentSearches(items);
+    } catch {
+      // ignore
+    }
+  };
+
+  useEffect(() => {
+    refreshRecentSearches();
+  }, []);
+
+  const handleSelectQuery = async (query: string) => {
+    setSearchQuery(query);
+    setIsSearchFocused(true);
+    if (query.trim().length >= 2) {
+      await saveRecentSearch(query);
+      await refreshRecentSearches();
+    }
+  };
+
+  const handleDeleteRecent = async (e: React.MouseEvent, query: string) => {
+    e.stopPropagation();
+    await deleteRecentSearch(query);
+    await refreshRecentSearches();
+  };
+
+  const handleClearAllRecents = async () => {
+    await clearRecentSearches();
+    setRecentSearches([]);
+  };
 
   // Restore state from URL query parameters on mount
   useEffect(() => {
@@ -66,6 +111,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
       if (q) {
         setSearchQuery(q);
         setIsSearchFocused(true);
+        saveRecentSearch(q).then(refreshRecentSearches);
       }
       const grade = params.get('grade');
       if (grade) setGradeWeight(parseFloat(grade));
@@ -223,7 +269,18 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
           </p>
 
           <div className="text-xs sm:text-sm text-slate-400 font-sans flex flex-wrap items-center gap-2">
-            <span>Authored by: <strong className="text-white">Aarti S Ravikumar</strong></span>
+            <span>
+              Authored by:{' '}
+              <a
+                href="https://ai-aarti.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-amber-300 font-bold hover:text-amber-200 underline inline-flex items-center gap-1 transition"
+              >
+                Aarti S Ravikumar
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </span>
             <span>•</span>
             <span className="text-slate-300">Pioneer Charter School of Science II</span>
             <span>•</span>
@@ -239,7 +296,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
           </div>
 
           {/* GLOBAL EVIDENCE SEARCH BAR */}
-          <div ref={searchContainerRef} className="relative w-full max-w-3xl pt-2">
+          <div ref={searchContainerRef} className="relative w-full max-w-3xl pt-2 space-y-2">
             <div className={`relative flex items-center rounded-2xl border transition-all duration-300 shadow-2xl ${
               isSearchFocused
                 ? 'border-amber-400 bg-slate-900 ring-4 ring-amber-500/20'
@@ -256,6 +313,11 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                   setSearchQuery(e.target.value);
                   setIsSearchFocused(true);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    handleSelectQuery(searchQuery.trim());
+                  }
+                }}
                 placeholder="Search any condition (e.g. Diabetes, BA00) or treatment (Metformin, Berberine, Ashwagandha)..."
                 className="w-full bg-transparent py-3.5 pr-10 text-sm text-white placeholder-slate-400 focus:outline-none font-sans"
               />
@@ -270,8 +332,50 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
               )}
             </div>
 
+            {/* RECENT SEARCHES SECTION (Powered by IndexedDB) */}
+            {recentSearches.length > 0 && (
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-950/80 border border-slate-800/90 px-3 py-2 text-xs backdrop-blur-md">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-slate-400 font-mono text-[11px] flex items-center gap-1">
+                    <History className="h-3.5 w-3.5 text-indigo-400" />
+                    <span className="font-semibold text-slate-300">Recent:</span>
+                  </span>
+                  {recentSearches.map((item) => (
+                    <div
+                      key={item.query}
+                      className="group inline-flex items-center gap-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-indigo-500/50 pl-2.5 pr-1.5 py-0.5 text-[11px] font-mono text-slate-200 transition"
+                    >
+                      <button
+                        onClick={() => handleSelectQuery(item.query)}
+                        className="hover:text-indigo-300 font-medium truncate max-w-[130px] sm:max-w-[200px]"
+                        title={`Re-run search: ${item.query}`}
+                      >
+                        {item.query}
+                      </button>
+                      <button
+                        onClick={(e) => handleDeleteRecent(e, item.query)}
+                        className="text-slate-500 hover:text-rose-400 p-0.5 rounded transition"
+                        title="Remove from recent searches"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleClearAllRecents}
+                  className="text-[10px] font-mono text-slate-500 hover:text-rose-300 flex items-center gap-1 transition ml-auto"
+                  title="Clear all recent searches from IndexedDB"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  <span>Clear</span>
+                </button>
+              </div>
+            )}
+
             {/* Quick Search Preset Chips & Share Action */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
               <div className="flex flex-wrap items-center gap-1.5">
                 <span className="text-slate-400 font-mono text-[11px] flex items-center gap-1">
                   <Sparkles className="h-3 w-3 text-amber-400" /> Quick Index:
@@ -279,10 +383,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                 {quickSearchPresets.map((preset, idx) => (
                   <button
                     key={idx}
-                    onClick={() => {
-                      setSearchQuery(preset.query);
-                      setIsSearchFocused(true);
-                    }}
+                    onClick={() => handleSelectQuery(preset.query)}
                     className="rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 px-2.5 py-1 text-[11px] font-mono border border-slate-800 transition"
                   >
                     {preset.label}
