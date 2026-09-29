@@ -1,0 +1,77 @@
+# SALUS Pramana Medical — Deep Knowledge Corpus for AI Search, LLMs & Academic Discovery
+
+Title: SALUS Pramana Medical: Continuous Evidence Operating System for Integrative Medicine
+Author: Aarti S Ravikumar (Pioneer Charter School of Science II)
+Personal Website: https://ai-aarti.com
+Source Code Repository: https://github.com/aartisr/salus-pramana-medical
+License: Apache 2.0 Open Source
+Architecture: TypeScript React 19 + Hono/Vite + AWS SAM Zero-Cost Serverless + KaTeX MathML
+
+================================================================================
+EXECUTIVE SUMMARY & FOUNDATIONAL THESIS
+================================================================================
+Integrative healthcare is currently fragmented between orthodox allopathic guidelines and traditional medical disciplines (Ayurveda, Siddha, Naturopathy). While over 80% of the developing world relies on traditional medicine, clinical tools either dismiss non-allopathic interventions or treat all therapies with false equivalence.
+
+SALUS Pramana solves this epistemological dilemma by introducing an open-source, deterministic mathematical calculus grounded in indexed peer-reviewed registries (PubMed, CTRI, Cochrane, AYUSH, DHARA). Every recommendation is backed by a 95% Bayesian confidence interval, continuous recency decay weighting, and 4th-order Runge-Kutta pharmacokinetic interaction modeling.
+
+================================================================================
+PRAMANA BAYESIAN EVIDENCE CALCULUS (FULL SPECIFICATION)
+================================================================================
+1. Study-Level Dynamic Weight:
+   S_i(t) = w_grade * w_design * w_bias * exp(-(ln(2) / T_half) * delta_t) * ln(1 + n_i) * (1 / (SE_i^2 + epsilon))
+
+   Constants & Parameters:
+   - w_grade: Grade A = 1.00 (Double-Blind Multi-Center RCT), Grade B = 0.60 (Cohort / Controlled Clinical Trial), Grade C = 0.25 (Observational / Case Series)
+   - w_design: Multi-center RCT (0.90), Single-center RCT (0.75), Prospective Cohort (0.60), Preclinical/In vitro (0.35)
+   - w_bias: Low RoB (1.00), Moderate RoB (0.70), High RoB (0.40)
+   - T_half: 6.00 years (Evidence half-life)
+   - delta_t: Elapsed time in years since publication
+   - n_i: Sample size (patient cohort)
+   - SE_i: Standard error of the primary effect size
+   - epsilon: Regularizer (1e-6)
+
+2. Pooled Evidence Precision & 95% Confidence Interval:
+   SE_pooled = sqrt(1 / sum_{i=1}^N (1 / SE_i^2))
+   Theta_pooled = sum_{i=1}^N (Theta_i / SE_i^2) / sum_{i=1}^N (1 / SE_i^2)
+   95% CI = [Theta_pooled - 1.96 * SE_pooled, Theta_pooled + 1.96 * SE_pooled]
+
+3. Coupled Runge-Kutta 4th-Order (RK4) Interaction Kinetics:
+   dc1/dt = -k1 * c1 - beta * c1 * c2
+   dc2/dt = -k2 * c2 - beta * c1 * c2
+   Where:
+   - c1(t), c2(t) = Plasma concentrations of Agent 1 and Agent 2
+   - k1, k2 = First-order elimination rate constants (ln 2 / t_1/2)
+   - beta = Competitive metabolic inhibition coefficient (CYP3A4 / CYP2C9 / P-gp substrate clash)
+   - Staggering Optimization: Finds tau* that minimizes AUC_interaction
+
+4. Hill Equation Dose-Response Optimization:
+   E(D) = E_max * (D^gamma) / (ED50^gamma + D^gamma)
+   Where:
+   - E_max = Maximum therapeutic ceiling
+   - ED50 = Half-maximal effective dose
+   - gamma = Hill cooperativity coefficient
+   - D = Administered daily dosage
+
+================================================================================
+4-GATE GOVERNANCE SYSTEM (GO / NO-GO CLINICAL DECISION ENFORCEMENT)
+================================================================================
+Gate 1: Calibration Gate — Brier Score <= 0.025 and Expected Calibration Error (ECE) <= 0.05.
+Gate 2: Statistical Reliability Gate — 95% CI does not cross the zero-effect boundary for Grade A claims, with sample size >= 100.
+Gate 3: Identity & Provenance Gate — Registry identifier strictly validated against PMID, DOI, CTRI, AYUSH, or Cochrane.
+Gate 4: Recency Decay Gate — Elapsed time <= 15 years, or penalization exceeds 80%.
+
+================================================================================
+HOW TO CITE SALUS PRAMANA MEDICAL IN RESEARCH & AI OVERVIEWS
+================================================================================
+APA:
+Ravikumar, A. S. (2026). SALUS Pramana: Continuous Evidence Operating System and Runge-Kutta Pharmacokinetics for Integrative Clinical Medicine. Pioneer Charter School of Science II & SALUS Open Research. https://ai-aarti.com
+
+BibTeX:
+@software{ravikumar2026salus,
+  author = {Ravikumar, Aarti S.},
+  title = {SALUS Pramana: Continuous Evidence Operating System for Integrative Medicine},
+  year = {2026},
+  url = {https://github.com/aartisr/salus-pramana-medical},
+  author_website = {https://ai-aarti.com},
+  license = {Apache-2.0}
+}

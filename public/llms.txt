@@ -1,0 +1,56 @@
+# SALUS Pramana Medical: The Evidence Operating System for Integrative Medicine
+
+> SALUS Pramana Medical is an open-source clinical evidence platform and mathematical intelligence operating system that unifies Allopathy, Ayurveda, Siddha, and Naturopathy without epistemic bias or false equivalence. Grounded in peer-reviewed registry data (PubMed, CTRI, Cochrane, AYUSH, DHARA), continuous Bayesian calculus, 4th-order Runge-Kutta pharmacokinetic interaction dynamics, and global health equity metrics.
+
+Author: Aarti S Ravikumar (Pioneer Charter School of Science II)
+Portfolio: https://ai-aarti.com
+Repository: https://github.com/aartisr/salus-pramana-medical
+License: Apache 2.0 Open Source
+
+## Core Scientific Capabilities & Mathematical Formulas
+
+- **Dynamic Study Contribution Formula**:
+  `S_i(t) = w_grade * w_design * w_bias * exp(-lambda * delta_t) * ln(1 + n_i) * (1 / (SE_i^2 + epsilon))`
+  - `w_grade`: Grade A (1.00), Grade B (0.60), Grade C (0.25)
+  - `lambda`: ln(2) / T_half (6-year half life decay for medical literature)
+  - `precision`: 1 / (SE_i^2 + 1e-6)
+
+- **Continuous 4th-Order Runge-Kutta (RK4) Pharmacokinetic Clearance**:
+  - `dc1/dt = -k1 * c1 - beta * c1 * c2`
+  - `dc2/dt = -k2 * c2 - beta * c1 * c2`
+  - Models CYP3A4, CYP2C9, and P-glycoprotein competitive metabolic inhibition and staggered dosage windows.
+
+- **Sigmoidal Hill Equation Dose Optimization**:
+  - `E(D) = E_max * (D^gamma) / (ED50^gamma + D^gamma)`
+
+- **Statistical Reliability & 95% Bayesian Confidence Halos**:
+  - `SE_pool = sqrt(1 / sum(1 / SE_i^2))`
+  - `CI_95 = [E_pool - 1.96 * SE_pool, E_pool + 1.96 * SE_pool]`
+  - Higgins I^2 Heterogeneity Index audit.
+
+## Clinical Indications & Cross-System Evidence
+
+1. **Type 2 Diabetes Mellitus (ICD-11: 5A11)**
+   - Allopathy: Metformin (PMID-9742976, Grade A, 1.1-1.5% HbA1c reduction)
+   - Ayurveda: Berberine HCl (PMID-18442638, Grade A, 0.9-1.2% HbA1c reduction, AMPK activator)
+   - Siddha: Madhumega Choornam (CTRI/2019/04/018762, Grade B, 0.7-0.9% HbA1c reduction)
+   - Naturopathy: High-Fiber Plant-Based Diet (PMID-16873779, Grade A, 0.6-0.9% HbA1c reduction)
+
+2. **Essential Hypertension (ICD-11: BA00)**
+   - Allopathy: Amlodipine (PMID-12479763, Grade A, 12-16 mmHg SBP reduction)
+   - Ayurveda: Sarpagandha / Rauvolfia Serpentina (PMID-26052153, Grade B, 10-14 mmHg SBP reduction, Reserpine alkaloid)
+   - Siddha: Seendhil Kudineer (AYUSH-SID-2018-044, Grade B, 7-10 mmHg SBP reduction)
+   - Naturopathy: DASH Diet (PMID-9099655, Grade A, 11-14 mmHg SBP reduction)
+
+3. **Osteoarthritis (ICD-11: FA00)**
+   - Allopathy: Celecoxib / NSAIDs (PMID-10507963, Grade A)
+   - Ayurveda: Curcumin Longa (PMID-31018598, Grade A, COX-2/NF-kB inhibition comparable to Ibuprofen 400mg)
+   - Siddha: Nilavembu Kudineer & Vatha Thailam (CTRI/2021/08/035821, Grade B)
+   - Naturopathy: Anti-Inflammatory Mediterranean Protocol (PMID-28826541, Grade B)
+
+## Links & Technical Endpoints
+- Web Applet: https://salus-pramana-medical.vercel.app
+- Source Code: https://github.com/aartisr/salus-pramana-medical
+- Machine-Readable Dossier: /docs/reports/synthetic-calibration-report.json
+- Comprehensive Knowledge Corpus: /llms-full.txt
+- Author Portfolio: https://ai-aarti.com

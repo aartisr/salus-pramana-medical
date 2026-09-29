@@ -15,6 +15,7 @@ import { AIClinicalSynthesis } from './components/AIClinicalSynthesis';
 import { RepositoryCodeArchitecture } from './components/RepositoryCodeArchitecture';
 import { CalibrationDriftHub } from './components/CalibrationDriftHub';
 import { ExportReportModal } from './components/ExportReportModal';
+import { CitationDiscoverabilityModal } from './components/CitationDiscoverabilityModal';
 import { PersonaMode } from './types/salus';
 import { HeartHandshake, Shield, Sparkles, Award, GitBranch, Globe2, ExternalLink } from 'lucide-react';
 
@@ -22,6 +23,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>('research-home');
   const [selectedPersona, setSelectedPersona] = useState<PersonaMode>('nobel_juror');
   const [isExportModalOpen, setIsExportModalOpen] = useState<boolean>(false);
+  const [isCitationModalOpen, setIsCitationModalOpen] = useState<boolean>(false);
   const [odeInterventionA, setOdeInterventionA] = useState<string>('Metformin Hydrochloride (1000 mg)');
   const [odeInterventionB, setOdeInterventionB] = useState<string>('Daruharidra / Berberine Extract (500 mg)');
 
@@ -40,6 +42,7 @@ export default function App() {
         selectedPersona={selectedPersona}
         setSelectedPersona={setSelectedPersona}
         onOpenExportModal={() => setIsExportModalOpen(true)}
+        onOpenCitationModal={() => setIsCitationModalOpen(true)}
       />
 
       {/* Main Container */}
@@ -106,6 +109,12 @@ export default function App() {
       <ExportReportModal
         isOpen={isExportModalOpen}
         onClose={() => setIsExportModalOpen(false)}
+      />
+
+      {/* Citation & AI Discoverability Modal */}
+      <CitationDiscoverabilityModal
+        isOpen={isCitationModalOpen}
+        onClose={() => setIsCitationModalOpen(false)}
       />
 
       {/* Global Footer */}

@@ -1,6 +1,6 @@
 {
-  "name": "SALUS Pramana: Nobel-Cadre Clinical Intelligence & Repository Evaluation",
-  "description": "Comprehensive Nobel-cadre evaluation and interactive clinical intelligence workstation for SALUS Pramana Medical, pioneering cross-tradition evidence calculus, ODE interaction dynamics, and global healthcare equity.",
+  "name": "SALUS Pramana: Evidence Behind Every Path to Healing",
+  "description": "Continuous evidence operating system for integrative medicine unifying Allopathy, Ayurveda, Siddha, and Naturopathy via Bayesian evidence calculus, Runge-Kutta ODE pharmacokinetics, and peer-reviewed registries.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

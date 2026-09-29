@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, ShieldCheck, Activity, Brain, GitBranch, FileSpreadsheet, Download, Sparkles, UserCheck, Globe2, Microscope } from 'lucide-react';
+import { Award, ShieldCheck, Activity, Brain, GitBranch, FileSpreadsheet, Download, Sparkles, UserCheck, Globe2, Microscope, BookOpen } from 'lucide-react';
 import { PersonaMode } from '../types/salus';
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
   selectedPersona: PersonaMode;
   setSelectedPersona: (persona: PersonaMode) => void;
   onOpenExportModal: () => void;
+  onOpenCitationModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   selectedPersona,
   setSelectedPersona,
   onOpenExportModal,
+  onOpenCitationModal,
 }) => {
   const tabs = [
     { id: 'research-home', label: 'Research Institute Home', icon: Microscope, badge: 'Overview' },
@@ -65,6 +67,15 @@ export const Header: React.FC<HeaderProps> = ({
               <Award className="h-3 w-3 text-amber-400" />
               Evaluation Benchmark: <strong>9.92 / 10.0</strong>
             </span>
+            <button
+              onClick={onOpenCitationModal}
+              className="inline-flex items-center gap-1.5 rounded bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-300 hover:text-white px-2 py-0.5 sm:px-2.5 text-[11px] sm:text-xs transition border border-indigo-700/50"
+              title="Academic citations & AI discoverability metadata"
+            >
+              <BookOpen className="h-3 w-3 text-amber-400" />
+              <span className="hidden sm:inline">Cite / AIO</span>
+              <span className="sm:hidden">Cite</span>
+            </button>
             <button
               onClick={onOpenExportModal}
               className="inline-flex items-center gap-1.5 rounded bg-slate-800 hover:bg-slate-700 px-2 py-0.5 sm:px-2.5 text-[11px] sm:text-xs text-slate-200 transition border border-slate-700"
