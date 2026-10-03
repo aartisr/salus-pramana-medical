@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-30T07:07:00.263Z",
+  "policy": "Exact source snapshots; no production records, credentials, or patient identifiers.",
+  "fixtures": [
+    {
+      "sourcePath": "src/data/globalHealthEquityData.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/data/globalHealthEquityData.ts",
+      "sourceSha256": "2f2489264c094a265d68e27ca0ea8605286da0648e1265ab2c1b7974701170d4",
+      "fixtureSha256": "2f2489264c094a265d68e27ca0ea8605286da0648e1265ab2c1b7974701170d4",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/data/nobelEvaluationData.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/data/nobelEvaluationData.ts",
+      "sourceSha256": "34b2715b06ab6545582d3091100d2ecc0359ffd96ab43a9f81cebc15250d5d29",
+      "fixtureSha256": "34b2715b06ab6545582d3091100d2ecc0359ffd96ab43a9f81cebc15250d5d29",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/data/salusRepositoryData.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/data/salusRepositoryData.ts",
+      "sourceSha256": "474a577acc4ec593a07a1173362c3c5a44557983131773ec7a41eaf801e446ba",
+      "fixtureSha256": "474a577acc4ec593a07a1173362c3c5a44557983131773ec7a41eaf801e446ba",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/services/calibrationReportService.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/services/calibrationReportService.ts",
+      "sourceSha256": "df94804eb180b4c916015ca6d1e241d9745059aecc9ef6e4635b4f5d54e54d70",
+      "fixtureSha256": "df94804eb180b4c916015ca6d1e241d9745059aecc9ef6e4635b4f5d54e54d70",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/services/doseResponseOptimizer.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/services/doseResponseOptimizer.ts",
+      "sourceSha256": "2c6e32b336ec893755813a3d916b6f924806620c6987fad39452585df4560522",
+      "fixtureSha256": "2c6e32b336ec893755813a3d916b6f924806620c6987fad39452585df4560522",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/services/evidenceExportService.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/services/evidenceExportService.ts",
+      "sourceSha256": "75a81da9930b2c6e26233481213e1accd8f61a2dc8a488d4333d56a9cad38bbb",
+      "fixtureSha256": "75a81da9930b2c6e26233481213e1accd8f61a2dc8a488d4333d56a9cad38bbb",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/services/evidenceSubscriptionService.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/services/evidenceSubscriptionService.ts",
+      "sourceSha256": "80642325284d81b8187e9e9dc99fffc8becf7f404bc5acd0bea2fcf9adc67b26",
+      "fixtureSha256": "80642325284d81b8187e9e9dc99fffc8becf7f404bc5acd0bea2fcf9adc67b26",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/services/odeInteractionSolver.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/services/odeInteractionSolver.ts",
+      "sourceSha256": "e77710d223d76dfaec15592bc571497f9987c12a601df8a9d34881f6b7989447",
+      "fixtureSha256": "e77710d223d76dfaec15592bc571497f9987c12a601df8a9d34881f6b7989447",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/services/pramanaCalculus.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/services/pramanaCalculus.ts",
+      "sourceSha256": "fc8105956ffffcbcf3ea210b6146c7d185a8ed56e3c3265df8e6c13bc20e2d86",
+      "fixtureSha256": "fc8105956ffffcbcf3ea210b6146c7d185a8ed56e3c3265df8e6c13bc20e2d86",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    },
+    {
+      "sourcePath": "src/services/recentSearchesDb.ts",
+      "fixturePath": "tests/fixtures/source-snapshots/src/services/recentSearchesDb.ts",
+      "sourceSha256": "2b34366ad466f3fd78a9472e87bdcb9c60c2464cfbdf8cacc26603c7c452aa71",
+      "fixtureSha256": "2b34366ad466f3fd78a9472e87bdcb9c60c2464cfbdf8cacc26603c7c452aa71",
+      "byteIdentical": true,
+      "classification": "non-PHI static source fixture"
+    }
+  ]
+}

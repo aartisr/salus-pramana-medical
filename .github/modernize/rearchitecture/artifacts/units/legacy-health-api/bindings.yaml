@@ -1,0 +1,4 @@
+unit: legacy-health-api
+bindings:
+  - { type: route-declaration, name: "GET /health", source_loc: "archive/legacy-monorepo/services/api/src/app.ts:84", target: healthHandler, must_appear_in_target: true, notes: "Public health response behind global security/correlation middleware." }
+runtime_config: []

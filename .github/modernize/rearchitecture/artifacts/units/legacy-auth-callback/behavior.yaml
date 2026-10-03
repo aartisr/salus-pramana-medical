@@ -1,0 +1,9 @@
+unit: legacy-auth-callback
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:130", effect: "stores PKCE verifier, state, and return route in sessionStorage before redirect", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:205", effect: "stores access token and expiry, scrubs callback parameters, and emits salus-auth-changed", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:176", condition: "code/state/verifier is missing or state mismatches", behavior: "rejects callback without storing credentials", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:195", trigger: "token exchange fails or omits access_token", outcome: "throws visible callback error and remains unauthenticated", contract: "no partial session", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:148", scope: "single PKCE token exchange and session update", isolation: "browser sessionStorage", must_preserve: true } }

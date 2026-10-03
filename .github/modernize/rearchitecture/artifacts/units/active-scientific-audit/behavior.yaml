@@ -1,0 +1,6 @@
+unit: active-scientific-audit
+side_effects: []
+branches:
+  - { source_loc: "src/routes/scientific-audit-route.tsx:7", condition: "selected persona changes", behavior: "audit dossier presentation changes while source metrics remain stable", must_preserve: true }
+error_paths: []
+concurrency: { model: sync, tx_boundary: { source_loc: "src/routes/scientific-audit-route.tsx:5", scope: "client render only", isolation: "none", must_preserve: false } }

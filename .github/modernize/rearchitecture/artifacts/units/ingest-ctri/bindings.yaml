@@ -1,0 +1,6 @@
+unit: ingest-ctri
+bindings:
+  - { type: convention, name: handler, source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:40", target: ctriIngestionHandler, must_appear_in_target: true, notes: "Externally invokable connector." }
+runtime_config:
+  - { key: CTRI_DATA_URL, source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:12", source: env, default_value: "empty; use deterministic sample", must_appear_in_target: true, notes: "External dataset URL." }
+  - { key: CTRI_HTTP_TIMEOUT_MS|CTRI_HTTP_MAX_RETRIES|CTRI_MIN_INTERVAL_MS|CTRI_MAX_REQUESTS_PER_RUN, source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:18", source: env, default_value: "5000|2|150|3", must_appear_in_target: true, notes: "Bounded HTTP policy." }

@@ -1,0 +1,8 @@
+unit: legacy-dashboard
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/compare-dashboard.tsx:1", effect: "loads conditions, evidence, and comparison intelligence through TanStack Query", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/compare-dashboard.tsx:431", condition: "persona lens changes", behavior: "comparison interpretation changes while evidence records remain unchanged", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/app-error-boundary.tsx:1", trigger: "route render or API query fails", outcome: "accessible error state is displayed", contract: "role=alert with actionable recovery", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:18", scope: "independent cached queries", isolation: "TanStack Query cache", must_preserve: true } }

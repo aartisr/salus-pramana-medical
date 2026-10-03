@@ -1,0 +1,4 @@
+unit: active-clinical-workbench
+bindings:
+  - { type: route-declaration, name: "GET /clinical-workbench", source_loc: "src/app/router.tsx:20", target: ClinicalWorkbenchRoute, must_appear_in_target: true, notes: "Lazy route preserving persona-sensitive decision support." }
+runtime_config: []

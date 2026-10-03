@@ -1,0 +1,5 @@
+unit: legacy-evidence-api
+commit: false
+candidate_splits:
+  - { id: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:123-154", drivers: [concern_split], rationale: "Authentication status and condition taxonomy commands have separate authorization and data ownership from evidence workflows.", source_slice: { file: archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts, lines: [123, 154] } }
+  - { id: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:156-274", drivers: [concern_split, data_ownership_split], rationale: "Evidence search/export, immutable submission, and editorial publication are distinct contracts sharing one persisted entity.", source_slice: { file: archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts, lines: [156, 274] } }

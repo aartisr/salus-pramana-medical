@@ -1,0 +1,4 @@
+unit: active-ai-synthesis
+bindings:
+  - { type: route-declaration, name: "GET /ai-clinical-reasoning", source_loc: "src/app/router.tsx:21", target: AiSynthesisRoute, must_appear_in_target: true, notes: "Lazy route bound to shared persona." }
+runtime_config: []

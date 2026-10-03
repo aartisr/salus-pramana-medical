@@ -1,0 +1,185 @@
+units:
+  - name: active-home
+    trigger: page
+    trigger_detail: "GET /"
+    source_anchors: [{ path: src/routes/home-route.tsx, line: 6 }]
+    exported_signature: [{ method: "ReactElement HomeRoute()", source_loc: "src/routes/home-route.tsx:6", stability: frozen }]
+    dynamic_entrypoints: [{ target: HomeRoute, mechanism: convention, source_loc: "src/app/router.tsx:15" }]
+    depends_on: []
+    shared_refs: [{ module: active-app-state, used_fields: [selectedPersona, setIsExportModalOpen] }]
+  - name: active-scientific-audit
+    trigger: page
+    trigger_detail: "GET /scientific-audit"
+    source_anchors: [{ path: src/routes/scientific-audit-route.tsx, line: 5 }]
+    exported_signature: [{ method: "ReactElement ScientificAuditRoute()", source_loc: "src/routes/scientific-audit-route.tsx:5", stability: frozen }]
+    dynamic_entrypoints: [{ target: ScientificAuditRoute, mechanism: convention, source_loc: "src/app/router.tsx:16" }]
+    depends_on: []
+    shared_refs: [{ module: active-app-state, used_fields: [selectedPersona] }, { module: active-clinical-domain, used_fields: [nobelEvaluationDossier] }]
+  - name: active-global-health
+    trigger: page
+    trigger_detail: "GET /global-health-equity"
+    source_anchors: [{ path: src/routes/global-health-route.tsx, line: 5 }]
+    exported_signature: [{ method: "ReactElement GlobalHealthRoute()", source_loc: "src/routes/global-health-route.tsx:5", stability: frozen }]
+    dynamic_entrypoints: [{ target: GlobalHealthRoute, mechanism: convention, source_loc: "src/app/router.tsx:17" }]
+    depends_on: []
+    shared_refs: [{ module: active-app-state, used_fields: [selectedPersona] }, { module: active-clinical-domain, used_fields: [countryHealthEquityProfiles, globalHealthEquitySummary] }]
+  - name: active-intelligence
+    trigger: page
+    trigger_detail: "GET /cross-system-intelligence"
+    source_anchors: [{ path: src/routes/intelligence-route.tsx, line: 5 }]
+    exported_signature: [{ method: "ReactElement IntelligenceRoute()", source_loc: "src/routes/intelligence-route.tsx:5", stability: frozen }]
+    dynamic_entrypoints: [{ target: IntelligenceRoute, mechanism: convention, source_loc: "src/app/router.tsx:18" }]
+    depends_on: [ { unit: active-ode-lab, via: "setOdeInterventions then route navigation" } ]
+    shared_refs: [{ module: active-app-state, used_fields: [selectedPersona, setOdeInterventions] }, { module: active-clinical-domain, used_fields: [computeConditionIntelligence] }]
+  - name: active-ode-lab
+    trigger: page
+    trigger_detail: "GET /ode-interaction-lab"
+    source_anchors: [{ path: src/routes/ode-lab-route.tsx, line: 4 }]
+    exported_signature: [{ method: "ReactElement OdeLabRoute()", source_loc: "src/routes/ode-lab-route.tsx:4", stability: frozen }]
+    dynamic_entrypoints: [{ target: OdeLabRoute, mechanism: convention, source_loc: "src/app/router.tsx:19" }]
+    depends_on: []
+    shared_refs: [{ module: active-app-state, used_fields: [selectedPersona, odeInterventionA, odeInterventionB] }, { module: active-clinical-domain, used_fields: [simulateInteractionDynamics] }]
+  - name: active-clinical-workbench
+    trigger: page
+    trigger_detail: "GET /clinical-workbench"
+    source_anchors: [{ path: src/routes/clinical-workbench-route.tsx, line: 4 }]
+    exported_signature: [{ method: "ReactElement ClinicalWorkbenchRoute()", source_loc: "src/routes/clinical-workbench-route.tsx:4", stability: frozen }]
+    dynamic_entrypoints: [{ target: ClinicalWorkbenchRoute, mechanism: convention, source_loc: "src/app/router.tsx:20" }]
+    depends_on: []
+    shared_refs: [{ module: active-app-state, used_fields: [selectedPersona] }, { module: active-clinical-domain, used_fields: [calculateDoseCandidates] }]
+  - name: active-ai-synthesis
+    trigger: page
+    trigger_detail: "GET /ai-clinical-reasoning"
+    source_anchors: [{ path: src/routes/ai-synthesis-route.tsx, line: 4 }]
+    exported_signature: [{ method: "ReactElement AiSynthesisRoute()", source_loc: "src/routes/ai-synthesis-route.tsx:4", stability: frozen }]
+    dynamic_entrypoints: [{ target: AiSynthesisRoute, mechanism: convention, source_loc: "src/app/router.tsx:21" }]
+    depends_on: [{ unit: active-clinical-ai-api, via: "POST /api/clinical-ai" }]
+    shared_refs: [{ module: active-app-state, used_fields: [selectedPersona] }]
+  - name: active-architecture
+    trigger: page
+    trigger_detail: "GET /architecture"
+    source_anchors: [{ path: src/routes/architecture-route.tsx, line: 3 }]
+    exported_signature: [{ method: "ReactElement ArchitectureRoute()", source_loc: "src/routes/architecture-route.tsx:3", stability: frozen }]
+    dynamic_entrypoints: [{ target: ArchitectureRoute, mechanism: convention, source_loc: "src/app/router.tsx:22" }]
+    depends_on: []
+    shared_refs: []
+  - name: active-calibration
+    trigger: page
+    trigger_detail: "GET /calibration-governance"
+    source_anchors: [{ path: src/routes/calibration-route.tsx, line: 3 }]
+    exported_signature: [{ method: "ReactElement CalibrationRoute()", source_loc: "src/routes/calibration-route.tsx:3", stability: frozen }]
+    dynamic_entrypoints: [{ target: CalibrationRoute, mechanism: convention, source_loc: "src/app/router.tsx:23" }]
+    depends_on: []
+    shared_refs: [{ module: active-clinical-domain, used_fields: [generateSyntheticCalibrationReport] }]
+  - name: legacy-dashboard
+    trigger: page
+    trigger_detail: "GET /"
+    source_anchors: [{ path: archive/legacy-monorepo/apps/web/src/components/compare-dashboard.tsx, line: 1 }]
+    exported_signature: [{ method: "ReactElement DashboardPage()", source_loc: "archive/legacy-monorepo/apps/web/src/pages/app-pages.tsx:10", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: DashboardPageLazy, mechanism: convention, source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:31" }]
+    depends_on: [{ unit: legacy-evidence-api, via: "GET /conditions and /evidence" }, { unit: legacy-intelligence-api, via: "condition and evidence intelligence requests" }]
+    shared_refs: [{ module: legacy-domain-contract, used_fields: [MedicalCondition, TreatmentEvidence] }]
+  - name: legacy-new-evidence
+    trigger: page
+    trigger_detail: "GET /new"
+    source_anchors: [{ path: archive/legacy-monorepo/apps/web/src/components/new-evidence-form.tsx, line: 1 }]
+    exported_signature: [{ method: "ReactElement NewEvidencePage()", source_loc: "archive/legacy-monorepo/apps/web/src/pages/app-pages.tsx:20", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: NewEvidencePageLazy, mechanism: convention, source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:37" }]
+    depends_on: [{ unit: legacy-evidence-api, via: "POST /evidence" }]
+    shared_refs: [{ module: legacy-domain-contract, used_fields: [TreatmentEvidence] }, { module: legacy-auth-contract, used_fields: [getAccessToken, beginLogin] }]
+  - name: legacy-comparison
+    trigger: page
+    trigger_detail: "GET /compare/$conditionId"
+    source_anchors: [{ path: archive/legacy-monorepo/apps/web/src/components/comparison-view.tsx, line: 1 }]
+    exported_signature: [{ method: "ReactElement ComparisonPage()", source_loc: "archive/legacy-monorepo/apps/web/src/pages/app-pages.tsx:34", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: ComparisonPageLazy, mechanism: convention, source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:43" }]
+    depends_on: [{ unit: legacy-intelligence-api, via: "GET /intelligence/*" }]
+    shared_refs: [{ module: legacy-domain-contract, used_fields: [MedicalCondition, TreatmentEvidence] }]
+  - name: legacy-editor
+    trigger: page
+    trigger_detail: "GET /editor"
+    source_anchors: [{ path: archive/legacy-monorepo/apps/web/src/components/editor-console.tsx, line: 23 }]
+    exported_signature: [{ method: "ReactElement EditorPage()", source_loc: "archive/legacy-monorepo/apps/web/src/pages/app-pages.tsx:54", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: EditorPageLazy, mechanism: convention, source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:58" }]
+    depends_on: [{ unit: legacy-evidence-api, via: "editor status, condition create, evidence publish" }]
+    shared_refs: [{ module: legacy-auth-contract, used_fields: [getAccessToken, beginLogin, signOut] }]
+  - name: legacy-auth-callback
+    trigger: page
+    trigger_detail: "GET /auth/callback"
+    source_anchors: [{ path: archive/legacy-monorepo/apps/web/src/hooks/use-auth-session.ts, line: 1 }]
+    exported_signature: [{ method: "ReactElement AuthCallbackPage()", source_loc: "archive/legacy-monorepo/apps/web/src/pages/app-pages.tsx:72", stability: frozen }]
+    dynamic_entrypoints: [{ target: AuthCallbackPageLazy, mechanism: convention, source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:64" }]
+    depends_on: []
+    shared_refs: [{ module: legacy-auth-contract, used_fields: [handleAuthCallback] }]
+  - name: legacy-math
+    trigger: page
+    trigger_detail: "GET /math"
+    source_anchors: [{ path: archive/legacy-monorepo/apps/web/src/components/math-explainer.tsx, line: 1 }]
+    exported_signature: [{ method: "ReactElement MathExplainerPage()", source_loc: "archive/legacy-monorepo/apps/web/src/pages/app-pages.tsx:88", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: MathExplainerPageLazy, mechanism: convention, source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:70" }]
+    depends_on: []
+    shared_refs: []
+  - name: active-clinical-ai-api
+    trigger: api
+    trigger_detail: "POST /api/clinical-ai"
+    source_anchors: [{ path: server.ts, line: 22 }]
+    exported_signature: [{ method: "POST /api/clinical-ai -> ClinicalSynthesisResponse", source_loc: "server.ts:22", stability: frozen }]
+    dynamic_entrypoints: []
+    depends_on: []
+    shared_refs: []
+  - name: legacy-health-api
+    trigger: api
+    trigger_detail: "GET /health"
+    source_anchors: [{ path: archive/legacy-monorepo/services/api/src/app.ts, line: 84 }]
+    exported_signature: [{ method: "GET /health -> {ok,service,motto}", source_loc: "archive/legacy-monorepo/services/api/src/app.ts:84", stability: frozen }]
+    dynamic_entrypoints: []
+    depends_on: []
+    shared_refs: []
+  - name: legacy-evidence-api
+    trigger: api
+    trigger_detail: "Evidence/auth surface: GET /auth/editor-status; GET|POST /conditions; GET|POST /evidence; GET /evidence/export.csv; PATCH /evidence/:id/publish"
+    source_anchors: [{ path: archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts, line: 122 }]
+    exported_signature: [{ method: "void registerEvidenceRoutes(Hono app)", source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:122", stability: frozen }]
+    dynamic_entrypoints: [{ target: registerEvidenceRoutes, mechanism: di, source_loc: "archive/legacy-monorepo/services/api/src/app.ts:85" }]
+    depends_on: []
+    shared_refs: [{ module: legacy-domain-contract, used_fields: [medicalConditionSchema, treatmentEvidenceSchema] }, { module: legacy-repository, used_fields: [listConditions, listEvidenceByCondition, createEvidence, getCondition, saveAuditLog, saveCondition, updateEvidencePublicationStatus] }, { module: legacy-auth-contract, used_fields: [requireAuthenticatedMutation, requireEditorRole, requireEditorAccess, getActorEmail, getAuthGroups, hasEditorRole] }]
+  - name: legacy-intelligence-api
+    trigger: api
+    trigger_detail: "Intelligence surface: GET /intelligence/{condition,evidence,gates,interaction,trajectory,dose-optimizer}/:id"
+    source_anchors: [{ path: archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts, line: 25 }]
+    exported_signature: [{ method: "void registerIntelligenceRoutes(Hono app)", source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:25", stability: frozen }]
+    dynamic_entrypoints: [{ target: registerIntelligenceRoutes, mechanism: di, source_loc: "archive/legacy-monorepo/services/api/src/app.ts:86" }]
+    depends_on: []
+    shared_refs: [{ module: legacy-repository, used_fields: [listEvidenceByCondition] }, { module: legacy-auth-contract, used_fields: [requireEditorAccess] }]
+  - name: ingest-pubmed
+    trigger: job
+    trigger_detail: "handler() / PubMed import"
+    source_anchors: [{ path: archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts, line: 47 }]
+    exported_signature: [{ method: "Promise<ImportResult> handler()", source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:47", stability: must_preserve }, { method: "Promise<ImportResult> importPubmedPmids(string[])", source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:25", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: handler, mechanism: convention, source_loc: "archive/legacy-monorepo/infra/template.yaml:1" }]
+    depends_on: []
+    shared_refs: [{ module: legacy-domain-contract, used_fields: [TreatmentEvidence] }, { module: ingestion-shared, used_fields: [evidenceExists, normalizeEvidence] }]
+  - name: ingest-clinicaltrials
+    trigger: job
+    trigger_detail: "handler() / ClinicalTrials.gov connector"
+    source_anchors: [{ path: archive/legacy-monorepo/services/ingestion/src/clinicaltrials-ingestor.ts, line: 43 }]
+    exported_signature: [{ method: "Promise<IngestionConnectorOutput> handler()", source_loc: "archive/legacy-monorepo/services/ingestion/src/clinicaltrials-ingestor.ts:43", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: handler, mechanism: convention, source_loc: "archive/legacy-monorepo/infra/template.yaml:1" }]
+    depends_on: [{ unit: ingest-pubmed, via: importPubmedPmids }]
+    shared_refs: [{ module: ingestion-shared, used_fields: [fetchJsonWithRetry, extractNctIds, extractClinicalTrialsSourceTimestamp, buildConnectorOutput] }]
+  - name: ingest-ayush
+    trigger: job
+    trigger_detail: "handler() / AYUSH connector"
+    source_anchors: [{ path: archive/legacy-monorepo/services/ingestion/src/ayush-ingestor.ts, line: 40 }]
+    exported_signature: [{ method: "Promise<IngestionConnectorOutput> handler()", source_loc: "archive/legacy-monorepo/services/ingestion/src/ayush-ingestor.ts:40", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: handler, mechanism: convention, source_loc: "archive/legacy-monorepo/infra/template.yaml:1" }]
+    depends_on: [{ unit: ingest-pubmed, via: importPubmedPmids }]
+    shared_refs: [{ module: ingestion-shared, used_fields: [fetchJsonWithRetry, extractAyushRefs, extractSourceTimestamp, buildConnectorOutput] }]
+  - name: ingest-ctri
+    trigger: job
+    trigger_detail: "handler() / CTRI connector"
+    source_anchors: [{ path: archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts, line: 40 }]
+    exported_signature: [{ method: "Promise<IngestionConnectorOutput> handler()", source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:40", stability: must_preserve }]
+    dynamic_entrypoints: [{ target: handler, mechanism: convention, source_loc: "archive/legacy-monorepo/infra/template.yaml:1" }]
+    depends_on: [{ unit: ingest-pubmed, via: importPubmedPmids }]
+    shared_refs: [{ module: ingestion-shared, used_fields: [fetchJsonWithRetry, extractCtriRefs, extractSourceTimestamp, buildConnectorOutput] }]

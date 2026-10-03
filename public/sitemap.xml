@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Core Application Landing & Global Evidence Explorer -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Cross-System Intelligence Studio (Allopathy, Ayurveda, Siddha, Naturopathy) -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/cross-system-intelligence</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Runge-Kutta 4th-Order Pharmacokinetic ODE Simulator -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/ode-interaction-lab</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Point-of-Care Diagnostic Decision Workbench & Go/No-Go Gates -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/clinical-workbench</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Global Health Equity & DALY Burden Map (195 Countries) -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/global-health-equity</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Peer-Reviewed Benchmark & Architectural Audit Dossier -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/scientific-audit</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Formal Mathematical Foundations & Pramana Calculus Proofs -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/architecture</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Brier Score Calibration & Statistical Drift Hub -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/calibration-governance</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Restored compatibility and editorial workflows -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/ai-clinical-reasoning</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/math</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/compare/cond-type2-diabetes</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/new</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/editor</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/auth/callback</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
+
+  <!-- Condition Queries Indexing -->
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/?q=Type+2+Diabetes</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/?q=Hypertension</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/?q=Osteoarthritis</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://saluspramana.ai-aarti.com/?q=Major+Depressive+Disorder</loc>
+    <lastmod>2026-09-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

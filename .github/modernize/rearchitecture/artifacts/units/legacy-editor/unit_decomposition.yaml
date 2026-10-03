@@ -1,0 +1,4 @@
+unit: legacy-editor
+commit: false
+candidate_splits:
+  - { id: "archive/legacy-monorepo/apps/web/src/components/editor-console.tsx:23", drivers: [concern_split], rationale: "Role verification, evidence moderation, search/pagination, and condition creation form distinct protected workflows.", source_slice: { file: archive/legacy-monorepo/apps/web/src/components/editor-console.tsx, lines: [23, 300] } }

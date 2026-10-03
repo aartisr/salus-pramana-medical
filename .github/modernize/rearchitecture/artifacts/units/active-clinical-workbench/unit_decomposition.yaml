@@ -1,0 +1,4 @@
+unit: active-clinical-workbench
+commit: false
+candidate_splits:
+  - { id: "src/components/DiagnosticDecisionWorkbench.tsx:1", drivers: [concern_split, data_ownership_split], rationale: "Patient input, recent-search persistence, deterministic dose analysis, and presentation have distinct state ownership.", source_slice: { file: src/components/DiagnosticDecisionWorkbench.tsx, lines: [1, 1200] } }

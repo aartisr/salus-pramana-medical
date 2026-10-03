@@ -1,0 +1,102 @@
+modules:
+  - name: active-app-state
+    kind: store
+    source_loc: "src/app/app-context.tsx:4"
+    used_by_units: [active-home, active-scientific-audit, active-global-health, active-intelligence, active-ode-lab, active-clinical-workbench, active-ai-synthesis]
+    fields:
+      - { name: selectedPersona, type: PersonaMode }
+      - { name: setSelectedPersona, type: "(PersonaMode) => void" }
+      - { name: isExportModalOpen, type: boolean }
+      - { name: setIsExportModalOpen, type: "(boolean) => void" }
+      - { name: isCitationModalOpen, type: boolean }
+      - { name: setIsCitationModalOpen, type: "(boolean) => void" }
+      - { name: odeInterventionA, type: string }
+      - { name: odeInterventionB, type: string }
+      - { name: setOdeInterventions, type: "(string,string) => void" }
+    god_class: false
+    split_candidate: false
+    migration_strategy: extract
+    notes: "Single React context for cross-route client state; do not duplicate per lazy chunk."
+  - name: active-clinical-domain
+    kind: utility
+    source_loc: "src/services/pramanaCalculus.ts:1"
+    used_by_units: [active-scientific-audit, active-global-health, active-intelligence, active-ode-lab, active-clinical-workbench, active-calibration]
+    fields:
+      - { name: nobelEvaluationDossier, type: NobelEvaluationDossier }
+      - { name: countryHealthEquityProfiles, type: "CountryHealthEquityProfile[]" }
+      - { name: globalHealthEquitySummary, type: GlobalHealthEquitySummary }
+      - { name: computeConditionIntelligence, type: "(TreatmentEvidence[],Date?) => ConditionIntelligence" }
+      - { name: simulateInteractionDynamics, type: "(...) => InteractionDynamics" }
+      - { name: calculateDoseCandidates, type: "(...) => DoseOptimizationCandidate[]" }
+      - { name: generateSyntheticCalibrationReport, type: "(number?) => SyntheticCalibrationReport" }
+    god_class: false
+    split_candidate: true
+    migration_strategy: extract
+    notes: "Keep deterministic data/calculation modules independent from UI and AI output."
+  - name: legacy-domain-contract
+    kind: dto
+    source_loc: "archive/legacy-monorepo/packages/domain/src/index.ts:1"
+    used_by_units: [legacy-dashboard, legacy-new-evidence, legacy-comparison, legacy-evidence-api, ingest-pubmed]
+    fields:
+      - { name: MedicalCondition, type: "{conditionId,icd11Code,standardName,ayurvedicEquivalent?,siddhaEquivalent?,pathophysiologySummary?}" }
+      - { name: TreatmentEvidence, type: "{evidenceId,conditionId,medicalSystem,interventionName,isPharmacological,evidenceGrade,studyMethodology,sampleSize?,registryIdentifier,sourceUrl,clinicalOutcomeSummary,publicationStatus?,contraindications,interactionWarnings,lastVerifiedDate?}" }
+      - { name: medicalConditionSchema, type: ZodObject }
+      - { name: treatmentEvidenceSchema, type: ZodObject }
+      - { name: evidenceGradeDescription, type: "(A|B|C) => string" }
+    god_class: false
+    split_candidate: false
+    migration_strategy: extract
+    notes: "Canonical archived wire-validation contract; preserve serialized field names and allowlist semantics."
+  - name: legacy-repository
+    kind: store
+    source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:1"
+    used_by_units: [legacy-evidence-api, legacy-intelligence-api]
+    fields:
+      - { name: listConditions, type: "() => Promise<MedicalCondition[]>" }
+      - { name: listEvidenceByCondition, type: "(conditionId?,includeDrafts?) => Promise<TreatmentEvidence[]>" }
+      - { name: createEvidence, type: "(TreatmentEvidence) => Promise<TreatmentEvidence|null>" }
+      - { name: getCondition, type: "(string) => Promise<MedicalCondition|null>" }
+      - { name: saveAuditLog, type: "(AuditInput) => Promise<AuditRecord>" }
+      - { name: saveCondition, type: "(MedicalCondition) => Promise<MedicalCondition>" }
+      - { name: updateEvidencePublicationStatus, type: "(string,EvidenceStatus) => Promise<TreatmentEvidence|null>" }
+    god_class: true
+    split_candidate: true
+    migration_strategy: split
+    notes: "One module combines condition, evidence, audit, DynamoDB, and memory adapters; preserve repository contracts while splitting adapters."
+  - name: legacy-auth-contract
+    kind: utility
+    source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:1"
+    used_by_units: [legacy-new-evidence, legacy-editor, legacy-auth-callback, legacy-evidence-api, legacy-intelligence-api]
+    fields:
+      - { name: getAccessToken, type: "() => string|null" }
+      - { name: beginLogin, type: "(AppRoute?) => Promise<void>" }
+      - { name: signOut, type: "() => void" }
+      - { name: handleAuthCallback, type: "() => Promise<AppRoute>" }
+      - { name: requireAuthenticatedMutation, type: HonoMiddleware }
+      - { name: requireEditorRole, type: HonoMiddleware }
+      - { name: requireEditorAccess, type: "(Context) => Promise<Response|undefined>" }
+      - { name: getActorEmail, type: "(Context) => string" }
+      - { name: getAuthGroups, type: "(Context) => string[]" }
+      - { name: hasEditorRole, type: "(Context) => boolean" }
+    god_class: false
+    split_candidate: true
+    migration_strategy: split
+    notes: "Browser PKCE/session concerns and server JWT/role middleware require separate target modules with one claims contract."
+  - name: ingestion-shared
+    kind: utility
+    source_loc: "archive/legacy-monorepo/services/ingestion/src/shared/http.ts:1"
+    used_by_units: [ingest-pubmed, ingest-clinicaltrials, ingest-ayush, ingest-ctri]
+    fields:
+      - { name: evidenceExists, type: "(tableName,evidenceId) => Promise<boolean>" }
+      - { name: normalizeEvidence, type: "(EvidenceInput) => TreatmentEvidence" }
+      - { name: fetchJsonWithRetry, type: "(url,options?) => Promise<FetchJsonResult>" }
+      - { name: extractNctIds, type: "(unknown) => string[]" }
+      - { name: extractClinicalTrialsSourceTimestamp, type: "(unknown) => string|null" }
+      - { name: extractAyushRefs, type: "(unknown) => string[]" }
+      - { name: extractCtriRefs, type: "(unknown) => string[]" }
+      - { name: extractSourceTimestamp, type: "(unknown) => string|null" }
+      - { name: buildConnectorOutput, type: "(ImportResult,ConnectorMetadata) => IngestionConnectorOutput" }
+    god_class: false
+    split_candidate: false
+    migration_strategy: extract
+    notes: "Shared bounded HTTP, parsing, normalization, dedupe, and output contracts."

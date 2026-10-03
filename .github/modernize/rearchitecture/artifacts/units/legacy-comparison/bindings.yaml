@@ -1,0 +1,5 @@
+unit: legacy-comparison
+bindings:
+  - { type: route-declaration, name: "GET /compare/$conditionId", source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:43", target: ComparisonPageLazy, must_appear_in_target: true, notes: "Typed conditionId route parameter and lazy loading." }
+runtime_config:
+  - { key: VITE_API_BASE_URL, source_loc: "archive/legacy-monorepo/apps/web/src/lib/intelligence-client.ts:10", source: env, default_value: "http://localhost:8787", must_appear_in_target: true, notes: "Intelligence API origin." }

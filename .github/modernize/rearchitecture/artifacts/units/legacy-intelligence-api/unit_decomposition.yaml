@@ -1,0 +1,5 @@
+unit: legacy-intelligence-api
+commit: false
+candidate_splits:
+  - { id: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:26-156", drivers: [concern_split], rationale: "Evidence scoring and governance reporting share source data but expose distinct frozen response contracts.", source_slice: { file: archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts, lines: [26, 156] } }
+  - { id: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:157-275", drivers: [concern_split], rationale: "Interaction, trajectory, and dose simulation are independent deterministic calculators with separate parameters and errors.", source_slice: { file: archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts, lines: [157, 275] } }

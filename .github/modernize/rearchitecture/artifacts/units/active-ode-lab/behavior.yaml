@@ -1,0 +1,7 @@
+unit: active-ode-lab
+side_effects: []
+branches:
+  - { source_loc: "src/services/odeInteractionSolver.ts:49", condition: "intervention parameters or duration change", behavior: "deterministic RK4 interaction trajectory and risk classification are recomputed", must_preserve: true }
+error_paths:
+  - { source_loc: "src/services/odeInteractionSolver.ts:49", trigger: "invalid or unsupported numeric inputs", outcome: "bounded safe output rather than non-finite chart values", contract: "No NaN/Infinity reaches UI", must_preserve: true }
+concurrency: { model: sync, tx_boundary: { source_loc: "src/services/odeInteractionSolver.ts:49", scope: "pure deterministic simulation", isolation: "none", must_preserve: false } }

@@ -1,0 +1,85 @@
+{
+  "reportVersion": "synthetic-calibration-v1",
+  "generatedAt": "2026-07-05T02:54:00.118Z",
+  "mode": "public",
+  "totals": {
+    "conditions": 4,
+    "withEvidence": 4,
+    "goCount": 0,
+    "noGoCount": 4
+  },
+  "summaries": [
+    {
+      "conditionId": "cond-type2-diabetes",
+      "conditionName": "Type 2 Diabetes Mellitus",
+      "evidenceCount": 1,
+      "decision": "CONDITIONAL",
+      "pramanaScore": 61,
+      "confidenceScore": 48,
+      "bayesianProbability": 0.7144,
+      "goNoGo": false,
+      "gateStatuses": {
+        "calibrationSlope": "insufficient-data",
+        "calibrationIntercept": "insufficient-data",
+        "intervalReliability95": "insufficient-data",
+        "citationCoverage": "pass",
+        "recencyCoverage": "pass"
+      }
+    },
+    {
+      "conditionId": "cond-hypertension",
+      "conditionName": "Hypertension",
+      "evidenceCount": 3,
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "pramanaScore": 40,
+      "confidenceScore": 23,
+      "bayesianProbability": 0.1682,
+      "goNoGo": false,
+      "gateStatuses": {
+        "calibrationSlope": "fail",
+        "calibrationIntercept": "fail",
+        "intervalReliability95": "fail",
+        "citationCoverage": "pass",
+        "recencyCoverage": "pass"
+      }
+    },
+    {
+      "conditionId": "cond-joint-inflammation",
+      "conditionName": "Joint Inflammation",
+      "evidenceCount": 1,
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "pramanaScore": 5,
+      "confidenceScore": 0,
+      "bayesianProbability": 0.023,
+      "goNoGo": false,
+      "gateStatuses": {
+        "calibrationSlope": "insufficient-data",
+        "calibrationIntercept": "insufficient-data",
+        "intervalReliability95": "insufficient-data",
+        "citationCoverage": "pass",
+        "recencyCoverage": "pass"
+      }
+    },
+    {
+      "conditionId": "cond-stress-disorder",
+      "conditionName": "Stress Disorder",
+      "evidenceCount": 1,
+      "decision": "INSUFFICIENT_EVIDENCE",
+      "pramanaScore": 4,
+      "confidenceScore": 0,
+      "bayesianProbability": 0.0212,
+      "goNoGo": false,
+      "gateStatuses": {
+        "calibrationSlope": "insufficient-data",
+        "calibrationIntercept": "insufficient-data",
+        "intervalReliability95": "insufficient-data",
+        "citationCoverage": "pass",
+        "recencyCoverage": "pass"
+      }
+    }
+  ],
+  "notes": [
+    "This is a synthetic/offline harness for calibration governance in environments without labeled longitudinal outcomes.",
+    "Production efficacy claims still require real outcome labels and full Section 8 validation metrics (AUROC, Brier, DCA)."
+  ]
+}

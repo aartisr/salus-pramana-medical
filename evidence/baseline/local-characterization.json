@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-30T07:07:00.263Z",
+  "runtime": {
+    "node": "v22.19.0",
+    "npm": "9.9.4",
+    "platform": "darwin/arm64"
+  },
+  "activeCanonicalTest": {
+    "command": "npm test",
+    "result": "PASS",
+    "filesPassed": 1,
+    "testsPassed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "environment": {
+    "docker": "unavailable (docker info failed)",
+    "playwrightBrowsers": "not installed or proven in the active package"
+  },
+  "authoritativeRouteContract": {
+    "source": "src/app/route-paths.ts",
+    "routeCount": 9,
+    "canonicalRoot": "/"
+  }
+}

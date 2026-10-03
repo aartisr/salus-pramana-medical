@@ -1,0 +1,7 @@
+unit: active-intelligence
+side_effects:
+  - { source_loc: "src/routes/intelligence-route.tsx:7", effect: "stores selected intervention pair for the ODE lab", must_preserve: true }
+branches:
+  - { source_loc: "src/services/pramanaCalculus.ts:105", condition: "evidence coverage or governance thresholds are insufficient", behavior: "returns the deterministic insufficient-evidence decision rather than an unsupported recommendation", must_preserve: true }
+error_paths: []
+concurrency: { model: sync, tx_boundary: { source_loc: "src/services/pramanaCalculus.ts:105", scope: "pure deterministic calculation", isolation: "none", must_preserve: false } }

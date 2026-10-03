@@ -1,0 +1,61 @@
+flows:
+  - name: persona-selection
+    medium: framework-context
+    key: selectedPersona
+    writer: { unit: active-home, source_loc: "src/components/Header.tsx:119" }
+    reader: { unit: active-intelligence, source_loc: "src/routes/intelligence-route.tsx:7" }
+    pairing: matched
+    must_preserve: true
+    must_confirm: null
+    verification_hint: "Change persona on home, deep-link to intelligence, and assert persona-specific content remains selected."
+    notes: "The root provider persists state across active lazy-route navigation."
+  - name: ode-intervention-handoff
+    medium: framework-context
+    key: odeInterventionA|odeInterventionB
+    writer: { unit: active-intelligence, source_loc: "src/routes/intelligence-route.tsx:7" }
+    reader: { unit: active-ode-lab, source_loc: "src/routes/ode-lab-route.tsx:5" }
+    pairing: matched
+    must_preserve: true
+    must_confirm: null
+    verification_hint: "Choose an intervention pair in intelligence, navigate to ODE lab, and assert both initial selections."
+    notes: "Do not replace with query state unless observable navigation behavior remains identical."
+  - name: cognito-pkce-session
+    medium: session
+    key: salus.auth.accessToken|salus.auth.accessTokenExpiry
+    writer: { unit: legacy-auth-callback, source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:205" }
+    reader: { unit: legacy-editor, source_loc: "archive/legacy-monorepo/apps/web/src/lib/editor-client.ts:17" }
+    pairing: matched
+    must_preserve: true
+    must_confirm: null
+    verification_hint: "Complete PKCE callback, reload editor, and assert bearer header and expiry clearing behavior."
+    notes: "Session-scoped token is never persisted in localStorage."
+  - name: editor-bearer-claims
+    medium: http-header
+    key: Authorization
+    writer: { unit: legacy-editor, source_loc: "archive/legacy-monorepo/apps/web/src/lib/editor-client.ts:17" }
+    reader: { unit: legacy-evidence-api, source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:41" }
+    pairing: matched
+    must_preserve: true
+    must_confirm: null
+    verification_hint: "Exercise missing, invalid, viewer-group, and evidence-editors tokens against every protected endpoint."
+    notes: "Server validates issuer/audience and reads cognito:groups; UI state never grants authority."
+  - name: ingested-evidence-visibility
+    medium: database
+    key: evidenceId
+    writer: { unit: ingest-pubmed, source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:40" }
+    reader: { unit: legacy-evidence-api, source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:289" }
+    pairing: matched
+    must_preserve: true
+    must_confirm: null
+    verification_hint: "Ingest a new PMID, query evidence, and assert draft filtering and exact normalized fields."
+    notes: "Connector writes draft records; public reads exclude drafts until editorial publication."
+  - name: external-cognito-jwt
+    medium: jwt-claim
+    key: email|cognito:groups
+    writer: { unit: external, source_loc: "Cognito token service" }
+    reader: { unit: legacy-evidence-api, source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:26" }
+    pairing: external-writer
+    must_preserve: true
+    must_confirm: runtime
+    verification_hint: "Validate real Cognito-compatible issuer/audience/JWKS tokens and group arrays in an isolated environment."
+    notes: "Static source cannot prove external token configuration or claim encoding."

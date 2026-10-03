@@ -1,0 +1,5 @@
+unit: legacy-dashboard
+bindings:
+  - { type: route-declaration, name: "GET /", source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:31", target: DashboardPageLazy, must_appear_in_target: true, notes: "Lazy route under AppShell and QueryClientProvider." }
+runtime_config:
+  - { key: VITE_API_BASE_URL, source_loc: "archive/legacy-monorepo/apps/web/src/lib/evidence-client.ts:5", source: env, default_value: "http://localhost:8787", must_appear_in_target: true, notes: "Base URL for archived API contracts." }

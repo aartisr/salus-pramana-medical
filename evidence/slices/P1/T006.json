@@ -1,0 +1,11 @@
+{
+  "taskId": "T006",
+  "status": "PASS",
+  "capturedAt": "2026-09-30T07:07:00.263Z",
+  "evidence": [
+    "evidence/source-integrity/before.json"
+  ],
+  "activeFiles": 68,
+  "archiveFiles": 107,
+  "archiveAggregateSha256": "39d6e35e1b21915c1f6ca6bed228a3c778371cbb62faad526002058541d20859"
+}

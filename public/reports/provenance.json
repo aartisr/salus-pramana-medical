@@ -1,0 +1,27 @@
+{
+  "source": "active public/reports corpus",
+  "policy": "self-contained active report corpus; published assets are declared here",
+  "assetCount": 20,
+  "index": [
+    "ARCHITECTURE.md",
+    "AWS_FREE_TIER_DEPLOYMENT_GUIDE.md",
+    "CALCULUS_MATH_SPEC.executive.pdf",
+    "CALCULUS_MATH_SPEC.html",
+    "CALCULUS_MATH_SPEC.mathml.html",
+    "CALCULUS_MATH_SPEC.md",
+    "CALCULUS_MATH_SPEC.pdf",
+    "DEPLOY_AWS.md",
+    "evidence_based_website_blueprint.pdf",
+    "IMPLEMENTATION_PLAN.md",
+    "INNOVATIONS.md",
+    "pdf-print-academic.css",
+    "pdf-print-executive.css",
+    "pdf-print.css",
+    "PHASE_COMPLETION_MATRIX.md",
+    "reports/synthetic-calibration-report.json",
+    "reports/synthetic-calibration-report.md",
+    "RESPONSIVE_ACCEPTANCE_CHECKLIST.md",
+    "UX_WORLD_CLASS_FLOW_BLUEPRINT.md",
+    "ZERO_COST_GUARDRAILS.md"
+  ]
+}

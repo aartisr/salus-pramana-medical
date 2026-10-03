@@ -1,0 +1,7 @@
+unit: active-home
+side_effects:
+  - { source_loc: "src/routes/home-route.tsx:8", effect: "opens the shared evidence export modal", must_preserve: true }
+branches:
+  - { source_loc: "src/components/ResearchHomepage.tsx:1", condition: "user selects a research capability", behavior: "navigates to the corresponding active route without losing persona state", must_preserve: true }
+error_paths: []
+concurrency: { model: sync, tx_boundary: { source_loc: "src/routes/home-route.tsx:6", scope: "client render only", isolation: "none", must_preserve: false } }

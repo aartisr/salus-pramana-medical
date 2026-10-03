@@ -1,0 +1,4 @@
+unit: active-ode-lab
+bindings:
+  - { type: route-declaration, name: "GET /ode-interaction-lab", source_loc: "src/app/router.tsx:19", target: OdeLabRoute, must_appear_in_target: true, notes: "Lazy route initialized from shared intervention state." }
+runtime_config: []

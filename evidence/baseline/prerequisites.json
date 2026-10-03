@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-30T07:07:00.263Z",
+  "policy": "Missing external evidence blocks only the listed capability and is never replaced with synthesized evidence.",
+  "prerequisites": [
+    {
+      "capability": "production screenshots and UI states",
+      "status": "BLOCKED",
+      "owner": "product/production-reference owner",
+      "blockerEvidence": "No authoritative screenshot set or approved persona/state matrix was supplied; HTTP HTML alone is not visual parity evidence.",
+      "blocks": [
+        "VG-09",
+        "VG-10",
+        "VG-12",
+        "T063",
+        "T064",
+        "T066"
+      ]
+    },
+    {
+      "capability": "production latency and availability telemetry",
+      "status": "BLOCKED",
+      "owner": "production observability owner",
+      "blockerEvidence": "No read-only telemetry export or probe authorization/profile was supplied.",
+      "blocks": [
+        "VG-13",
+        "T067"
+      ]
+    },
+    {
+      "capability": "latest-two-major browser and assistive-technology matrix",
+      "status": "BLOCKED",
+      "owner": "browser test environment owner",
+      "blockerEvidence": "@playwright/test is declared, but no installed browser binary or latest-two-major Safari/VoiceOver and Chromium screen-reader matrix was proven.",
+      "blocks": [
+        "VG-09",
+        "VG-10",
+        "VG-11",
+        "VG-12",
+        "T063",
+        "T064",
+        "T065",
+        "T066"
+      ]
+    },
+    {
+      "capability": "isolated Cognito-compatible identities",
+      "status": "BLOCKED",
+      "owner": "identity environment owner",
+      "blockerEvidence": "No isolated issuer, audience, JWKS, contributor/viewer identities, or evidence-editors identity was supplied.",
+      "blocks": [
+        "VG-07",
+        "T061"
+      ]
+    },
+    {
+      "capability": "disposable DynamoDB-compatible store",
+      "status": "BLOCKED",
+      "owner": "data test environment owner",
+      "blockerEvidence": "docker info failed and no isolated remote DynamoDB-compatible endpoint or disposable table credentials were supplied.",
+      "blocks": [
+        "VG-06",
+        "VG-08",
+        "T061",
+        "T062"
+      ]
+    },
+    {
+      "capability": "live registry connector references",
+      "status": "BLOCKED",
+      "owner": "registry integration owner",
+      "blockerEvidence": "No approved recorded fixtures or read-only smoke authorization/profile was supplied for PubMed, ClinicalTrials.gov, AYUSH/DHARA, and CTRI/ICTRP.",
+      "blocks": [
+        "VG-08",
+        "VG-13",
+        "T062",
+        "T067"
+      ]
+    }
+  ]
+}

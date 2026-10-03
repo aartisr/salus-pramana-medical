@@ -1,0 +1,6 @@
+unit: ingest-pubmed
+bindings:
+  - { type: convention, name: handler, source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:47", target: pubmedIngestionHandler, must_appear_in_target: true, notes: "Externally invokable job entrypoint." }
+runtime_config:
+  - { key: DYNAMODB_TABLE, source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:7", source: env, default_value: "skip all records", must_appear_in_target: true, notes: "No implicit production fallback." }
+  - { key: AWS_REGION, source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:8", source: env, default_value: "us-east-1", must_appear_in_target: true, notes: "DynamoDB client region." }

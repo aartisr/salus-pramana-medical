@@ -1,0 +1,4 @@
+unit: active-intelligence
+commit: false
+candidate_splits:
+  - { id: "src/components/ClinicalIntelligenceStudio.tsx:1", drivers: [concern_split, reuse_split], rationale: "Evidence computation, citation graph rendering, and ODE handoff have distinct consumers and verification contracts.", source_slice: { file: src/components/ClinicalIntelligenceStudio.tsx, lines: [1, 1200] } }

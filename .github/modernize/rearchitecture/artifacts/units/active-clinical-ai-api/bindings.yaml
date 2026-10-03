@@ -1,0 +1,6 @@
+unit: active-clinical-ai-api
+bindings:
+  - { type: route-declaration, name: "POST /api/clinical-ai", source_loc: "server.ts:22", target: clinicalAiHandler, must_appear_in_target: true, notes: "Express JSON endpoint." }
+runtime_config:
+  - { key: GEMINI_API_KEY, source_loc: "server.ts:13", source: env, default_value: "none; deterministic fallback", must_appear_in_target: true, notes: "Optional external model credential." }
+  - { key: PORT, source_loc: "server.ts:8", source: env, default_value: "3000", must_appear_in_target: true, notes: "HTTP listen port." }

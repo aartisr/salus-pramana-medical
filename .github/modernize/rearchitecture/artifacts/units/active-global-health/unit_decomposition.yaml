@@ -1,0 +1,4 @@
+unit: active-global-health
+commit: false
+candidate_splits:
+  - { id: "src/components/GlobalHealthEquityDashboard.tsx:1", drivers: [concern_split], rationale: "Map interaction and policy/equity metric presentation are separable concerns with distinct accessibility verification.", source_slice: { file: src/components/GlobalHealthEquityDashboard.tsx, lines: [1, 1000] } }

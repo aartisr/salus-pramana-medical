@@ -1,0 +1,16 @@
+unit: legacy-evidence-api
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:138", effect: "creates or replaces condition and appends condition.create audit record", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:216", effect: "conditionally creates draft evidence and appends evidence.create audit record", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:248", effect: "conditionally updates publicationStatus and appends editorial audit record", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:159", condition: "includeDrafts=true", behavior: "requires authenticated evidence-editors claim before exposing drafts", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:18", condition: "limit/cursor malformed or out of range", behavior: "normalizes to limit 1..100 and nonnegative cursor", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:294", condition: "publicationStatus is absent", behavior: "treats legacy record as published for public reads without mutating the stored item", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:141", trigger: "condition payload fails Zod schema", outcome: "flattened validation response", contract: "HTTP 400 {error: flattenedZodError}", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:229", trigger: "conditionId does not exist", outcome: "submission rejected", contract: "HTTP 400 {error}", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:241", trigger: "evidenceId already exists", outcome: "immutable submission rejected", contract: "HTTP 409 {error}", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:262", trigger: "publication status invalid or evidence missing", outcome: "validation/not-found response", contract: "HTTP 400 or 404 {error}", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:48", trigger: "protected route has missing/malformed bearer, invalid token, wrong issuer/audience, missing auth configuration, or authenticated non-editor", outcome: "request is denied before mutation or draft disclosure", contract: "HTTP 401 Missing bearer token or Invalid or expired token; 403 Editor role required; 503 auth configuration error", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:356", scope: "conditional single-item evidence create/update followed by audit write", isolation: "DynamoDB conditional expression; audit is not atomic with primary write", must_preserve: true } }

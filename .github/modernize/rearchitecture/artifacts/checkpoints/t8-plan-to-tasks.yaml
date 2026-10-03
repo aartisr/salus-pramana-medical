@@ -1,0 +1,79 @@
+metadata:
+  generated: "2026-09-30"
+  source_plan: ".github/modernize/rearchitecture/artifacts/t8-teamlead-plan.md"
+  target_tasks: ".github/modernize/rearchitecture/artifacts/t8-teamlead-plan.md"
+summary:
+  total_plan_items: 10
+  covered_plan_items: 10
+  missing_plan_items: 0
+  coverage_percentage: 100.0
+  total_tasks_generated: 70
+  orphan_tasks: 0
+phases:
+  - item_id: P1
+    name: Active-Root Scaffold And Baseline Guard
+    requirements: [REQ-076, REQ-077]
+    tasks: [T001, T002, T003, T004, T005, T006, T007, T008, T009]
+    depends_on: []
+  - item_id: P2
+    name: Shared Contracts Clinical Core Identity And Persistence Foundations
+    requirements: [REQ-009, REQ-013, REQ-017, REQ-018, REQ-019, REQ-021, REQ-023, REQ-024, REQ-025, REQ-028, REQ-038, REQ-048, REQ-052, REQ-053, REQ-055, REQ-056, REQ-057, REQ-058, REQ-059, REQ-060, REQ-061, REQ-062, REQ-063, REQ-064, REQ-065, REQ-066, REQ-067, REQ-068, REQ-069, REQ-076, REQ-077]
+    tasks: [T010, T011, T012, T013, T014, T015, T016, T017]
+    depends_on: [P1]
+  - item_id: P3
+    name: Application Shell Home Discovery And Personal State
+    requirements: [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010, REQ-011, REQ-016, REQ-040, REQ-049, REQ-073, REQ-074, REQ-075, REQ-076, REQ-077]
+    tasks: [T018, T019, T020, T021, T022, T023, T024]
+    depends_on: [P2]
+  - item_id: P4
+    name: Clinical Intelligence ODE Workbench And AI Reasoning
+    requirements: [REQ-012, REQ-013, REQ-014, REQ-015, REQ-016, REQ-017, REQ-018, REQ-019, REQ-020, REQ-021, REQ-022, REQ-023, REQ-024, REQ-025, REQ-026, REQ-027, REQ-028, REQ-058, REQ-059, REQ-060, REQ-061, REQ-062, REQ-063, REQ-074, REQ-075, REQ-077]
+    tasks: [T025, T026, T027, T028, T029, T030]
+    depends_on: [P2]
+  - item_id: P5
+    name: Equity Scientific Audit Architecture Calibration And Math
+    requirements: [REQ-029, REQ-030, REQ-031, REQ-032, REQ-033, REQ-034, REQ-035, REQ-036, REQ-037, REQ-038, REQ-039, REQ-073, REQ-074, REQ-075, REQ-077, REQ-078]
+    tasks: [T031, T032, T033, T034, T035, T036, T037, T038]
+    depends_on: [P2]
+  - item_id: P6
+    name: Comparison Submission Editor And Auth Callback
+    requirements: [REQ-040, REQ-041, REQ-042, REQ-043, REQ-044, REQ-045, REQ-046, REQ-047, REQ-048, REQ-049, REQ-069, REQ-074, REQ-075, REQ-077]
+    tasks: [T039, T040, T041, T042, T043, T044, T045]
+    depends_on: [P2]
+  - item_id: P7
+    name: Express Evidence Condition Health And Auth Contracts
+    requirements: [REQ-027, REQ-044, REQ-045, REQ-046, REQ-047, REQ-050, REQ-051, REQ-052, REQ-053, REQ-054, REQ-055, REQ-056, REQ-057, REQ-064, REQ-067, REQ-069, REQ-076]
+    tasks: [T046, T047, T048, T049, T050]
+    depends_on: [P2]
+  - item_id: P8
+    name: Registry Ingestion
+    requirements: [REQ-064, REQ-070, REQ-071, REQ-072, REQ-077]
+    tasks: [T051, T052, T053, T054]
+    depends_on: [P2]
+  - item_id: P9
+    name: Static Discovery And Report Corpus
+    requirements: [REQ-073, REQ-077, REQ-078]
+    tasks: [T055, T056, T057]
+    depends_on: [P2]
+  - item_id: P10
+    name: Mandatory Validation Tail And Parity Evidence
+    requirements: [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010, REQ-011, REQ-012, REQ-013, REQ-014, REQ-015, REQ-016, REQ-017, REQ-018, REQ-019, REQ-020, REQ-021, REQ-022, REQ-023, REQ-024, REQ-025, REQ-026, REQ-027, REQ-028, REQ-029, REQ-030, REQ-031, REQ-032, REQ-033, REQ-034, REQ-035, REQ-036, REQ-037, REQ-038, REQ-039, REQ-040, REQ-041, REQ-042, REQ-043, REQ-044, REQ-045, REQ-046, REQ-047, REQ-048, REQ-049, REQ-050, REQ-051, REQ-052, REQ-053, REQ-054, REQ-055, REQ-056, REQ-057, REQ-058, REQ-059, REQ-060, REQ-061, REQ-062, REQ-063, REQ-064, REQ-065, REQ-066, REQ-067, REQ-068, REQ-069, REQ-070, REQ-071, REQ-072, REQ-073, REQ-074, REQ-075, REQ-076, REQ-077, REQ-078]
+    tasks: [T058, T059, T060, T061, T062, T063, T064, T065, T066, T067, T068, T069, T070]
+    depends_on: [P3, P4, P5, P6, P7, P8, P9]
+missing_plan_items: []
+orphan_tasks: []
+upstream_trace:
+  - { plan_item: P1, source_requirements: [REQ-076, REQ-077], tasks: [T001, T002, T003, T004, T005, T006, T007, T008, T009] }
+  - { plan_item: P2, source_requirements: [REQ-009, REQ-013, REQ-017, REQ-018, REQ-019, REQ-021, REQ-023, REQ-024, REQ-025, REQ-028, REQ-038, REQ-048, REQ-052, REQ-053, REQ-055, REQ-056, REQ-057, REQ-058, REQ-059, REQ-060, REQ-061, REQ-062, REQ-063, REQ-064, REQ-065, REQ-066, REQ-067, REQ-068, REQ-069, REQ-076, REQ-077], tasks: [T010, T011, T012, T013, T014, T015, T016, T017] }
+  - { plan_item: P3, source_requirements: [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010, REQ-011, REQ-016, REQ-040, REQ-049, REQ-073, REQ-074, REQ-075, REQ-076, REQ-077], tasks: [T018, T019, T020, T021, T022, T023, T024] }
+  - { plan_item: P4, source_requirements: [REQ-012, REQ-013, REQ-014, REQ-015, REQ-016, REQ-017, REQ-018, REQ-019, REQ-020, REQ-021, REQ-022, REQ-023, REQ-024, REQ-025, REQ-026, REQ-027, REQ-028, REQ-058, REQ-059, REQ-060, REQ-061, REQ-062, REQ-063, REQ-074, REQ-075, REQ-077], tasks: [T025, T026, T027, T028, T029, T030] }
+  - { plan_item: P5, source_requirements: [REQ-029, REQ-030, REQ-031, REQ-032, REQ-033, REQ-034, REQ-035, REQ-036, REQ-037, REQ-038, REQ-039, REQ-073, REQ-074, REQ-075, REQ-077, REQ-078], tasks: [T031, T032, T033, T034, T035, T036, T037, T038] }
+  - { plan_item: P6, source_requirements: [REQ-040, REQ-041, REQ-042, REQ-043, REQ-044, REQ-045, REQ-046, REQ-047, REQ-048, REQ-049, REQ-069, REQ-074, REQ-075, REQ-077], tasks: [T039, T040, T041, T042, T043, T044, T045] }
+  - { plan_item: P7, source_requirements: [REQ-027, REQ-044, REQ-045, REQ-046, REQ-047, REQ-050, REQ-051, REQ-052, REQ-053, REQ-054, REQ-055, REQ-056, REQ-057, REQ-064, REQ-067, REQ-069, REQ-076], tasks: [T046, T047, T048, T049, T050] }
+  - { plan_item: P8, source_requirements: [REQ-064, REQ-070, REQ-071, REQ-072, REQ-077], tasks: [T051, T052, T053, T054] }
+  - { plan_item: P9, source_requirements: [REQ-073, REQ-077, REQ-078], tasks: [T055, T056, T057] }
+  - { plan_item: P10, source_requirements: [REQ-001, REQ-002, REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-010, REQ-011, REQ-012, REQ-013, REQ-014, REQ-015, REQ-016, REQ-017, REQ-018, REQ-019, REQ-020, REQ-021, REQ-022, REQ-023, REQ-024, REQ-025, REQ-026, REQ-027, REQ-028, REQ-029, REQ-030, REQ-031, REQ-032, REQ-033, REQ-034, REQ-035, REQ-036, REQ-037, REQ-038, REQ-039, REQ-040, REQ-041, REQ-042, REQ-043, REQ-044, REQ-045, REQ-046, REQ-047, REQ-048, REQ-049, REQ-050, REQ-051, REQ-052, REQ-053, REQ-054, REQ-055, REQ-056, REQ-057, REQ-058, REQ-059, REQ-060, REQ-061, REQ-062, REQ-063, REQ-064, REQ-065, REQ-066, REQ-067, REQ-068, REQ-069, REQ-070, REQ-071, REQ-072, REQ-073, REQ-074, REQ-075, REQ-076, REQ-077, REQ-078], tasks: [T058, T059, T060, T061, T062, T063, T064, T065, T066, T067, T068, T069, T070] }
+validation:
+  passed: true
+  errors: []
+  warnings: []

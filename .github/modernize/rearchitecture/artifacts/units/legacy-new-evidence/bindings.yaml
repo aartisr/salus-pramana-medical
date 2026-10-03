@@ -1,0 +1,5 @@
+unit: legacy-new-evidence
+bindings:
+  - { type: route-declaration, name: "GET /new", source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:37", target: NewEvidencePageLazy, must_appear_in_target: true, notes: "Lazy protected workflow with client-side auth state." }
+runtime_config:
+  - { key: VITE_API_BASE_URL, source_loc: "archive/legacy-monorepo/apps/web/src/lib/evidence-client.ts:5", source: env, default_value: "http://localhost:8787", must_appear_in_target: true, notes: "Submission API origin." }

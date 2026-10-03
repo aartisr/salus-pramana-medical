@@ -1,0 +1,803 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-01T18:28:25.526Z",
+  "algorithm": "sha256",
+  "scope": {
+    "activeRoot": "capability-bearing root files plus public/** and src/**",
+    "excluded": [
+      ".git/**",
+      ".github/modernize/rearchitecture/**",
+      "dist/**",
+      "evidence/**",
+      "node_modules/**",
+      "tests/**"
+    ]
+  },
+  "activeRoot": {
+    "totalFiles": 156,
+    "totalBytes": 2270476,
+    "aggregateSha256": "44703640f8af6593e61df10c9a61773855d56328d34a795e377d2e476be7cb44",
+    "entries": [
+      {
+        "path": ".node-version",
+        "sha256": "8a8e2dad6439cf133bf9b7dd36c15405298e70a65a82c94e40d57209d3b08af2",
+        "size": 7
+      },
+      {
+        "path": "README.md",
+        "sha256": "5766548b2c357750f72d9fa54878798e53f852b4cc4b875dad5fef6856f0ef9b",
+        "size": 17645
+      },
+      {
+        "path": "index.html",
+        "sha256": "bcc7040aa79f19b8a127c100d9d070958296209c339936cb18674eb4caa24fa9",
+        "size": 10433
+      },
+      {
+        "path": "metadata.json",
+        "sha256": "17bc29a8c21c21c9bbda2a153e4083cbee1e9240e0ac8456fed339da35384aae",
+        "size": 402
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "ba8546811adfca21955762267e7efa134520eba8f27877c6c8b1c25ca00d5a92",
+        "size": 210580
+      },
+      {
+        "path": "package.json",
+        "sha256": "ea33068e213b9b043a855af692497d6975e9963f8f1a6dd148d56bb2896df518",
+        "size": 1999
+      },
+      {
+        "path": "public/llms-full.txt",
+        "sha256": "580bdfa21b71630747b78328781b0df60ac05bff158dcf6e5c494b098d7e3717",
+        "size": 4774
+      },
+      {
+        "path": "public/llms.txt",
+        "sha256": "0679dc5ba86e6401e506a01bc3401f8a6e0f530d963cada684b1e258595bd5fc",
+        "size": 3206
+      },
+      {
+        "path": "public/reports/ARCHITECTURE.md",
+        "sha256": "0cd806270f4160287e4b80556bbe1197a5a007b8d7e58d039353b5f69e3eba1d",
+        "size": 4958
+      },
+      {
+        "path": "public/reports/AWS_FREE_TIER_DEPLOYMENT_GUIDE.md",
+        "sha256": "0c066ad7aca2bd622020857e071ed12256b5635af4b5b2de7b030ee127012420",
+        "size": 10113
+      },
+      {
+        "path": "public/reports/CALCULUS_MATH_SPEC.executive.pdf",
+        "sha256": "3c930a5178cc2370b0f28893d29cb8f7c6ab59ceb499968f2b8762e9e7c43835",
+        "size": 560229
+      },
+      {
+        "path": "public/reports/CALCULUS_MATH_SPEC.html",
+        "sha256": "03d04f981044ed776a3cf8660170717f9b46298a51f4c2da675eec516d4f06d3",
+        "size": 19869
+      },
+      {
+        "path": "public/reports/CALCULUS_MATH_SPEC.mathml.html",
+        "sha256": "65e6099f1e14c4952ecad3d3de907d4d6f6e6136f0f87ae3e01d4433c27308fa",
+        "size": 34455
+      },
+      {
+        "path": "public/reports/CALCULUS_MATH_SPEC.md",
+        "sha256": "a62829b8592e59e4e9772757fbdabe75d73ddd045139e9dd8b9986bfe52b5f36",
+        "size": 9938
+      },
+      {
+        "path": "public/reports/CALCULUS_MATH_SPEC.pdf",
+        "sha256": "e57e3fc605e6a2f2ce07ee69cc3bfe0ba2c23ef97b8cb8692f4b27eed6598ce7",
+        "size": 560228
+      },
+      {
+        "path": "public/reports/DEPLOY_AWS.md",
+        "sha256": "5b634b3d29969bba0e863950d27309d831f7adf1b7caa7581e788c7d9b41fe1b",
+        "size": 3286
+      },
+      {
+        "path": "public/reports/IMPLEMENTATION_PLAN.md",
+        "sha256": "09c9d8cb28dd1772ee5d2625b2bae920f010afdfa909005bda48f385dd5c6cb5",
+        "size": 56629
+      },
+      {
+        "path": "public/reports/INNOVATIONS.md",
+        "sha256": "f9be16efa58c068c26e3069ade07cbb3c2f0058610c378f8bd14ffab0ca19c75",
+        "size": 3880
+      },
+      {
+        "path": "public/reports/PHASE_COMPLETION_MATRIX.md",
+        "sha256": "4b333589d1652116c380448bd82fb4ba0cf0eb1ab43299b704193c83625d497e",
+        "size": 21207
+      },
+      {
+        "path": "public/reports/RESPONSIVE_ACCEPTANCE_CHECKLIST.md",
+        "sha256": "dab271d2176c530460bb8f99741aee57542d9bbebf547db95e86ee6102da1067",
+        "size": 3169
+      },
+      {
+        "path": "public/reports/UX_WORLD_CLASS_FLOW_BLUEPRINT.md",
+        "sha256": "dd54f3fba60c0af5847f017ef118a7cd8094ff014e4e51f184dd9aef829ea503",
+        "size": 9241
+      },
+      {
+        "path": "public/reports/ZERO_COST_GUARDRAILS.md",
+        "sha256": "71832425701c9e18b1fae91688da3d9f0d756280729f11fd42ceb544ff56e383",
+        "size": 725
+      },
+      {
+        "path": "public/reports/evidence_based_website_blueprint.pdf",
+        "sha256": "f7347976f8e036e858c938008c46443d98ad4915d73aa90de6a91b56a5eaef8d",
+        "size": 29625
+      },
+      {
+        "path": "public/reports/pdf-print-academic.css",
+        "sha256": "c1466f393e1cc31fd9b0c82aee04eb849559ada7ba74e6d8d2ef3435d9b9eb64",
+        "size": 1665
+      },
+      {
+        "path": "public/reports/pdf-print-executive.css",
+        "sha256": "b9ef7282a031d8f323881ddc567ed1cfe60b937e9e3687cace451f5c8da9a9ca",
+        "size": 2029
+      },
+      {
+        "path": "public/reports/pdf-print.css",
+        "sha256": "f34598d22d260fc2e9bc7ead1314100ab27ee0973482e9b4c84d26286560c669",
+        "size": 2456
+      },
+      {
+        "path": "public/reports/provenance.json",
+        "sha256": "b8785a24cf532ac449838bcc40c8a0653edd12677b9e2089241e67be02d2a00e",
+        "size": 845
+      },
+      {
+        "path": "public/reports/reports/synthetic-calibration-report.json",
+        "sha256": "7ffbd189bfe67cfbb679a980205c70f9e11e6fb67e6d6d59d9aa3a5e9689cbae",
+        "size": 2627
+      },
+      {
+        "path": "public/reports/reports/synthetic-calibration-report.md",
+        "sha256": "43d273c1583e98201db8305aace68a154fda9427fff8ad0e597512d70b5b39a9",
+        "size": 895
+      },
+      {
+        "path": "public/robots.txt",
+        "sha256": "98d524827a0ddb88eb6049010fe148c6bc767a375cc69e61f052c3848e49a073",
+        "size": 747
+      },
+      {
+        "path": "public/sitemap.xml",
+        "sha256": "6cc1c40717e6a3fba45d0ec1506eb52fcf5cb487bb0839709bc757d6bf77fe22",
+        "size": 4233
+      },
+      {
+        "path": "server.ts",
+        "sha256": "83a32126f06331c140efafc4f5e6c848366ada302270bd06938384136a377224",
+        "size": 71
+      },
+      {
+        "path": "src/App.tsx",
+        "sha256": "8f0109344b1f7260f5e1f09e59752515b237cf163df5412bbef9b9f8dd4c7ae1",
+        "size": 540
+      },
+      {
+        "path": "src/app/app-context.tsx",
+        "sha256": "8905e0c223308a6cd4c8704b492ecbd61fdba2f68905c7200021331e833288a6",
+        "size": 1734
+      },
+      {
+        "path": "src/app/query-client.ts",
+        "sha256": "373b71c2aa93f72ad9f557b6f796b4e529136fc15de4df376b014eedd3c87467",
+        "size": 291
+      },
+      {
+        "path": "src/app/root-layout.tsx",
+        "sha256": "abf031355e8547636cb5821d340ca5d13b9a21023d495546e2eba34cc4d03d7f",
+        "size": 3958
+      },
+      {
+        "path": "src/app/route-boundaries.tsx",
+        "sha256": "af80f824405485978b8b6249a6faba1b4ab37b050e0c0543016aa8c15d418896",
+        "size": 1374
+      },
+      {
+        "path": "src/app/route-paths.test.ts",
+        "sha256": "92c9e5bb56e1bcddc881b0501abcc4465482548235107b13aa6513943eb8cfa1",
+        "size": 1097
+      },
+      {
+        "path": "src/app/route-paths.ts",
+        "sha256": "28ee22541fe14c1f07ab7a8576112129bc945a6e9923670c3169baf71a33ce43",
+        "size": 820
+      },
+      {
+        "path": "src/app/router.tsx",
+        "sha256": "fb1f5144e975bfc46d421b9eef346d84875c9fb99caf5e6e4cff5366eea70518",
+        "size": 3428
+      },
+      {
+        "path": "src/application/audit.ts",
+        "sha256": "b6e39ee0016a89cdaf1af67bae7b8025f897d7f3c3c621f94a218f148b59204a",
+        "size": 664
+      },
+      {
+        "path": "src/application/commands.ts",
+        "sha256": "25edeed5753d670bebe5e946a1638d688ad7d169aa826a9e5565ede75ead4703",
+        "size": 2871
+      },
+      {
+        "path": "src/application/errors.ts",
+        "sha256": "cd1e79f5471d77fd11a92b99cb08ab4f96c74f6b4817018960516e1e1b72309c",
+        "size": 284
+      },
+      {
+        "path": "src/application/index.ts",
+        "sha256": "56324675baca89683b043358a3d4f015dade3a7b596076d2386ad5053eb9364f",
+        "size": 105
+      },
+      {
+        "path": "src/application/queries.ts",
+        "sha256": "6db604cf58ff6539ddaf2d1086094db3aa6b9a3d054adf210ea3d3f6df36056f",
+        "size": 2093
+      },
+      {
+        "path": "src/client/app/root.tsx",
+        "sha256": "f3f82b3f81159372a04e2a4732f535e787ce420f2deb25e6a34596f1fcd4afcf",
+        "size": 487
+      },
+      {
+        "path": "src/client/config/api.ts",
+        "sha256": "32809a81d1bc16a684231d1efa7afa6389f15ac8c5885d7f793c6ac76d7ad25f",
+        "size": 201
+      },
+      {
+        "path": "src/client/features/auth/AuthCallbackPage.tsx",
+        "sha256": "08a0df3f2db8053aacba6d9d6f6c76fb58f376b43e280f8f34b42779d316ef5e",
+        "size": 1808
+      },
+      {
+        "path": "src/client/features/comparison/ComparisonPage.tsx",
+        "sha256": "4169a48638899316fb51b7f9a9ce79c37c0a3df46e7198d961b760c7439429e9",
+        "size": 6744
+      },
+      {
+        "path": "src/client/features/comparison/model.ts",
+        "sha256": "d3544c4fe8be8d3d20cc3d3d7cdc94c1955e297627ad77216ce70121ce100d3a",
+        "size": 3523
+      },
+      {
+        "path": "src/client/features/editor/EditorPage.tsx",
+        "sha256": "f07afb237ea7e0c2265c4c05633459aa443e4617fe9f4f83d39df474b1f95101",
+        "size": 9926
+      },
+      {
+        "path": "src/client/features/editor/model.ts",
+        "sha256": "574324fc07746191966d7f5987de0487aa23a4d519c223c223ff4d9bc0801466",
+        "size": 1095
+      },
+      {
+        "path": "src/client/features/math/MathCompatibilityPage.tsx",
+        "sha256": "02f7bcc6b633c4c6cf93e9caa7847223eefda726f2d652f1b839d70ee15b1a58",
+        "size": 3681
+      },
+      {
+        "path": "src/client/features/submission/SubmissionPage.tsx",
+        "sha256": "10d8f746f653aeb4f7b133a27ca7375227a32fb4d8098edea158fabe576eb598",
+        "size": 7059
+      },
+      {
+        "path": "src/client/features/submission/model.ts",
+        "sha256": "06af31b5ec94fa21a1e4d9036a2acb2e6312781cdf3eedb0945a014c5266fd04",
+        "size": 2283
+      },
+      {
+        "path": "src/client/main.tsx",
+        "sha256": "d1881bdea96fc2f2086925c23220043fa31225d7ef85aa4ae8a6a32496ab247f",
+        "size": 358
+      },
+      {
+        "path": "src/client/routes/auth-callback.lazy.tsx",
+        "sha256": "07280ece43a3db11824bcbc36fe789fd7d8aa7211db8b667a27daf774f2bda92",
+        "size": 138
+      },
+      {
+        "path": "src/client/routes/condition-comparison.lazy.tsx",
+        "sha256": "071093a5dddcdc9c804b12185067043e72cad63b6c14e0d85452dffd325be4d9",
+        "size": 145
+      },
+      {
+        "path": "src/client/routes/editor.lazy.tsx",
+        "sha256": "3ea825068f692d34bb3b508ebd0db1e2b2c6790e71f0030b85785f4610a0127a",
+        "size": 116
+      },
+      {
+        "path": "src/client/routes/math.lazy.tsx",
+        "sha256": "62668bce3b93a3c8f439fa9cc14070851a40c31548e9361506bfc0b3c5c3c0e0",
+        "size": 145
+      },
+      {
+        "path": "src/client/routes/new-evidence.lazy.tsx",
+        "sha256": "522c9de5aa41f934ecde2dc3f255cdae3759a160bd6781ccef7658654dbd4a2c",
+        "size": 137
+      },
+      {
+        "path": "src/client/services/api-client.ts",
+        "sha256": "9ab848320907dc99501e223e7672575246e4c4969b52b111bae42983174651af",
+        "size": 4654
+      },
+      {
+        "path": "src/client/services/auth/session.ts",
+        "sha256": "30278535dbb120dba45ea880eb65e0c939b1a357dd0d7549998bc0d1d1eadc99",
+        "size": 5857
+      },
+      {
+        "path": "src/client/services/contracts.ts",
+        "sha256": "6a00a6d789bea522b8d015cfc94d7273458594ec0f60fde5685fae8d98540767",
+        "size": 1582
+      },
+      {
+        "path": "src/components/AIClinicalSynthesis.tsx",
+        "sha256": "d6c2677780a0c7723ab59f41f45c284db98aedd3961bd73d93dbc35361de1dfc",
+        "size": 11917
+      },
+      {
+        "path": "src/components/CalibrationDriftHub.tsx",
+        "sha256": "5ce3dbc664d40d06e8bda9b8c0d56713514855fbf49add3094b627c48e834fa4",
+        "size": 7199
+      },
+      {
+        "path": "src/components/CitationDiscoverabilityModal.tsx",
+        "sha256": "d77e1894bbd41ca13191e00c438f59190a16e85cab5ab391aa77395803fefe61",
+        "size": 7980
+      },
+      {
+        "path": "src/components/ClinicalIntelligenceStudio.tsx",
+        "sha256": "8010f7bdb6180a72de4e38f2aa8424588aedd050e2fa1ec0f8578db30d448637",
+        "size": 23028
+      },
+      {
+        "path": "src/components/D3WorldMap.tsx",
+        "sha256": "1dbfb1bd6753dce5fe881f889f900b861e15424efa9e7dbdb8c783015a3a14c1",
+        "size": 17393
+      },
+      {
+        "path": "src/components/DiagnosticDecisionWorkbench.tsx",
+        "sha256": "dc298db081f00204d5c265b0c519cae9bf8e74d558b27ea812b601f5bf155bae",
+        "size": 16421
+      },
+      {
+        "path": "src/components/EvidenceNotificationModal.tsx",
+        "sha256": "499ef921dd41679785615324dfdc28550010ca4dc4f155a18137f30286bcf682",
+        "size": 16882
+      },
+      {
+        "path": "src/components/ExportReportModal.tsx",
+        "sha256": "c2c13fe14cc50bfacda6e511d802549c3ab7b48d86fa84536af1dbfc972ebf33",
+        "size": 5950
+      },
+      {
+        "path": "src/components/GlobalHealthEquityDashboard.tsx",
+        "sha256": "836c6acb214122bbf7f790a40d6de920ec58ba41a4b813536f0038916427b637",
+        "size": 22721
+      },
+      {
+        "path": "src/components/Header.tsx",
+        "sha256": "ae8c2dcba038029819f707c2f30a4bf886826dd2ce60f94ac0adc951c5f27b02",
+        "size": 12103
+      },
+      {
+        "path": "src/components/InterParadigmCitationGraph.tsx",
+        "sha256": "e145cae45a6681ec55b9e347f52fb3b0d874b1d6f8205d1cf7d19ea203bbce55",
+        "size": 35803
+      },
+      {
+        "path": "src/components/MathFoundationsModal.tsx",
+        "sha256": "35a2f2573d1219f4680c0b8670ddfd899f17136a1d8e5e5c78dd1647b195f511",
+        "size": 20274
+      },
+      {
+        "path": "src/components/MathRenderer.tsx",
+        "sha256": "6f76907ee2002fe53cd5aa4f7913e112d4a71f3dc28dc5d15eed68f655f5941e",
+        "size": 1086
+      },
+      {
+        "path": "src/components/NobelEvaluationSuite.tsx",
+        "sha256": "73292580963fdc400e9b72cf784656b9cdae87f1a56343185334f2122aa088a4",
+        "size": 21717
+      },
+      {
+        "path": "src/components/NobelMathematicalDefense.tsx",
+        "sha256": "1cfa6fef6fe3e639a43ca5c2c0c12eafc283fe0393092e14c7a829dd8d6ff5c6",
+        "size": 16747
+      },
+      {
+        "path": "src/components/ODESimulationLab.tsx",
+        "sha256": "921679d79bd5196eeb8e53799d1764ac9b302d0c0e90e8366c29bfc1bceaa3f6",
+        "size": 18120
+      },
+      {
+        "path": "src/components/RepositoryCodeArchitecture.tsx",
+        "sha256": "316f2a965ad4df44e6f79bb8c268cc413dd4f6ec4fea1304ae5bf8c4abec07d9",
+        "size": 14373
+      },
+      {
+        "path": "src/components/ResearchHomepage.tsx",
+        "sha256": "259c81edc3a726a46440847af40e3683448decf4c8495b00b1bd9e627919c312",
+        "size": 69966
+      },
+      {
+        "path": "src/components/WorkflowGuide.tsx",
+        "sha256": "893bbdfdd95e10ee3b7c15eecfcdd7f4d7d2d3585f78f23cde9a2af43d180973",
+        "size": 2740
+      },
+      {
+        "path": "src/components/ui/Badge.tsx",
+        "sha256": "6919a7f3a533ea7f7256c2b704959b76a2b5be63e5335d185012111b55cdcaa7",
+        "size": 1351
+      },
+      {
+        "path": "src/components/ui/Card.tsx",
+        "sha256": "7370b33856d281eb6e66f79845b0a292271ed568853708d8b3324202c4f87c85",
+        "size": 912
+      },
+      {
+        "path": "src/components/ui/SliderField.tsx",
+        "sha256": "25dda25d5335c449c9d96584d9688b07f194beb322335c28adb1b44aa2caa2d0",
+        "size": 1417
+      },
+      {
+        "path": "src/components/ui/StatCard.tsx",
+        "sha256": "8f7029a8acc715832d2fbd9a3cadf0f63bc9d5ec0c504b284227d76eaf8ab968",
+        "size": 1435
+      },
+      {
+        "path": "src/data/globalHealthEquityData.ts",
+        "sha256": "2f2489264c094a265d68e27ca0ea8605286da0648e1265ab2c1b7974701170d4",
+        "size": 17259
+      },
+      {
+        "path": "src/data/nobelEvaluationData.ts",
+        "sha256": "34b2715b06ab6545582d3091100d2ecc0359ffd96ab43a9f81cebc15250d5d29",
+        "size": 22422
+      },
+      {
+        "path": "src/data/salusRepositoryData.ts",
+        "sha256": "474a577acc4ec593a07a1173362c3c5a44557983131773ec7a41eaf801e446ba",
+        "size": 30172
+      },
+      {
+        "path": "src/domain/clinical/calibration.ts",
+        "sha256": "d606402c4f06563f42bf101ee398626b703d72d7c5bc5ebcc4c2ae6e5f674cee",
+        "size": 2427
+      },
+      {
+        "path": "src/domain/clinical/dose.ts",
+        "sha256": "9cd9d5b56301f634d946429c2fa370044c2e8b1241e11eb7c390d6dc820ac51f",
+        "size": 1966
+      },
+      {
+        "path": "src/domain/clinical/index.ts",
+        "sha256": "a89e64ac32954599c40012a2fe564b4332fdb94211e38d928bcfa08ddad31f1e",
+        "size": 229
+      },
+      {
+        "path": "src/domain/clinical/interaction.ts",
+        "sha256": "95f7f6df756822721c274be8c91e9abf6de022e72ce4a815cbc47fb76566b2fd",
+        "size": 5282
+      },
+      {
+        "path": "src/domain/clinical/pramana.ts",
+        "sha256": "552a1486dd9340e6a550cfd92a83e19160295f7e88048e917baff41a525aebfe",
+        "size": 8454
+      },
+      {
+        "path": "src/domain/clinical/safety.ts",
+        "sha256": "e9e8bc36845ebc129d1110b1d5eb26d49af1be0e33e21a11a00fd1ef3cae7934",
+        "size": 2289
+      },
+      {
+        "path": "src/domain/clinical/trajectory.ts",
+        "sha256": "e1f2f0f1ec4197ec67d9ca4695a440edaa62d2edf0f47174e5eaba90ef307cc6",
+        "size": 3267
+      },
+      {
+        "path": "src/domain/clinical/types.ts",
+        "sha256": "d8e333c5dbd52cfd90acf0aa218941ad58a96c042da1aed781adc3f16c679c45",
+        "size": 2032
+      },
+      {
+        "path": "src/domain/clinical/validation-gates.ts",
+        "sha256": "fa433349081f55605ad5029e6230df791ccdb1c3379ae4351738f953f52b1788",
+        "size": 4572
+      },
+      {
+        "path": "src/domain/contracts/index.ts",
+        "sha256": "c8858af9cc11a5b384b55033fae2754d396b72dd40c2addb465d1c89d7355ea4",
+        "size": 10083
+      },
+      {
+        "path": "src/domain/index.ts",
+        "sha256": "e42beb9263c9630de33125d0e580ac169b3ec9d98518413e2a556cbc0a6f63e5",
+        "size": 56
+      },
+      {
+        "path": "src/index.css",
+        "sha256": "2b96d5f4fc8b6d447453430d14392a1484b7ddcadf5d24c09162d28a6057da5a",
+        "size": 4783
+      },
+      {
+        "path": "src/ingestion/connectors/ayush.ts",
+        "sha256": "741ddf03577cec3deec515212de9741bf68a188aa4a77602a6a40eea83926d73",
+        "size": 2844
+      },
+      {
+        "path": "src/ingestion/connectors/clinical-trials.ts",
+        "sha256": "d1dcb5db4333bca40af23ad7da615388ff160413f402c5021202c5f4c31faba8",
+        "size": 2785
+      },
+      {
+        "path": "src/ingestion/connectors/ctri.ts",
+        "sha256": "b14f1850fcc238ff2cfcfb16f5367714b9310666fc7e8be50423948f6ca2c59e",
+        "size": 2829
+      },
+      {
+        "path": "src/ingestion/index.ts",
+        "sha256": "7f31b8fc4ef8a0fa9802fc0262cb4d67faffee0af6ae56ac17568af3f15a1345",
+        "size": 370
+      },
+      {
+        "path": "src/ingestion/pubmed.ts",
+        "sha256": "a2da1eee888da401d341e52bc4ba3921c7ee3e0a6abca885bc9d9581cf70bce4",
+        "size": 1467
+      },
+      {
+        "path": "src/ingestion/shared/connector-output.ts",
+        "sha256": "0be236c92225608266a85d0f7e3ecc9a61ddce96131daee808149a70286854d6",
+        "size": 1684
+      },
+      {
+        "path": "src/ingestion/shared/http.ts",
+        "sha256": "0db067a5a15550c18e273294044578e43eb3da02fd9773f2a75229290b94bbac",
+        "size": 8264
+      },
+      {
+        "path": "src/ingestion/shared/import-drafts.ts",
+        "sha256": "73eaac8d8739e8a828ae1f39a134ce7a6b1f5aad1625ae89612ed845e82e208d",
+        "size": 1123
+      },
+      {
+        "path": "src/ingestion/shared/normalize.ts",
+        "sha256": "ced10c89c01e18f832b9c10df2001fb26a9b785f0dbf6ce38a229d4c4b3ab6d2",
+        "size": 732
+      },
+      {
+        "path": "src/ingestion/shared/repository.ts",
+        "sha256": "841e1fff499991ca60e7f011ce90d92179bb78c7fa68b822d0ba532214a385be",
+        "size": 721
+      },
+      {
+        "path": "src/ingestion/shared/source-parsers.ts",
+        "sha256": "1eadaf8b2a7768555325560af2d64eeb4e0dc4c8418e236005fb88bd456354f2",
+        "size": 3706
+      },
+      {
+        "path": "src/main.tsx",
+        "sha256": "111e0aebc8480fb830d49f4e026f7358d06117e5be04e979f3a46225fde7c94c",
+        "size": 24
+      },
+      {
+        "path": "src/persistence/contracts/index.ts",
+        "sha256": "c47c2f36763fb82b54345f2c39e6dbc9738859b3e55015b2855ecf4b1693606c",
+        "size": 2448
+      },
+      {
+        "path": "src/persistence/contracts/query-policy.ts",
+        "sha256": "3242f6cdb14991879319aff78a10797ec9e1be95d82a3adde590319a42bd6781",
+        "size": 2131
+      },
+      {
+        "path": "src/persistence/dynamodb/index.ts",
+        "sha256": "8c6385c99a7ccdcd5e7f4fb240aae65867f08538c9bb863202904085ddceba21",
+        "size": 9066
+      },
+      {
+        "path": "src/persistence/index.ts",
+        "sha256": "a5423e25b225c0cb721352cfe3b94d6d6d1b179173c867ead11749804baf4a45",
+        "size": 158
+      },
+      {
+        "path": "src/persistence/memory/index.ts",
+        "sha256": "b6ebaaa18e01bf593cd0b4385fb48659b9ea9dbe405148c38fca4e3176807def",
+        "size": 5557
+      },
+      {
+        "path": "src/persistence/memory/seeds.ts",
+        "sha256": "f1a3bc132ffe5c00bc62eb7c8b57161f19509eee18583b910e4127ba3760d7c0",
+        "size": 1270
+      },
+      {
+        "path": "src/persistence/select-adapter.ts",
+        "sha256": "ec67760cb8125dfab6e0094aadd738699fdf90a655559b0791985a04cc82540e",
+        "size": 1493
+      },
+      {
+        "path": "src/routes/ai-synthesis-route.tsx",
+        "sha256": "a56b90d403526c8cd398d3bf44adc65630e4b85353394a4c6c534a056e2433a3",
+        "size": 275
+      },
+      {
+        "path": "src/routes/architecture-route.tsx",
+        "sha256": "7818f0daa9c0c152bde9761df2befdefd861197b470c1947c09e0948b6d9d547",
+        "size": 168
+      },
+      {
+        "path": "src/routes/calibration-route.tsx",
+        "sha256": "3078401611a0dcb88a8fa3d195937f8a76f7eeaca3938d5dc5041f4dc4b3ed72",
+        "size": 146
+      },
+      {
+        "path": "src/routes/clinical-workbench-route.tsx",
+        "sha256": "87dac866aad023084ce921d12f785a88b1fc441e707683e8f03fc9bb89d4f84c",
+        "size": 305
+      },
+      {
+        "path": "src/routes/global-health-route.tsx",
+        "sha256": "7ec3f8a1a8ef03449cd30c0f9b8ea2ce1ab6e0883fdc73773b27af9b38593a02",
+        "size": 573
+      },
+      {
+        "path": "src/routes/home-route.tsx",
+        "sha256": "780208357cc862a80865a0ac985ac1369083f96414e60d183d813918ce9b4cc9",
+        "size": 682
+      },
+      {
+        "path": "src/routes/intelligence-route.tsx",
+        "sha256": "2b1def37eb9c03d9da0893d96f8f5914469b63e2f9bde702cf61846edb96912a",
+        "size": 620
+      },
+      {
+        "path": "src/routes/ode-lab-route.tsx",
+        "sha256": "57f00145006078ca6634aa7268998b2f27090b912aaca3ea12fdb89bca9c3bd5",
+        "size": 377
+      },
+      {
+        "path": "src/routes/scientific-audit-route.tsx",
+        "sha256": "51a0e3ffe8d20378616242bfccd3cd2eca651391e8ff3e8658ed95f7db856cae",
+        "size": 722
+      },
+      {
+        "path": "src/server/app/create-app.ts",
+        "sha256": "33c6d23b2c7798fd2797dbb223cd605c0992514bc6f476dd8c02591b6b98dfe6",
+        "size": 15053
+      },
+      {
+        "path": "src/server/app/default-dependencies.ts",
+        "sha256": "13a9dce64ef01154b56490399aab715532bde8259dab0d3d23ce6e7d5728b3ae",
+        "size": 3880
+      },
+      {
+        "path": "src/server/auth/jwt-verifier.ts",
+        "sha256": "68b2ea3582f7e7c9cb6a6875ec5e858e6ed84d3811a02b2a5717dada4e295986",
+        "size": 3209
+      },
+      {
+        "path": "src/server/auth/middleware.ts",
+        "sha256": "6f9cc74b014b7e598a38e3272aa5ed1411853c29b9fcde2f6c7a447348b27b66",
+        "size": 2550
+      },
+      {
+        "path": "src/server/config/runtime.ts",
+        "sha256": "694f27cef744ec8193137d4160ca1fe19a4cf11e83e866fd5e945d1e2d39ec73",
+        "size": 1862
+      },
+      {
+        "path": "src/server/index.ts",
+        "sha256": "e0be1653a6b03016b185c11274258a8dcf062abd5561e80ea4da4565d4742898",
+        "size": 1547
+      },
+      {
+        "path": "src/server/routes/auth.ts",
+        "sha256": "f79b778baa9b211f92465636a58f859107569d11177e1d61a97a8740a548d7b1",
+        "size": 409
+      },
+      {
+        "path": "src/server/routes/clinical-ai.ts",
+        "sha256": "1087a2b52214ab020ad0ae3808cf91a4ab7e06e8f651d46113b68b88dcc9c706",
+        "size": 3978
+      },
+      {
+        "path": "src/server/routes/conditions.ts",
+        "sha256": "0cff36246f0c392669ebcfb5f5cdcaea6ad5d9f90869f2e4687d9a30105a2ea8",
+        "size": 1530
+      },
+      {
+        "path": "src/server/routes/evidence.ts",
+        "sha256": "d148c93f7267b12adfe58e27de93b12e5485172cadcd6df0b2a75ca661b0ab3d",
+        "size": 7248
+      },
+      {
+        "path": "src/server/routes/health.ts",
+        "sha256": "4a40475e4eae0ee882f0a1a294991c94f1dfb482af872101e3e0566565c16ea0",
+        "size": 243
+      },
+      {
+        "path": "src/server/routes/intelligence.ts",
+        "sha256": "cb90f68ee71e0c653f22fd21042307c9d6b6b32490f7451d5a5f64c48a22d170",
+        "size": 6326
+      },
+      {
+        "path": "src/services/calibrationReportService.ts",
+        "sha256": "df94804eb180b4c916015ca6d1e241d9745059aecc9ef6e4635b4f5d54e54d70",
+        "size": 2812
+      },
+      {
+        "path": "src/services/doseResponseOptimizer.ts",
+        "sha256": "2c6e32b336ec893755813a3d916b6f924806620c6987fad39452585df4560522",
+        "size": 2212
+      },
+      {
+        "path": "src/services/evidenceExportService.ts",
+        "sha256": "75a81da9930b2c6e26233481213e1accd8f61a2dc8a488d4333d56a9cad38bbb",
+        "size": 6099
+      },
+      {
+        "path": "src/services/evidenceSubscriptionService.ts",
+        "sha256": "80642325284d81b8187e9e9dc99fffc8becf7f404bc5acd0bea2fcf9adc67b26",
+        "size": 1973
+      },
+      {
+        "path": "src/services/odeInteractionSolver.ts",
+        "sha256": "e77710d223d76dfaec15592bc571497f9987c12a601df8a9d34881f6b7989447",
+        "size": 6788
+      },
+      {
+        "path": "src/services/pramanaCalculus.ts",
+        "sha256": "fc8105956ffffcbcf3ea210b6146c7d185a8ed56e3c3265df8e6c13bc20e2d86",
+        "size": 11395
+      },
+      {
+        "path": "src/services/recentSearchesDb.ts",
+        "sha256": "2b34366ad466f3fd78a9472e87bdcb9c60c2464cfbdf8cacc26603c7c452aa71",
+        "size": 5314
+      },
+      {
+        "path": "src/shared/index.ts",
+        "sha256": "2e29cd9a98755c46896f7a2d56524db2d6d96b248e36db46de14c30bf47c8d05",
+        "size": 10
+      },
+      {
+        "path": "src/types/healthEquity.ts",
+        "sha256": "b100027bbe02e38d5ac9ae0ce8f0375c24ccc11f5bdb6e4923bafa80ca3f18a1",
+        "size": 2323
+      },
+      {
+        "path": "src/types/salus.ts",
+        "sha256": "e0eedb4b5958c54767ec1e48d978ac07bb99e742d1f5d80e8a48c24fe1c19cbe",
+        "size": 5066
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "2f0e7032b5ea9bc1ebcb8d4d0799dd3ff07ca391b679ae18121d3ce7ae5aa06d",
+        "size": 740
+      },
+      {
+        "path": "vercel.json",
+        "sha256": "0ceb5c3eb993cad6e9477188bcfdc19917f31c3115c216064ee3a7dba0a44029",
+        "size": 183
+      },
+      {
+        "path": "vite.config.ts",
+        "sha256": "a8a4169c266bd1b83782c0059afcd9300b0e5e1d78084694819bd53d5f782d7f",
+        "size": 798
+      },
+      {
+        "path": "vitest.config.ts",
+        "sha256": "c848d3911048aae0ce9271940abb7de22d8d4623b49f8d58569270a4cf926c83",
+        "size": 196
+      }
+    ]
+  }
+}

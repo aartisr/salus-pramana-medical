@@ -1,0 +1,8 @@
+unit: active-ai-synthesis
+side_effects:
+  - { source_loc: "src/components/AIClinicalSynthesis.tsx:1", effect: "submits clinical synthesis request to the active server", must_preserve: true }
+branches:
+  - { source_loc: "server.ts:26", condition: "Gemini client is unavailable or generation fails", behavior: "returns deterministic clinical synthesis with fallback status", must_preserve: true }
+error_paths:
+  - { source_loc: "server.ts:65", trigger: "external model generation throws", outcome: "HTTP success with fallback payload and diagnostic error text", contract: "{status:'fallback',source,content,error?}", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "server.ts:22", scope: "one model request or deterministic fallback", isolation: "none", must_preserve: false } }

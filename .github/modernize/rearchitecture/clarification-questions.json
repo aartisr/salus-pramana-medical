@@ -1,0 +1,485 @@
+{
+  "schema": "clarification-questions/v1",
+  "generated_at": "2026-09-30T01:16:28Z",
+  "user_input": "PROCEED. The user explicitly authorized the complete migration despite the 18,611 LOC scope and elevated risk. Do not stop for another proceed confirmation. Work directly in /Users/rraviku2/aarti/salus-pramana-medical and implement a deliberate end-to-end migration of ALL capabilities from archive/legacy-monorepo into the active root TanStack React/Vite/Express application. The user requires an award-quality coherent medical research workflow, not a raw copy. Preserve every current production tab, D3 chart, map, modal, dataset, and behavior.\n\nCurrent state: exact production source from GitHub commit 2436937 is active at root; light medical theme; TanStack Router/Query; 9 lazy routes in src/routes; shared state in src/app; archive/legacy-monorepo contains old monorepo. Git history is stale due local Git TLS failures, so use current working files as source of truth. Do not deploy, commit, or push.\n\nRequired parity: evidence submission; editor console/publication status; Cognito-compatible auth and editor authorization; evidence/condition CRUD, search, pagination and CSV API; persistence abstraction with local fallback and DynamoDB option; immutable audit logging; PubMed, AYUSH, CTRI and ClinicalTrials.gov ingestion; runtime registry and HTTPS source allowlist validation; validation gates; drift monitoring; single-intervention trajectories; calibration reporting; relevant AWS SAM infrastructure; math/deployment/UX docs and print assets. Explicitly reconcile recency default and ODE strength/severity differences with documented decisions and tests.\n\nWorkflow: Research Home -> Discover/Search -> Compare -> Analyze interactions/trajectory/dose -> Review provenance/validation gates -> Submit evidence -> Editorial review/publish -> Calibration/governance monitoring. Place routes/navigation appropriately; use TanStack Query for server state and lazy route splitting; preserve light research theme; no placeholders/dead controls; maintain medical disclaimer/provenance/uncertainty/no-PHI policy.\n\nExecute with TDD and phased validation. Produce migration plan and requirement traceability artifacts. Run full tests, lint, build, audit, browser route checks desktop/mobile, API smoke tests. Return concise changed-file/features/tests/prerequisites report.\n\nClassification:\n- type: brownfield\n- change_type: rewrite\n- source: archived React monorepo and AWS-oriented Node services\n- target: active root TanStack React/Vite/Express application, current workspace versions\n- grouping_needed: false\n- scope: all legacy capabilities plus preservation of all current root capabilities\n\nProject facts:\n- scope path: /Users/rraviku2/aarti/salus-pramana-medical\n- recorded authorized scope: 18,611 LOC\n- skill recon: 16,883 nonblank JavaScript/TypeScript lines\n- primary language: JavaScript/TypeScript\n- top-level directories: 5\n- git repository: true, but remote history is stale due TLS failures\n- frontend present: React/Vite/TanStack Router/Query, 9 lazy routes, light medical theme\n- backend present: Express server plus archived API/ingestion services\n- archive includes domain package, evidence/condition/editorial/auth/audit/persistence APIs, ingestion, SAM infrastructure, and docs\n\nFeasibility verdict: Risky / uncertain because this is a full monorepo consolidation with cross-cutting auth, persistence, ingestion, governance, infrastructure, documentation, UI preservation, and broad validation. The user explicitly authorized proceeding despite this elevated risk. Record feasibility_override=true and do not ask another proceed confirmation.",
+  "title": "Legacy Medical Research Monorepo Consolidation",
+  "assessment_snapshot": {
+    "intro": "The scan identifies a full-stack brownfield consolidation into the active root application with:",
+    "bullets": [
+      "An active React 19, Vite 8, TanStack Router/Query frontend with nine lazy routes and a light medical research theme",
+      "An Express 4 backend plus archived evidence, editorial, authentication, audit, persistence, ingestion, AWS SAM, and documentation capabilities",
+      "A user-authorized 18,611 LOC scope with elevated cross-cutting migration risk and an explicit feasibility override",
+      "Strict parity requirements for all current root behaviors and all archived capabilities, with no deployment, commit, or push"
+    ]
+  },
+  "proposed_outcome": "Consolidate every archived capability into the active in-place React/Vite/Express application as one coherent medical research workflow while preserving all current UI and behavior, enforcing provenance and no-PHI safeguards, and proving parity through traceable tests and phased validation.",
+  "scope": [
+    "frontend",
+    "backend",
+    "generic"
+  ],
+  "status": "awaiting_answers",
+  "questions": [
+    {
+      "id": "F1",
+      "kit": "frontend",
+      "field": "target.framework",
+      "title": "Frontend framework",
+      "question": "Which target frontend framework and major version should the consolidated application use?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "React 19 with Vite 8", "label": "React 19 with Vite 8" },
+        { "value": "React 19 with another build system", "label": "React 19 with another build system" },
+        { "value": "Another frontend framework", "label": "Another frontend framework" }
+      ],
+      "allow_other": true,
+      "recommended": "React 19 with Vite 8",
+      "default": null,
+      "prefilled": true,
+      "prefilled_value": "React 19 with Vite 8",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F2",
+      "kit": "frontend",
+      "field": "target.component_library",
+      "title": "Component library",
+      "question": "Which component or UI library should govern new and migrated interface elements?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "Existing bespoke components with Tailwind CSS 4", "label": "Existing bespoke components with Tailwind CSS 4" },
+        { "value": "Radix UI with Tailwind CSS 4", "label": "Radix UI with Tailwind CSS 4" },
+        { "value": "MUI 7", "label": "Material UI 7" }
+      ],
+      "allow_other": true,
+      "recommended": "Existing bespoke components with Tailwind CSS 4",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": {
+        "question_id": "F1",
+        "visible_when": null,
+        "options_when": {
+          "React 19 with Vite 8": [
+            { "value": "Existing bespoke components with Tailwind CSS 4", "label": "Existing bespoke components with Tailwind CSS 4" },
+            { "value": "Radix UI with Tailwind CSS 4", "label": "Radix UI with Tailwind CSS 4" },
+            { "value": "MUI 7", "label": "Material UI 7" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "F3",
+      "kit": "frontend",
+      "field": "visual.screenshots",
+      "title": "Current UI references",
+      "question": "Provide paths or URLs for screenshots, recordings, Figma files, or a running production reference that defines the current UI states to preserve.",
+      "importance": "required",
+      "impact": 5,
+      "type": "text",
+      "options": [],
+      "recommended": null,
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F4",
+      "kit": "frontend",
+      "field": "visual.design_system",
+      "title": "Design system source",
+      "question": "Which design-system or token source should define colors, typography, spacing, motion, and component styling?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "Match the active root light medical theme using src/index.css and current components", "label": "Match the active root light medical theme using src/index.css and current components" },
+        { "value": "Provide a separate design token file", "label": "Provide a separate design token file" },
+        { "value": "Provide a Figma or Storybook source", "label": "Provide a Figma or Storybook source" }
+      ],
+      "allow_other": true,
+      "recommended": "Match the active root light medical theme using src/index.css and current components",
+      "default": "match existing pixel-by-pixel using extracted CSS custom properties",
+      "prefilled": true,
+      "prefilled_value": "Match the active root light medical theme using src/index.css and current components",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F5",
+      "kit": "frontend",
+      "field": "compliance.accessibility",
+      "title": "Accessibility target",
+      "question": "Which accessibility standard should the migrated experience satisfy?",
+      "importance": "recommended",
+      "impact": 4,
+      "type": "single_select",
+      "options": [
+        { "value": "WCAG 2.2 AA", "label": "WCAG 2.2 AA" },
+        { "value": "WCAG 2.1 AA", "label": "WCAG 2.1 AA" },
+        { "value": "Section 508", "label": "Section 508" },
+        { "value": "No explicit accessibility target", "label": "No explicit accessibility target" }
+      ],
+      "allow_other": true,
+      "recommended": "WCAG 2.2 AA",
+      "default": "WCAG 2.1 AA",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F6",
+      "kit": "frontend",
+      "field": "compatibility.browsers",
+      "title": "Browser targets",
+      "question": "Which browser and runtime compatibility targets must be supported?",
+      "importance": "recommended",
+      "impact": 3,
+      "type": "single_select",
+      "options": [
+        { "value": "Modern evergreen latest 2 major versions", "label": "Chrome, Firefox, Safari, and Edge latest 2 major versions" },
+        { "value": "Current stable browsers only", "label": "Current stable browsers only" },
+        { "value": "Include legacy browsers", "label": "Include legacy browsers" }
+      ],
+      "allow_other": true,
+      "recommended": "Modern evergreen latest 2 major versions",
+      "default": "modern evergreen (Chrome, Firefox, Safari, Edge — latest 2 major versions)",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F7",
+      "kit": "frontend",
+      "field": "responsive.breakpoints",
+      "title": "Responsive strategy",
+      "question": "Which responsive strategy and breakpoint policy should the consolidated UI follow?",
+      "importance": "recommended",
+      "impact": 4,
+      "type": "single_select",
+      "options": [
+        { "value": "Mobile-first using existing breakpoints", "label": "Mobile-first using existing breakpoints" },
+        { "value": "Match current layouts exactly", "label": "Match current desktop and mobile layouts exactly" },
+        { "value": "Desktop-first", "label": "Desktop-first" }
+      ],
+      "allow_other": true,
+      "recommended": "Mobile-first using existing breakpoints",
+      "default": "mobile-first using existing breakpoints detected from codebase",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F8",
+      "kit": "frontend",
+      "field": "i18n.locales",
+      "title": "Locales",
+      "question": "Which locales and internationalization behavior are in scope?",
+      "importance": "optional",
+      "impact": 2,
+      "type": "single_select",
+      "options": [
+        { "value": "Preserve current locales", "label": "Preserve current locales" },
+        { "value": "English only", "label": "English only" },
+        { "value": "Add specified locales", "label": "Add specified locales" }
+      ],
+      "allow_other": true,
+      "recommended": "Preserve current locales",
+      "default": "preserve current locales; keep existing i18n library if present",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F9",
+      "kit": "frontend",
+      "field": "state_mgmt.preference",
+      "title": "Client state",
+      "question": "Which client and server state-management pattern should the migration use?",
+      "importance": "optional",
+      "impact": 4,
+      "type": "single_select",
+      "options": [
+        { "value": "Preserve src/app shared state and use TanStack Query 5 for server state", "label": "Preserve src/app shared state and use TanStack Query 5 for server state" },
+        { "value": "TanStack Query 5 plus Zustand", "label": "TanStack Query 5 plus Zustand" },
+        { "value": "TanStack Query 5 plus Redux Toolkit", "label": "TanStack Query 5 plus Redux Toolkit" }
+      ],
+      "allow_other": true,
+      "recommended": "Preserve src/app shared state and use TanStack Query 5 for server state",
+      "default": "preserve existing pattern if identifiable; otherwise use component state plus a server-state library",
+      "prefilled": true,
+      "prefilled_value": "Preserve src/app shared state and use TanStack Query 5 for server state",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "F10",
+      "kit": "frontend",
+      "field": "routing.preference",
+      "title": "Routing strategy",
+      "question": "Which routing library and code-splitting strategy should be retained?",
+      "importance": "optional",
+      "impact": 4,
+      "type": "single_select",
+      "options": [
+        { "value": "TanStack Router 1 with lazy route splitting", "label": "TanStack Router 1 with lazy route splitting" },
+        { "value": "React Router 7 with lazy route splitting", "label": "React Router 7 with lazy route splitting" },
+        { "value": "Another routing strategy", "label": "Another routing strategy" }
+      ],
+      "allow_other": true,
+      "recommended": "TanStack Router 1 with lazy route splitting",
+      "default": "use the de-facto router for the chosen target framework",
+      "prefilled": true,
+      "prefilled_value": "TanStack Router 1 with lazy route splitting",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "B1",
+      "kit": "backend",
+      "field": "target.framework",
+      "title": "Backend framework",
+      "question": "Which backend framework and runtime major versions should host the consolidated APIs and ingestion services?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "Express 4.21 on Node.js 22", "label": "Express 4.21 on Node.js 22" },
+        { "value": "Express 5 on Node.js 22", "label": "Express 5 on Node.js 22" },
+        { "value": "Another Node.js framework", "label": "Another Node.js framework" }
+      ],
+      "allow_other": true,
+      "recommended": "Express 4.21 on Node.js 22",
+      "default": null,
+      "prefilled": true,
+      "prefilled_value": "Express 4.21 on Node.js 22",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "B2",
+      "kit": "backend",
+      "field": "api.contract_preservation",
+      "title": "API compatibility",
+      "question": "How strictly must existing evidence, condition, editorial, ingestion, and governance API contracts be preserved?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "must preserve", "label": "Preserve existing endpoints, payloads, and status codes" },
+        { "value": "can break with versioning", "label": "Allow changes behind a new API version" },
+        { "value": "can break", "label": "Allow a complete API redesign" }
+      ],
+      "allow_other": true,
+      "recommended": "must preserve",
+      "default": "must preserve",
+      "prefilled": true,
+      "prefilled_value": "must preserve",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "B3",
+      "kit": "backend",
+      "field": "data.migration_strategy",
+      "title": "Data migration",
+      "question": "Which migration strategy should apply to evidence, condition, editorial, audit, calibration, and ingestion data?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "TBD / assess in research phase", "label": "Assess existing data and decide during research" },
+        { "value": "no migration", "label": "No existing persistent data migration; preserve API and storage behavior" },
+        { "value": "in-place", "label": "Migrate in place with compatible schemas" },
+        { "value": "dual-write", "label": "Dual-write during transition" },
+        { "value": "new schema", "label": "Create a new schema and ETL existing data" }
+      ],
+      "allow_other": true,
+      "recommended": "TBD / assess in research phase",
+      "default": "TBD / assess in research phase",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "B4",
+      "kit": "backend",
+      "field": "auth.framework",
+      "title": "Authentication",
+      "question": "Which authentication and editor-authorization mechanism should the consolidated application preserve or adopt?",
+      "importance": "recommended",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "Cognito-compatible auth preserving claims and editor authorization", "label": "Cognito-compatible auth preserving claims and editor authorization" },
+        { "value": "Amazon Cognito hosted authentication", "label": "Amazon Cognito hosted authentication" },
+        { "value": "Another OpenID Connect provider", "label": "Another OpenID Connect provider" }
+      ],
+      "allow_other": true,
+      "recommended": "Cognito-compatible auth preserving claims and editor authorization",
+      "default": "preserve existing auth mechanism; detect from codebase",
+      "prefilled": true,
+      "prefilled_value": "Cognito-compatible auth preserving claims and editor authorization",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "B5",
+      "kit": "backend",
+      "field": "nfr.sla",
+      "title": "Service objectives",
+      "question": "Which latency, throughput, availability, and ingestion reliability objectives should gate the migration?",
+      "importance": "recommended",
+      "impact": 4,
+      "type": "single_select",
+      "options": [
+        { "value": "Match current production baseline with no regression", "label": "Match current production baseline with no regression" },
+        { "value": "Define explicit targets during research", "label": "Define explicit targets during research" },
+        { "value": "Best effort only", "label": "Best effort only" }
+      ],
+      "allow_other": true,
+      "recommended": "Match current production baseline with no regression",
+      "default": "match current production baseline; no regression",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "G1",
+      "kit": "generic",
+      "field": "success.definition",
+      "title": "Definition of done",
+      "question": "Which observable outcome defines completion for this migration?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "Complete legacy parity plus preservation of every active root capability, verified by all requested gates", "label": "Complete legacy parity plus preservation of every active root capability, verified by all requested gates" },
+        { "value": "Complete legacy parity with approved current-root changes", "label": "Complete legacy parity with approved current-root changes" },
+        { "value": "Prioritized subset only", "label": "Prioritized subset only" }
+      ],
+      "allow_other": true,
+      "recommended": "Complete legacy parity plus preservation of every active root capability, verified by all requested gates",
+      "default": "feature parity with the current system; all existing user-facing behaviors preserved",
+      "prefilled": true,
+      "prefilled_value": "Complete legacy parity plus preservation of every active root capability, verified by all requested gates",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "G2",
+      "kit": "generic",
+      "field": "out_of_scope",
+      "title": "Out-of-scope work",
+      "question": "Which work must remain outside this migration?",
+      "importance": "recommended",
+      "impact": 4,
+      "type": "multi_select",
+      "options": [
+        { "value": "Deployment", "label": "Deployment" },
+        { "value": "Git commits", "label": "Git commits" },
+        { "value": "Git pushes", "label": "Git pushes" },
+        { "value": "Removing active root capabilities", "label": "Removing active root capabilities" }
+      ],
+      "allow_other": true,
+      "recommended": "Deployment",
+      "default": "no explicit exclusions; agent will infer from project structure",
+      "prefilled": true,
+      "prefilled_value": [
+        "Deployment",
+        "Git commits",
+        "Git pushes",
+        "Removing active root capabilities"
+      ],
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "G3",
+      "kit": "generic",
+      "field": "existing_tests.posture",
+      "title": "Test-suite policy",
+      "question": "How should existing and newly added tests gate migration completion?",
+      "importance": "recommended",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "must pass", "label": "All existing and new tests must pass" },
+        { "value": "can rewrite", "label": "Tests may be replaced with equivalent coverage" },
+        { "value": "partial", "label": "Only specified suites must pass" }
+      ],
+      "allow_other": true,
+      "recommended": "must pass",
+      "default": "must pass",
+      "prefilled": true,
+      "prefilled_value": "must pass",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "G4",
+      "kit": "generic",
+      "field": "target.output_location",
+      "title": "Output location",
+      "question": "Where should the rewritten and consolidated code be placed?",
+      "importance": "required",
+      "impact": 5,
+      "type": "single_select",
+      "options": [
+        { "value": "in-place", "label": "In place at /Users/rraviku2/aarti/salus-pramana-medical" },
+        { "value": "salus-pramana-medical-new", "label": "New sibling directory: salus-pramana-medical-new" }
+      ],
+      "allow_other": true,
+      "recommended": "in-place",
+      "default": "new sibling directory: salus-pramana-medical-new",
+      "prefilled": true,
+      "prefilled_value": "in-place",
+      "answer": null,
+      "depends_on": null
+    },
+    {
+      "id": "G5",
+      "kit": "generic",
+      "field": "constraints.additional",
+      "title": "Additional constraints",
+      "question": "List any additional requirements, exclusions, dependencies, compliance rules, or operational constraints not already captured above.",
+      "importance": "optional",
+      "impact": 3,
+      "type": "text",
+      "options": [],
+      "recommended": null,
+      "default": "None beyond the decisions listed in this specification.",
+      "prefilled": true,
+      "prefilled_value": "None beyond the decisions listed in this specification.",
+      "answer": null,
+      "depends_on": null
+    }
+  ],
+  "metadata": {
+    "classification": {
+      "type": "brownfield",
+      "change_type": "rewrite",
+      "source": "archived React monorepo and AWS-oriented Node services",
+      "target": "active root TanStack React/Vite/Express application, current workspace versions",
+      "grouping_needed": false,
+      "scope": "all legacy capabilities plus preservation of all current root capabilities"
+    },
+    "feasibility_override": true,
+    "authorized_scope_loc": 18611,
+    "reconfirmation_required": false
+  }
+}

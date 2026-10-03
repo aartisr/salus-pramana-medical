@@ -1,0 +1,4 @@
+unit: legacy-math
+bindings:
+  - { type: route-declaration, name: "GET /math", source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:70", target: MathExplainerPageLazy, must_appear_in_target: true, notes: "Lazy mathematical foundations route." }
+runtime_config: []

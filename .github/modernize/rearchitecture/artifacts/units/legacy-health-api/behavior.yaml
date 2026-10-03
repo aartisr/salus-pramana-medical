@@ -1,0 +1,5 @@
+unit: legacy-health-api
+side_effects: []
+branches: []
+error_paths: []
+concurrency: { model: event-loop, tx_boundary: { source_loc: "archive/legacy-monorepo/services/api/src/app.ts:84", scope: "read-only health response", isolation: "none", must_preserve: false } }

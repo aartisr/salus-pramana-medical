@@ -1,0 +1,4 @@
+unit: active-intelligence
+bindings:
+  - { type: route-declaration, name: "GET /cross-system-intelligence", source_loc: "src/app/router.tsx:18", target: IntelligenceRoute, must_appear_in_target: true, notes: "Lazy route sharing persona and ODE selection state." }
+runtime_config: []

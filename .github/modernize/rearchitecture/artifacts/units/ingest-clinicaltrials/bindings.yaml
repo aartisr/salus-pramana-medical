@@ -1,0 +1,6 @@
+unit: ingest-clinicaltrials
+bindings:
+  - { type: convention, name: handler, source_loc: "archive/legacy-monorepo/services/ingestion/src/clinicaltrials-ingestor.ts:43", target: clinicalTrialsIngestionHandler, must_appear_in_target: true, notes: "Externally invokable connector." }
+runtime_config:
+  - { key: CLINICALTRIALS_QUERY, source_loc: "archive/legacy-monorepo/services/ingestion/src/clinicaltrials-ingestor.ts:14", source: env, default_value: "hypertension OR diabetes", must_appear_in_target: true, notes: "Registry query." }
+  - { key: CLINICALTRIALS_HTTP_TIMEOUT_MS|CLINICALTRIALS_HTTP_MAX_RETRIES|CLINICALTRIALS_MIN_INTERVAL_MS|CLINICALTRIALS_MAX_REQUESTS_PER_RUN, source_loc: "archive/legacy-monorepo/services/ingestion/src/clinicaltrials-ingestor.ts:21", source: env, default_value: "5000|2|150|3", must_appear_in_target: true, notes: "Bounded HTTP policy." }

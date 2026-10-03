@@ -1,0 +1,9 @@
+unit: active-clinical-ai-api
+side_effects:
+  - { source_loc: "server.ts:52", effect: "calls Gemini generateContent when a usable API key initializes the client", must_preserve: true }
+branches:
+  - { source_loc: "server.ts:25", condition: "AI client is absent", behavior: "returns deterministic fallback response", must_preserve: true }
+  - { source_loc: "server.ts:65", condition: "model call throws", behavior: "logs failure and returns deterministic fallback response", must_preserve: true }
+error_paths:
+  - { source_loc: "server.ts:65", trigger: "external AI failure", outcome: "fallback JSON remains available", contract: "HTTP 200 with status=fallback", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "server.ts:22", scope: "single HTTP request", isolation: "none", must_preserve: false } }

@@ -1,0 +1,8 @@
+unit: legacy-new-evidence
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/new-evidence-form.tsx:1", effect: "submits a validated evidence record as draft and invalidates evidence queries", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/pages/app-pages.tsx:20", condition: "user is unauthenticated", behavior: "shows Cognito sign-in requirement instead of submission workflow", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/lib/api-error.ts:1", trigger: "API validation, authorization, or network failure", outcome: "form retains user context and surfaces actionable error", contract: "HTTP error status and message remain distinguishable", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/apps/web/src/components/new-evidence-form.tsx:1", scope: "single submission mutation", isolation: "server conditional create", must_preserve: true } }

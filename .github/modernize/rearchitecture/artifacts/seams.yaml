@@ -1,0 +1,30 @@
+seams:
+  - id: "src/app/router.tsx:13"
+    description: "Active-root route behavior is authoritative while archived-only pages are consolidated into one target router."
+    source: declared
+    cut_between: { migrated_side: legacy-dashboard, frozen_side: active-home }
+    protocol_shift: null
+    frozen_side_rule: "The active root route paths, light-theme behavior, and current browser-visible states MUST NOT be modified; target routing adapts archived-only pages around them."
+    bridge_points: []
+  - id: "archive/legacy-monorepo/services/api/src/app.ts:84"
+    description: "Archived Hono API remains immutable evidence while its frozen REST contracts move into the sibling Express runtime."
+    source: declared
+    cut_between: { migrated_side: active-clinical-ai-api, frozen_side: legacy-evidence-api }
+    protocol_shift: null
+    frozen_side_rule: "No archived API, repository, auth, test, or infrastructure source may be edited; Express handlers must adapt to its visible contracts."
+    bridge_points: []
+  - id: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:40"
+    description: "Ingestion writes and API reads meet at the DynamoDB-compatible TreatmentEvidence record."
+    source: inferred
+    cut_between: { migrated_side: ingest-pubmed, frozen_side: legacy-evidence-api }
+    protocol_shift: { from: "DynamoDB document write", to: "repository interface" }
+    frozen_side_rule: "The evidenceId key, byCondition index semantics, publication filtering, and visible TreatmentEvidence attributes MUST remain unchanged."
+    bridge_points:
+      - at: "ingestion PutCommand to evidence repository"
+        from_form: "TreatmentEvidence document keyed by evidenceId"
+        to_form: "EvidenceRepository.createImportedDraft(TreatmentEvidence)"
+        mapping_rule: "Preserve every serialized field; default publicationStatus to draft, contraindications and interactionWarnings to empty arrays, and lastVerifiedDate to normalized source date; use evidenceId unchanged as idempotency key."
+        edge_cases: ["ConditionalCheckFailedException increments skipped and preserves the first record byte-for-byte", "every other adapter error fails or surfaces the job", "missing production table returns the frozen explicit skipped/failure result rather than memory fallback"]
+        idempotency_retry: "Use one conditional create with attribute_not_exists(evidenceId); a retry with the same evidenceId cannot overwrite and is reported as skipped."
+        fallback: "PERSISTENCE_ADAPTER is selected once at startup; memory is non-production only, and a DynamoDB failure is never retried against memory."
+        must_preserve: true

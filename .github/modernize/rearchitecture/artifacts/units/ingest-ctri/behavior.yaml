@@ -1,0 +1,8 @@
+unit: ingest-ctri
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:70", effect: "delegates fixed PubMed records for normalized evidence persistence", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:65", condition: "CTRI URL absent/fails or returns no references", behavior: "uses fixed CTRI/ICTRP references and marks fallbackUsed", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:54", trigger: "remote source throws", outcome: "continues with deterministic fallback sample", contract: "connector output identifies fallback", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:40", scope: "fetch then delegated import", isolation: "none", must_preserve: false } }

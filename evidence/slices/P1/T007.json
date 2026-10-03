@@ -1,0 +1,12 @@
+{
+  "taskId": "T007",
+  "status": "PARTIAL",
+  "capturedAt": "2026-09-30T07:07:00.263Z",
+  "evidence": [
+    "evidence/baseline/local-characterization.json",
+    "evidence/baseline/production-http.json",
+    "evidence/baseline/prerequisites.json"
+  ],
+  "obtainableArtifactsCaptured": 6,
+  "externalPrerequisitesBlocked": 6
+}

@@ -1,0 +1,6 @@
+unit: active-global-health
+side_effects: []
+branches:
+  - { source_loc: "src/routes/global-health-route.tsx:7", condition: "persona or selected geography/metric changes", behavior: "map and equity summaries recompute without mutating source data", must_preserve: true }
+error_paths: []
+concurrency: { model: sync, tx_boundary: { source_loc: "src/routes/global-health-route.tsx:5", scope: "client render and D3 interaction", isolation: "none", must_preserve: false } }

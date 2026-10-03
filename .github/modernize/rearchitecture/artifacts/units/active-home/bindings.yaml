@@ -1,0 +1,4 @@
+unit: active-home
+bindings:
+  - { type: route-declaration, name: "GET /", source_loc: "src/app/router.tsx:15", target: HomeRoute, must_appear_in_target: true, notes: "TanStack lazy route; preserve pending/error boundary and deep link." }
+runtime_config: []

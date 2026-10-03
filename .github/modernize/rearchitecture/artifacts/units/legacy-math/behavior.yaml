@@ -1,0 +1,6 @@
+unit: legacy-math
+side_effects: []
+branches:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/math-explainer.tsx:1", condition: "user selects a mathematical concept", behavior: "shows the corresponding evidence-scoring explanation and safety disclaimer", must_preserve: true }
+error_paths: []
+concurrency: { model: sync, tx_boundary: { source_loc: "archive/legacy-monorepo/apps/web/src/components/math-explainer.tsx:1", scope: "client render only", isolation: "none", must_preserve: false } }

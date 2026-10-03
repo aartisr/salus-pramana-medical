@@ -1,0 +1,8 @@
+unit: legacy-auth-callback
+bindings:
+  - { type: route-declaration, name: "GET /auth/callback", source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:64", target: AuthCallbackPageLazy, must_appear_in_target: true, notes: "Cognito authorization-code PKCE callback." }
+runtime_config:
+  - { key: VITE_COGNITO_DOMAIN, source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:21", source: env, default_value: "", must_appear_in_target: true, notes: "Hosted UI domain." }
+  - { key: VITE_COGNITO_CLIENT_ID, source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:22", source: env, default_value: "", must_appear_in_target: true, notes: "OAuth public client identifier." }
+  - { key: VITE_COGNITO_REDIRECT_URI, source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:23", source: env, default_value: "window.origin/auth/callback", must_appear_in_target: true, notes: "Callback URI." }
+  - { key: VITE_COGNITO_SCOPES, source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:29", source: env, default_value: "openid email profile", must_appear_in_target: true, notes: "OAuth scopes." }

@@ -1,0 +1,4 @@
+unit: active-home
+commit: false
+candidate_splits:
+  - { id: "src/components/ResearchHomepage.tsx:1", drivers: [concern_split], rationale: "The large homepage composes navigation, evidence discovery, subscription, and export interactions that may change independently.", source_slice: { file: src/components/ResearchHomepage.tsx, lines: [1, 1400] } }

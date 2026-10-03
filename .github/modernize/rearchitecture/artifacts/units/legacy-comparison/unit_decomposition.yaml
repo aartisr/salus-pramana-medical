@@ -1,0 +1,4 @@
+unit: legacy-comparison
+commit: false
+candidate_splits:
+  - { id: "archive/legacy-monorepo/apps/web/src/components/comparison-view.tsx:1", drivers: [concern_split, execution_model_split], rationale: "Parallel API orchestration and deterministic visualization are separate execution concerns with different error states.", source_slice: { file: archive/legacy-monorepo/apps/web/src/components/comparison-view.tsx, lines: [1, 500] } }

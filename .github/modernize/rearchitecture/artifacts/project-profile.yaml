@@ -1,0 +1,47 @@
+project:
+  scope_path: "."
+  loc: 18611
+  languages: [javascript]
+  git: true
+  structure:
+    src: "Active TanStack React/Vite application, routes, components, services, data, and types"
+    public: "Active static and discovery assets"
+    archive/legacy-monorepo/apps/web: "Archived legacy web application capability source"
+    archive/legacy-monorepo/packages/domain: "Archived shared domain capability source"
+    archive/legacy-monorepo/services/api: "Archived evidence, condition, editorial, auth, audit, and persistence APIs"
+    archive/legacy-monorepo/services/ingestion: "Archived external research ingestion connectors"
+    archive/legacy-monorepo/infra: "Archived AWS SAM infrastructure source"
+    archive/legacy-monorepo/docs: "Archived technical, mathematical, deployment, UX, and print documentation"
+  notes: "Migrate all archived capabilities into the active root application as a coherent medical research workflow while preserving existing production UI and behavior."
+
+assessment:
+  change_type: rewrite
+  rationale: |
+    The request consolidates an archived multi-package React/AWS application into the active root TanStack React/Vite/Express architecture. It requires capability reconciliation, API and persistence redesign, authentication and authorization, ingestion, governance, documentation, and end-to-end validation rather than a dependency-only upgrade.
+  transformations:
+    - fromStack: "Legacy React monorepo and AWS-oriented Node services"
+      fromStackVersion: "archived current"
+      toStack: "TanStack React/Vite/Express root application"
+      toStackVersion: "current workspace"
+  grouping_needed: false
+  deep_planning: true
+
+progress_sync:
+  run_id: "E2E4AC95-AB90-49F0-B6ED-E41DE8F2A9BC"
+  grouping_mode: none
+  execution_mode: all-at-once
+  plan_start_time: "2026-09-30T01:13:50Z"
+  plan_completed_time: "2026-09-30T04:05:21Z"
+  execution_start_time: "2026-09-30T04:12:00Z"
+  execution_completed_time: null
+  validation_start_time: null
+  validation_completed_time: null
+  total_phases: 20
+  completed_phases: 6
+  total_modules: 5
+  completed_modules: 0
+  total_tasks: 43
+  completed_tasks: 15
+  total_commits: 3
+  build_verified: false
+  test_verified: false

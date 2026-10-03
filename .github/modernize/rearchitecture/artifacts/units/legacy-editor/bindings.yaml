@@ -1,0 +1,5 @@
+unit: legacy-editor
+bindings:
+  - { type: route-declaration, name: "GET /editor", source_loc: "archive/legacy-monorepo/apps/web/src/main.tsx:58", target: EditorPageLazy, must_appear_in_target: true, notes: "Lazy page; UI authorization is advisory and server enforcement remains mandatory." }
+runtime_config:
+  - { key: VITE_API_BASE_URL, source_loc: "archive/legacy-monorepo/apps/web/src/lib/editor-client.ts:5", source: env, default_value: "http://localhost:8787", must_appear_in_target: true, notes: "Editorial API origin." }

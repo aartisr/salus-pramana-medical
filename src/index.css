@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+/*
+ * SALUS design tokens
+ *
+ * All application colour utilities resolve through this file. Keep semantic
+ * roles stable (950 = canvas, 900 = raised surface, 100 = primary text) so a
+ * theme adjustment does not require a screen-by-screen class rewrite.
+ */
+@theme {
+  --color-slate-950: #f2f6f3;
+  --color-slate-900: #ffffff;
+  /* Surface tones stay light enough to support dark ink. Control borders use
+     --color-control-border below instead of overloading a fill token. */
+  --color-slate-800: #d8e2dc;
+  --color-slate-700: #71867a;
+  --color-slate-600: #5d7267;
+  --color-slate-500: #4b6256;
+  --color-slate-400: #3a5145;
+  --color-slate-300: #294136;
+  --color-slate-200: #20382c;
+  --color-slate-100: #172b20;
+
+  --color-amber-950: #fff8e8;
+  --color-amber-900: #ffedbf;
+  --color-amber-700: #8b5100;
+  --color-amber-600: #9b5c00;
+  --color-amber-500: #b26b00;
+  --color-amber-400: #8e5400;
+  --color-amber-300: #744500;
+  --color-amber-200: #5d3800;
+  --color-amber-50: #fff8e8;
+
+  --color-indigo-950: #edf3f8;
+  --color-indigo-900: #dce8f1;
+  --color-indigo-700: #315f80;
+  --color-indigo-600: #3a6f94;
+  --color-indigo-500: #477fa5;
+  --color-indigo-400: #2f668c;
+  --color-indigo-300: #285776;
+  --color-indigo-200: #234a63;
+  --color-indigo-100: #1c3d54;
+
+  --color-emerald-950: #eaf6ef;
+  --color-emerald-900: #d5ecdf;
+  --color-emerald-700: #176246;
+  --color-emerald-600: #1d7654;
+  --color-emerald-500: #258862;
+  --color-emerald-400: #18704f;
+  --color-emerald-300: #145f43;
+  --color-emerald-200: #0e4d36;
+
+  --color-cyan-950: #eaf5f5;
+  --color-cyan-900: #d7ebeb;
+  --color-cyan-700: #21656c;
+  --color-cyan-600: #287881;
+  --color-cyan-500: #318993;
+  --color-cyan-400: #246f77;
+  --color-cyan-300: #1f5d64;
+
+  --color-teal-950: #e8f6f1;
+  --color-teal-900: #d2eee5;
+  --color-teal-700: #155a4a;
+  --color-teal-600: #176957;
+  --color-teal-500: #1d795f;
+  --color-teal-400: #155c48;
+  --color-teal-300: #104c3b;
+  --color-teal-200: #0c3d30;
+
+  --color-rose-950: #fbeeed;
+  --color-rose-900: #f5ddda;
+  --color-rose-700: #913f36;
+  --color-rose-600: #aa4a3e;
+  --color-rose-500: #ad5147;
+  --color-rose-400: #9c463c;
+  --color-rose-300: #843b33;
+  --color-rose-200: #6e302a;
+}
+
+@layer base {
+  html {
+    min-width: 320px;
+    overflow-x: clip;
+    scroll-behavior: smooth;
+  }
+
+  :root {
+    --color-control-border: #83968b;
+    color-scheme: light;
+    background: var(--color-slate-950);
+    color: var(--color-slate-100);
+  }
+
+  body {
+    min-height: 100dvh;
+    min-width: 320px;
+    margin: 0;
+    overflow-x: clip;
+    background: var(--color-slate-950);
+    color: var(--color-slate-100);
+    text-rendering: optimizeLegibility;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  summary,
+  [tabindex]:not([tabindex='-1']) {
+    &:focus-visible {
+      outline: 3px solid var(--color-amber-400);
+      outline-offset: 3px;
+    }
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-amber-500) 35%, transparent);
+    color: var(--color-slate-100);
+  }
+
+  img,
+  picture,
+  svg,
+  video,
+  canvas {
+    max-inline-size: 100%;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  /* Semantic ink roles are for information-bearing text. They avoid relying
+     on decorative palette steps whose contrast changes by surface. */
+  .ink-primary { color: var(--color-slate-100); }
+  .ink-secondary { color: var(--color-slate-300); }
+  .ink-muted { color: var(--color-slate-400); }
+  .ink-accent { color: var(--color-amber-400); }
+  .heading-accent { color: var(--color-amber-700); }
+
+  /* Compatibility bridge: the established screens use `text-white` as their
+     high-emphasis ink on light research surfaces. Filled controls opt into a
+     true white label below. */
+  .text-white { color: var(--color-slate-100); }
+  :is(.bg-indigo-600, .bg-emerald-600, .bg-teal-600, .bg-teal-700, .bg-rose-500, .bg-amber-700).text-white { color: #fff; }
+  :is(.bg-gradient-to-r, .bg-gradient-to-br).text-white { color: #fff; }
+
+  /* Dense network visualizations benefit from a dark analytical field. This
+     scope remaps the same semantic tokens used by the graph only; no page
+     outside the graph inherits this treatment. */
+  .theme-graph-dark,
+  .theme-workspace-dark {
+    --color-slate-950: #071711;
+    --color-slate-900: #0d2119;
+    --color-slate-800: #17362b;
+    --color-slate-700: #285043;
+    --color-slate-600: #426b5b;
+    --color-slate-500: #638576;
+    --color-slate-400: #9ab6a8;
+    --color-slate-300: #c5d9cd;
+    --color-slate-200: #dcece4;
+    --color-slate-100: #f2faf5;
+    --color-amber-400: #f8be46;
+    --color-amber-300: #fbd57e;
+    --color-amber-200: #ffebbb;
+    --color-indigo-400: #a6a7ff;
+    --color-indigo-300: #c2c2ff;
+    --color-emerald-400: #5bd59a;
+    --color-emerald-300: #91e7bb;
+    --color-cyan-400: #59cad7;
+    --color-cyan-300: #93e0e8;
+    --color-teal-400: #63d5b0;
+    --color-teal-300: #96e8cc;
+    --color-teal-200: #c0f5e1;
+    --color-rose-400: #f58da2;
+    --color-rose-300: #fcb8c5;
+    color: var(--color-slate-100);
+    color-scheme: dark;
+  }
+
+  .theme-graph-dark .text-white,
+  .theme-workspace-dark .text-white { color: #fff; }
+
+  .font-cinzel { font-family: 'Cinzel', serif; }
+  .surface-canvas { background-color: var(--color-slate-950); }
+  .surface-raised { background-color: var(--color-slate-900); }
+  .surface-sunken { background-color: var(--color-slate-800); }
+
+  /* A large portion of the established interface uses slate-800 for both
+     quiet surfaces and borders. Keep the former light for readable ink,
+     then give the latter an explicit, WCAG-visible boundary. */
+  .border-slate-800 { border-color: var(--color-control-border); }
+
+  /* Compatibility views deliberately use a conventional light form surface.
+     Keeping this scope here prevents their accessible colour system from
+     drifting into component-local CSS as the research workspace evolves. */
+  .theme-compat-light {
+    --color-slate-950: #020617;
+    --color-slate-900: #0f172a;
+    --color-slate-800: #1e293b;
+    --color-slate-700: #334155;
+    --color-slate-600: #475569;
+    --color-slate-500: #64748b;
+    --color-slate-400: #94a3b8;
+    --color-slate-300: #cbd5e1;
+    --color-slate-200: #e2e8f0;
+    --color-slate-100: #f1f5f9;
+    --color-teal-800: #115e59;
+    --color-teal-700: #0f766e;
+    --color-teal-200: #99f6e4;
+    color: var(--color-slate-900);
+    color-scheme: light;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

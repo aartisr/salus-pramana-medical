@@ -1,0 +1,43 @@
+user_intent:
+  raw_request: "Execute the complete 18,611 LOC brownfield rewrite in a sibling project; preserve archive and active-root capabilities until parity is proven."
+  inferred_acceptance:
+    - "all active-root behavior remains present"
+    - "all archived web, API, auth, persistence, domain, and ingestion capability reaches the target runtime"
+    - "fixed target stack and full validation pass"
+    - "source repository and archive remain unchanged"
+  cleanup_required: false
+strategy: full_rewrite
+runtime_reachable:
+  - src/main.tsx
+  - src/app/**
+  - src/routes/**
+  - src/components/**
+  - src/services/**
+  - src/data/**
+  - src/types/**
+  - server.ts
+  - archive/legacy-monorepo/apps/web/src/**
+  - archive/legacy-monorepo/packages/domain/src/**
+  - archive/legacy-monorepo/services/api/src/**
+  - archive/legacy-monorepo/services/ingestion/src/**
+must_rewrite:
+  - { path: src/**, reason: "authoritative active UI, state, routes, data, and deterministic clinical behavior must execute independently in the sibling runtime" }
+  - { path: server.ts, reason: "authoritative active POST /api/clinical-ai contract and deterministic fallback must execute on Express 4.21" }
+  - { path: archive/legacy-monorepo/apps/web/src/**, reason: "archived-only dashboard, submission, comparison, editor, PKCE, and math capabilities are required for complete parity" }
+  - { path: archive/legacy-monorepo/packages/domain/src/**, reason: "shared validation and serialized medical/evidence contracts are required by restored API and ingestion surfaces" }
+  - { path: archive/legacy-monorepo/services/api/src/**, reason: "all frozen endpoint, auth, audit, deterministic intelligence, and repository behavior must be restored under Express 4.21" }
+  - { path: archive/legacy-monorepo/services/ingestion/src/**, reason: "all four required ingestion entrypoints and their bounded connector semantics must run in the target" }
+copy_as_is:
+  - public/robots.txt
+  - public/sitemap.xml
+  - public/llms.txt
+  - public/llms-full.txt
+legacy_allowed_to_remain:
+  - archive/legacy-monorepo/**
+  - src/**
+  - server.ts
+defer_cleanup:
+  - "Archive removal is prohibited even after parity without a separately authorized task."
+  - "Active-root capability removal is prohibited; the source repository remains the comparison baseline."
+full_rewrite_reason: "The user explicitly requires complete active-plus-archived capability parity in an isolated sibling runtime that may not depend on source/archive files; every listed runtime surface must therefore be reimplemented, while cleanup remains forbidden."
+implementation_rule: "Implementation consumes must_rewrite as capability-bearing source scope and writes only to /Users/rraviku2/aarti/salus-pramana-medical-new. Source anchors are evidence, not permission to edit source files."

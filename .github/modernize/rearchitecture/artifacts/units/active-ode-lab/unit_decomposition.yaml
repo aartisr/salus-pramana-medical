@@ -1,0 +1,4 @@
+unit: active-ode-lab
+commit: false
+candidate_splits:
+  - { id: "src/components/ODESimulationLab.tsx:1", drivers: [concern_split], rationale: "Numerical simulation controls and trajectory visualization have separate deterministic and accessibility verification needs.", source_slice: { file: src/components/ODESimulationLab.tsx, lines: [1, 1000] } }

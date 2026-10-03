@@ -1,0 +1,4 @@
+unit: active-architecture
+bindings:
+  - { type: route-declaration, name: "GET /architecture", source_loc: "src/app/router.tsx:22", target: ArchitectureRoute, must_appear_in_target: true, notes: "Lazy route preserving repository architecture view." }
+runtime_config: []

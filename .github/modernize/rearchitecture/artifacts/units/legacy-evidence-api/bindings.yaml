@@ -1,0 +1,12 @@
+unit: legacy-evidence-api
+bindings:
+  - { type: route-declaration, name: registerEvidenceRoutes, source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:122", target: evidenceRouter, must_appear_in_target: true, notes: "Express router must preserve every registered method/path and middleware order." }
+  - { type: interceptor, name: Cognito bearer and evidence-editors authorization, source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:48", target: authMiddleware, must_appear_in_target: true, notes: "Verify bearer signature, issuer, audience, validity, email, and cognito:groups server-side on every protected request; local bypass is explicit non-production/test only and forbidden in production." }
+runtime_config:
+  - { key: PERSISTENCE_ADAPTER, source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:161", source: env, default_value: "none; missing or unknown fails startup", must_appear_in_target: true, notes: "Target binding decision selects memory or dynamodb exactly once; memory is forbidden in production and operations never fail over." }
+  - { key: DYNAMODB_TABLE, source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:161", source: env, default_value: "none", must_appear_in_target: true, notes: "Required for dynamodb mode; missing configuration fails startup rather than selecting memory." }
+  - { key: CONDITIONS_TABLE, source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:174", source: env, default_value: "memory conditions", must_appear_in_target: true, notes: "Condition table." }
+  - { key: AUDIT_TABLE, source_loc: "archive/legacy-monorepo/services/api/src/repository.ts:430", source: env, default_value: "audit returned but not persisted", must_appear_in_target: true, notes: "Audit table." }
+  - { key: COGNITO_ISSUER, source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:11", source: env, default_value: "none", must_appear_in_target: true, notes: "JWT issuer and JWKS origin." }
+  - { key: COGNITO_AUDIENCE, source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:12", source: env, default_value: "none", must_appear_in_target: true, notes: "JWT audience." }
+  - { key: ALLOW_UNAUTH_MUTATIONS, source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:10", source: env, default_value: "false", must_appear_in_target: true, notes: "Explicit local/test-only bypass; NODE_ENV=production rejects it even when set." }

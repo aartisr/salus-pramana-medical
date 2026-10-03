@@ -1,0 +1,49 @@
+# User-agent rules for all Search Engines, AI Overviews (AIO), LLM Crawlers (AEO/AXO)
+User-agent: *
+Allow: /
+Crawl-delay: 1
+
+# Specific AI & LLM Search Agents allowed for indexing, citations, and AI Overviews
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+# Direct pointers to discovery specifications
+Sitemap: /sitemap.xml
+LLMs-Txt: /llms.txt
+LLMs-Full-Txt: /llms-full.txt

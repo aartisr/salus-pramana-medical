@@ -1,0 +1,6 @@
+{
+  "name": "SALUS Pramana: Evidence Behind Every Path to Healing",
+  "description": "Continuous evidence operating system for integrative medicine unifying Allopathy, Ayurveda, Siddha, and Naturopathy via Bayesian evidence calculus, Runge-Kutta ODE pharmacokinetics, and peer-reviewed registries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

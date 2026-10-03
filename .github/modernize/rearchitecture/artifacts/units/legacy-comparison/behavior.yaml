@@ -1,0 +1,8 @@
+unit: legacy-comparison
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/comparison-view.tsx:1", effect: "loads condition-scoped intelligence, gates, trajectories, interactions, and dose suggestions", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/governance-gates-panel.tsx:1", condition: "governance gate fails or data is insufficient", behavior: "renders fail-closed governance result", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/lib/intelligence-client.ts:1", trigger: "intelligence endpoint fails", outcome: "query error remains visible without fabricating results", contract: "preserve API status/message", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/apps/web/src/components/comparison-view.tsx:1", scope: "parallel read-only intelligence queries", isolation: "TanStack Query cache", must_preserve: true } }

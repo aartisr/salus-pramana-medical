@@ -1,0 +1,4 @@
+unit: active-clinical-ai-api
+commit: false
+candidate_splits:
+  - { id: "server.ts:22-75", drivers: [protocol_split, concern_split], rationale: "HTTP validation, external model invocation, and deterministic safety fallback have separate contracts and failure semantics.", source_slice: { file: server.ts, lines: [22, 75] } }

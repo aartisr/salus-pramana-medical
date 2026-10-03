@@ -1,0 +1,4 @@
+unit: active-ai-synthesis
+commit: false
+candidate_splits:
+  - { id: "src/components/AIClinicalSynthesis.tsx:1", drivers: [protocol_split], rationale: "Model request orchestration and clinical presentation cross a network protocol boundary with deterministic fallback semantics.", source_slice: { file: src/components/AIClinicalSynthesis.tsx, lines: [1, 1000] } }

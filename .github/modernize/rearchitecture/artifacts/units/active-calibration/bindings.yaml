@@ -1,0 +1,4 @@
+unit: active-calibration
+bindings:
+  - { type: route-declaration, name: "GET /calibration-governance", source_loc: "src/app/router.tsx:23", target: CalibrationRoute, must_appear_in_target: true, notes: "Lazy route preserving calibration and drift presentation." }
+runtime_config: []

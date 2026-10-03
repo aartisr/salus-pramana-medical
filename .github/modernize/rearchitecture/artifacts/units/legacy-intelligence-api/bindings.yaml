@@ -1,0 +1,5 @@
+unit: legacy-intelligence-api
+bindings:
+  - { type: route-declaration, name: registerIntelligenceRoutes, source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:25", target: intelligenceRouter, must_appear_in_target: true, notes: "Express router must preserve all six GET contracts." }
+runtime_config:
+  - { key: STRICT_GOVERNANCE_GATES, source_loc: "archive/legacy-monorepo/services/api/src/config.ts:24", source: env, default_value: "false unless query override", must_appear_in_target: true, notes: "Fail-closed governance switch." }

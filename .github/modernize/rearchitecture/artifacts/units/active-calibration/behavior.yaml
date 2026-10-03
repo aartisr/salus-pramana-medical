@@ -1,0 +1,6 @@
+unit: active-calibration
+side_effects: []
+branches:
+  - { source_loc: "src/services/calibrationReportService.ts:22", condition: "seed offset changes", behavior: "generates a reproducible synthetic calibration report for that seed", must_preserve: true }
+error_paths: []
+concurrency: { model: sync, tx_boundary: { source_loc: "src/services/calibrationReportService.ts:22", scope: "pure report generation", isolation: "none", must_preserve: false } }

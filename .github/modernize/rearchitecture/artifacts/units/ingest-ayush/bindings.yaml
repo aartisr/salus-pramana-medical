@@ -1,0 +1,6 @@
+unit: ingest-ayush
+bindings:
+  - { type: convention, name: handler, source_loc: "archive/legacy-monorepo/services/ingestion/src/ayush-ingestor.ts:40", target: ayushIngestionHandler, must_appear_in_target: true, notes: "Externally invokable connector." }
+runtime_config:
+  - { key: AYUSH_DATA_URL, source_loc: "archive/legacy-monorepo/services/ingestion/src/ayush-ingestor.ts:12", source: env, default_value: "empty; use deterministic sample", must_appear_in_target: true, notes: "External dataset URL." }
+  - { key: AYUSH_HTTP_TIMEOUT_MS|AYUSH_HTTP_MAX_RETRIES|AYUSH_MIN_INTERVAL_MS|AYUSH_MAX_REQUESTS_PER_RUN, source_loc: "archive/legacy-monorepo/services/ingestion/src/ayush-ingestor.ts:18", source: env, default_value: "5000|2|150|3", must_appear_in_target: true, notes: "Bounded HTTP policy." }

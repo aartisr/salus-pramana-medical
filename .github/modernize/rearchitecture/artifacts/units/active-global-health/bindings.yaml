@@ -1,0 +1,4 @@
+unit: active-global-health
+bindings:
+  - { type: route-declaration, name: "GET /global-health-equity", source_loc: "src/app/router.tsx:17", target: GlobalHealthRoute, must_appear_in_target: true, notes: "Lazy route; D3 map remains keyboard and screen-reader reachable." }
+runtime_config: []

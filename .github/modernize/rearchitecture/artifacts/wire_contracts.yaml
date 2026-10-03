@@ -1,0 +1,187 @@
+contracts:
+  - name: active-clinical-ai
+    unit: active-clinical-ai-api
+    type: rest
+    stability: frozen
+    source_loc: "server.ts:22"
+    contract: { method: POST, path: /api/clinical-ai, request: "{condition?,interventions?,patientProfile?,queryType?}", response: "{status:'success'|'fallback',source:string,content:string,error?:string}", error: "model errors return HTTP 200 fallback payload", auth: none }
+    target_contract: { method: "Router.post('/api/clinical-ai', clinicalAiHandler)", notes: "Validate JSON shape additively; retain deterministic fallback and response fields." }
+    semantic_divergence: []
+  - name: health
+    unit: legacy-health-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/app.ts:84"
+    contract: { method: GET, path: /health, request: none, response: "200 {ok:true,service:'salus-api',motto:string}", error: "global 500 envelope only", auth: none }
+    target_contract: { method: "Router.get('/health', healthHandler)", notes: "Preserve exact keys and values." }
+    semantic_divergence: []
+  - name: express-global-middleware
+    unit: global
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/app.ts:27"
+    contract: { method: "ALL", path: "*", request: "accept x-correlation-id, then x-request-id; JSON bodies limited to 1_000_000 bytes", response: "x-correlation-id plus CORS, nosniff, DENY frame, strict-origin referrer, restricted permissions, no-store; production HSTS", error: "413 {error:'Request body exceeds the 1 MB limit'}; terminal 500 {error:'Internal server error',correlationId}", auth: "route-specific after parsing" }
+    target_contract: { method: "createAppMiddleware() -> Express middleware chain", notes: "Order correlation, request.start log, CORS, security headers, size guard, JSON parsing, auth, routes, not-found, terminal error/request.finish; never log bearer headers, tokens, or bodies." }
+    semantic_divergence: []
+  - name: editor-status
+    unit: legacy-evidence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:123"
+    contract: { method: GET, path: /auth/editor-status, request: none, response: "200 {authenticated:true,actorEmail:string,groups:string[],isEditor:boolean}", error: "401 missing/invalid token; 503 missing issuer/audience", auth: "Bearer JWT, issuer+audience verified" }
+    target_contract: { method: "Router.get('/auth/editor-status', requireAuthenticated, editorStatusHandler)", notes: "Missing/malformed bearer -> 401 Missing bearer token; invalid/expired token -> 401 Invalid or expired token; missing issuer/audience -> 503; read verified email and cognito:groups, with exact evidence-editors membership controlling isEditor." }
+    semantic_divergence: []
+  - name: conditions-list
+    unit: legacy-evidence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:132"
+    contract: { method: GET, path: /conditions, request: none, response: "200 MedicalCondition[]", error: "500 global envelope", auth: none }
+    target_contract: { method: "Router.get('/conditions', listConditionsHandler)", notes: "Validate each response with medicalConditionSchema; serialized field names unchanged." }
+    semantic_divergence: []
+  - name: conditions-create
+    unit: legacy-evidence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:138"
+    contract: { method: POST, path: /conditions, request: MedicalCondition, response: "201 MedicalCondition", error: "400 flattened Zod validation; 401/403/503 auth errors", auth: "Bearer JWT with evidence-editors group" }
+    target_contract: { method: "Router.post('/conditions', requireAuthenticated, requireEditorRole, createConditionHandler)", notes: "Persist then emit condition.create audit record." }
+    semantic_divergence: []
+  - name: evidence-list
+    unit: legacy-evidence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:156"
+    contract: { method: GET, path: /evidence, request: "query conditionId?,includeDrafts?,q?,limit?,cursor?", response: "200 {metadata:{causalEquivalencyDisclaimer,message,pagination,query},rows:TreatmentEvidence[]}", error: "401/403/503 when drafts requested without editor access", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/evidence', listEvidenceHandler)", notes: "Case-insensitive corpus search; date-desc then evidenceId sort; limit 1..100; offset cursor string or null. Readers accept draft|published|rejected|under_review plus absent; only published or absent is public." }
+    semantic_divergence:
+      - { field: cursor, issue: "Cursor is a decimal offset string on input/nextCursor but numeric in metadata.cursor.", source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:26" }
+  - name: evidence-csv-export
+    unit: legacy-evidence-api
+    type: file
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:196"
+    contract: { method: GET, path: /evidence/export.csv, request: "query conditionId?,includeDrafts?,q?", response: "text/csv; charset=utf-8 with fixed 15-column header and attachment filename salus-evidence-export.csv", error: "401/403/503 for unauthorized drafts", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/evidence/export.csv', exportEvidenceCsvHandler)", notes: "RFC-style quote cells containing comma, quote, or newline; arrays joined with ' | '." }
+    semantic_divergence: []
+  - name: evidence-create
+    unit: legacy-evidence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:216"
+    contract: { method: POST, path: /evidence, request: TreatmentEvidence, response: "201 TreatmentEvidence with publicationStatus=draft", error: "400 validation/unknown condition; 409 duplicate evidenceId; 401/503 auth", auth: "authenticated Bearer JWT; editor group not required" }
+    target_contract: { method: "Router.post('/evidence', requireAuthenticated, createEvidenceHandler)", notes: "Force draft, reject unknown status values at mutation validation, default verification date, conditional create, then evidence.create audit; preserve publicationStatus spelling." }
+    semantic_divergence: []
+  - name: evidence-publish
+    unit: legacy-evidence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/evidence-routes.ts:248"
+    contract: { method: PATCH, path: "/evidence/:id/publish", request: "{publicationStatus:'draft'|'published'|'rejected'}", response: "200 updated TreatmentEvidence", error: "400 missing id/invalid status; 404 absent record; 401/403/503 auth", auth: "Bearer JWT with evidence-editors group" }
+    target_contract: { method: "Router.patch('/evidence/:id/publish', requireAuthenticated, requireEditorRole, publishEvidenceHandler)", notes: "Accept only draft|published|rejected on this endpoint; reject under_review and unknown values; conditionally update an existing item, then write evidence.<status> audit." }
+    semantic_divergence: []
+  - name: condition-intelligence
+    unit: legacy-intelligence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:26"
+    contract: { method: GET, path: "/intelligence/condition/:conditionId", request: "query mode=public|clinician,strictGates?,includeDrafts?", response: "200 ConditionIntelligence plus governance", error: "400 missing id; computation error returns fail-closed 200 INSUFFICIENT_EVIDENCE", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/intelligence/condition/:conditionId', conditionIntelligenceHandler)", notes: "Use one authorized evidence snapshot and mode; default sampleSize=100. Explicit strictGates query overrides STRICT_GOVERNANCE_GATES. Any fail/insufficient gate may only downgrade RECOMMEND to INSUFFICIENT_EVIDENCE; exceptions return the frozen zero-evidence HTTP 200 result." }
+    semantic_divergence: []
+  - name: evidence-intelligence
+    unit: legacy-intelligence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:100"
+    contract: { method: GET, path: "/intelligence/evidence/:evidenceId", request: "query mode=public|clinician,strictGates?,includeDrafts?", response: "200 EvidenceIntelligence", error: "400 missing id; 404 evidence not found; auth errors for drafts", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/intelligence/evidence/:evidenceId', evidenceIntelligenceHandler)", notes: "Strict gates may downgrade conditionDecision only; route handlers and AI output cannot create or upgrade recommendation state." }
+    semantic_divergence: []
+  - name: governance-gates
+    unit: legacy-intelligence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:138"
+    contract: { method: GET, path: "/intelligence/gates/:conditionId", request: "query mode=public|clinician,includeDrafts?", response: "200 ValidationGateReport", error: "400 missing id; auth errors for drafts", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/intelligence/gates/:conditionId', governanceGatesHandler)", notes: "Compute from same evidence snapshot and mode as condition intelligence." }
+    semantic_divergence: []
+  - name: interaction-timeline
+    unit: legacy-intelligence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:157"
+    contract: { method: GET, path: "/intelligence/interaction/:conditionId", request: "query interventionA,interventionB,hours?,includeDrafts?", response: "200 {conditionId,interventionA,interventionB,timeline,generatedAt}", error: "400 missing id/interventions; auth errors for drafts", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/intelligence/interaction/:conditionId', interactionTimelineHandler)", notes: "Clamp hours to 6..168 with default 48; preserve RK4 constants and risk thresholds." }
+    semantic_divergence: []
+  - name: intervention-trajectory
+    unit: legacy-intelligence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:203"
+    contract: { method: GET, path: "/intelligence/trajectory/:evidenceId", request: "query hours?,includeDrafts?", response: "200 {evidenceId,trajectory,generatedAt}", error: "400 missing id; 404 absent evidence; 500 failed computation", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/intelligence/trajectory/:evidenceId', trajectoryHandler)", notes: "Clamp hours to 6..168 with default 72; preserve route-specific 500 envelope." }
+    semantic_divergence: []
+  - name: dose-optimizer
+    unit: legacy-intelligence-api
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:242"
+    contract: { method: GET, path: "/intelligence/dose-optimizer/:evidenceId", request: "query includeDrafts?", response: "200 DoseOptimizationResult", error: "400 missing id; 404 absent evidence; 500 failed computation", auth: "public unless includeDrafts=true" }
+    target_contract: { method: "Router.get('/intelligence/dose-optimizer/:evidenceId', doseOptimizerHandler)", notes: "Preserve default sampleSize=100 and patientWeight=70 plus deterministic recommendation text." }
+    semantic_divergence: []
+  - name: cognito-authorize
+    unit: legacy-auth-callback
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:137"
+    contract: { method: GET, path: "{VITE_COGNITO_DOMAIN}/oauth2/authorize", request: "response_type=code,client_id,redirect_uri,scope,state,code_challenge_method=S256,code_challenge", response: "browser redirect to /auth/callback?code&state", error: "callback error/error_description", auth: "PKCE authorization code" }
+    target_contract: { method: "beginLogin(returnTo) -> window.location.assign(authorizeUrl)", notes: "Generate cryptographically random verifier/state and store only in sessionStorage." }
+    semantic_divergence: []
+  - name: cognito-token
+    unit: legacy-auth-callback
+    type: rest
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/apps/web/src/lib/auth.ts:181"
+    contract: { method: POST, path: "{VITE_COGNITO_DOMAIN}/oauth2/token", request: "application/x-www-form-urlencoded grant_type=authorization_code,client_id,code,redirect_uri,code_verifier", response: "{access_token,expires_in?}", error: "non-2xx text included in callback error; missing token rejected", auth: "PKCE verifier" }
+    target_contract: { method: "handleAuthCallback() -> Promise<AppRoute>", notes: "Validate state before exchange; session-store token+expiry; scrub callback query; restrict returnTo allowlist." }
+    semantic_divergence: []
+  - name: cognito-jwks
+    unit: legacy-evidence-api
+    type: sdk
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/api/src/auth.ts:17"
+    contract: { method: GET, path: "{COGNITO_ISSUER}/.well-known/jwks.json", request: "JWT kid lookup", response: JWKS, error: "invalid/expired token -> 401; missing auth config -> 503", auth: "issuer and audience verification" }
+    target_contract: { method: "verifyBearerToken(token) -> Promise<AuthClaims>", notes: "Require COGNITO_ISSUER and COGNITO_AUDIENCE; cache issuer JWKS; verify signature, issuer, audience, expiry/validity; preserve verified email and cognito:groups. Local bypass is explicit non-production/test only and is rejected in production." }
+    semantic_divergence: []
+  - name: clinicaltrials-source
+    unit: ingest-clinicaltrials
+    type: rest
+    stability: must_preserve
+    source_loc: "archive/legacy-monorepo/services/ingestion/src/clinicaltrials-ingestor.ts:6"
+    contract: { method: GET, path: "https://clinicaltrials.gov/api/v2/studies", request: "query.term,pageSize,format=json", response: "JSON studies parsed to NCT IDs and source timestamp", error: "bounded timeout/retry/rate-limit then deterministic sample", auth: none }
+    target_contract: { method: "ClinicalTrialsConnector.fetch(limit=5) -> Promise<{nctIds,sourceTimestamp}>", notes: "Preserve configured query, parser tolerance, fallback marker, and request bounds." }
+    semantic_divergence: []
+  - name: ayush-source
+    unit: ingest-ayush
+    type: rest
+    stability: must_preserve
+    source_loc: "archive/legacy-monorepo/services/ingestion/src/ayush-ingestor.ts:12"
+    contract: { method: GET, path: "{AYUSH_DATA_URL}", request: "provider-specific JSON", response: "rows|records parsed to AYUSH/DHARA refs and timestamp", error: "absent/failing source -> deterministic sample with fallbackUsed", auth: none }
+    target_contract: { method: "AyushConnector.fetch(limit=5) -> Promise<{refs,sourceTimestamp}>", notes: "Preserve parser tolerance and bounded HTTP policy." }
+    semantic_divergence: []
+  - name: ctri-source
+    unit: ingest-ctri
+    type: rest
+    stability: must_preserve
+    source_loc: "archive/legacy-monorepo/services/ingestion/src/ctri-ingestor.ts:12"
+    contract: { method: GET, path: "{CTRI_DATA_URL}", request: "provider-specific JSON", response: "trials|records parsed to CTRI/ICTRP refs and timestamp", error: "absent/failing source -> deterministic sample with fallbackUsed", auth: none }
+    target_contract: { method: "CtriConnector.fetch(limit=5) -> Promise<{refs,sourceTimestamp}>", notes: "Preserve parser tolerance and bounded HTTP policy." }
+    semantic_divergence: []
+  - name: pubmed-evidence-write
+    unit: ingest-pubmed
+    type: sdk
+    stability: frozen
+    source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:25"
+    contract: { method: "DynamoDB Get then Put", path: "DYNAMODB_TABLE/evidenceId", request: "PMID strings", response: "{source:'pubmed',ingested,skipped,reason?}", error: "missing table -> all skipped with reason", auth: "AWS SDK credential chain" }
+    target_contract: { method: "PubmedImporter.importPmids(pmids:string[]) -> Promise<ImportResult>", notes: "Normalize to draft TreatmentEvidence and call EvidenceRepository.createImportedDraft. DynamoDB performs one Put with attribute_not_exists(evidenceId); ConditionalCheckFailedException increments skipped, all other adapter errors surface, and no failure may switch to memory." }
+    semantic_divergence:
+      - { field: evidenceId, issue: "Source get-before-put is racy; binding ADR-06 intentionally strengthens the target to one conditional create while preserving first-write and visible ingested/skipped semantics.", source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:33" }

@@ -1,0 +1,11 @@
+unit: legacy-intelligence-api
+side_effects: []
+branches:
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:26", condition: "mode=clinician", behavior: "uses clinician interpretation; otherwise public mode", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:49", condition: "strict governance has any fail or insufficient-data gate", behavior: "deterministic governance downgrades RECOMMEND to INSUFFICIENT_EVIDENCE using the same authorized evidence snapshot and mode; it never upgrades a decision", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:15", condition: "includeDrafts=true", behavior: "requires evidence-editors authorization", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:74", trigger: "condition intelligence computation throws", outcome: "returns deterministic fail-closed result with zero evidence/scores, low coverage, empty contributions, and no recommendation", contract: "HTTP 200 decision=INSUFFICIENT_EVIDENCE", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:122", trigger: "evidence is not found", outcome: "not-found response", contract: "HTTP 404 {error:'Evidence not found'}", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:185", trigger: "interaction interventions missing", outcome: "validation response", contract: "HTTP 400 {error}", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/services/api/src/routes/intelligence-routes.ts:25", scope: "read-only repository snapshot followed by deterministic computation", isolation: "none", must_preserve: false } }

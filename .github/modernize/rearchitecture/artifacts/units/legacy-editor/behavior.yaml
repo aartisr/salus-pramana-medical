@@ -1,0 +1,9 @@
+unit: legacy-editor
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/editor-console.tsx:63", effect: "invalidates evidence queries after publication-status mutation", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/editor-console.tsx:64", effect: "announces successful editorial status update", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/editor-console.tsx:86", condition: "authenticated user lacks evidence-editors group", behavior: "publish controls remain disabled and role guidance is shown", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/apps/web/src/components/editor-console.tsx:129", trigger: "editor status cannot be verified", outcome: "protected controls stay disabled", contract: "fail closed", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/apps/web/src/components/editor-console.tsx:1", scope: "each editorial mutation independently commits on server", isolation: "conditional repository operation", must_preserve: true } }

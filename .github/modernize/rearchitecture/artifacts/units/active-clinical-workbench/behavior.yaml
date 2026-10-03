@@ -1,0 +1,8 @@
+unit: active-clinical-workbench
+side_effects:
+  - { source_loc: "src/services/recentSearchesDb.ts:101", effect: "persists recent clinical searches to IndexedDB and mirrors the bounded localStorage fallback", must_preserve: true }
+branches:
+  - { source_loc: "src/services/recentSearchesDb.ts:43", condition: "IndexedDB is unavailable", behavior: "uses bounded localStorage fallback", must_preserve: true }
+error_paths:
+  - { source_loc: "src/services/recentSearchesDb.ts:18", trigger: "IndexedDB unavailable or blocked", outcome: "search remains usable through local fallback", contract: "No workflow-blocking storage exception", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "src/services/recentSearchesDb.ts:101", scope: "single recent-search store operation", isolation: "IndexedDB transaction", must_preserve: true } }

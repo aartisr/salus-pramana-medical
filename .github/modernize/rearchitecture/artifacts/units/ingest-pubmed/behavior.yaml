@@ -1,0 +1,9 @@
+unit: ingest-pubmed
+side_effects:
+  - { source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:40", effect: "writes normalized draft evidence records to the evidence table", must_preserve: true }
+branches:
+  - { source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:26", condition: "DYNAMODB_TABLE is absent", behavior: "returns skipped count without writes", must_preserve: true }
+  - { source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:35", condition: "conditional create reports existing evidenceId", behavior: "increments skipped and preserves the first record byte-for-byte", must_preserve: true }
+error_paths:
+  - { source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:40", trigger: "repository error other than duplicate conditional conflict", outcome: "fails or surfaces the job error without counting it as skipped and without memory fallback", contract: "ImportResult is not reported as successful", must_preserve: true }
+concurrency: { model: async, tx_boundary: { source_loc: "archive/legacy-monorepo/services/ingestion/src/pubmed-ingestor.ts:33", scope: "one atomic createImportedDraft operation per normalized evidenceId", isolation: "DynamoDB Put attribute_not_exists(evidenceId), or equivalent single-process memory check-and-insert", must_preserve: true } }

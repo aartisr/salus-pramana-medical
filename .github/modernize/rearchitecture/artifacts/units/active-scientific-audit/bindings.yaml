@@ -1,0 +1,4 @@
+unit: active-scientific-audit
+bindings:
+  - { type: route-declaration, name: "GET /scientific-audit", source_loc: "src/app/router.tsx:16", target: ScientificAuditRoute, must_appear_in_target: true, notes: "Lazy route with shared root boundaries." }
+runtime_config: []
