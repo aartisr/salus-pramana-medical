@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { medicalConditions, treatmentEvidenceList } from '../data/salusRepositoryData';
+import { WorkspaceGuide } from './WorkspaceGuide';
 import { PersonaMode } from '../types/salus';
 import { Sparkles, Send, Bot, FileText, CheckCircle2, ShieldAlert, RefreshCw, Layers } from 'lucide-react';
 
@@ -10,6 +11,11 @@ interface AIClinicalSynthesisProps {
 export const AIClinicalSynthesis: React.FC<AIClinicalSynthesisProps> = ({
   selectedPersona,
 }) => {
+  const isPatientLens = selectedPersona === 'patient';
+  const isClinicianLens = selectedPersona === 'clinician';
+  const isResearcherLens = selectedPersona === 'researcher';
+  const isPolicyLens = selectedPersona === 'policy_maker';
+  const isAuditLens = selectedPersona === 'nobel_juror';
   const [selectedConditionId, setSelectedConditionId] = useState<string>(medicalConditions[0].conditionId);
   const [queryPrompt, setQueryPrompt] = useState<string>(
     'Synthesize the clinical evidence for combining first-line Metformin with botanical Berberine and time-restricted feeding in early Type 2 Diabetes. Detail CYP clearance pathways, lactic acid risk, and HbA1c trajectory.'
@@ -30,7 +36,17 @@ export const AIClinicalSynthesis: React.FC<AIClinicalSynthesisProps> = ({
           condition: activeCondition,
           interventions: treatmentEvidenceList.filter((e) => e.conditionId === activeCondition.conditionId),
           patientProfile: { age: 54, egfr: 72, comorbidities: ['Dyslipidemia', 'Mild Hypertension'] },
-          queryType: queryPrompt,
+          queryType: isPatientLens
+            ? `Explain in plain language for a patient or family advocate. Name uncertainty, avoid treatment instructions, and link each conclusion to its registry source. ${queryPrompt}`
+            : isClinicianLens
+            ? `Structure this for clinical review: state evidence grade, contraindications, interaction risk, uncertainty, source identifiers, and monitoring questions. Do not issue treatment orders. ${queryPrompt}`
+            : isResearcherLens
+            ? `Structure this for research audit: separate findings from assumptions, report evidence grade, study design, uncertainty, source identifiers, and reproducibility limitations. Do not make clinical recommendations. ${queryPrompt}`
+            : isPolicyLens
+            ? `Structure this for health-policy review: separate observed evidence from modelled population impact; state equity, affordability, adoption, unit, and uncertainty assumptions with source identifiers. Do not make individual treatment recommendations. ${queryPrompt}`
+            : isAuditLens
+            ? `Structure this for independent audit: separate claims, source records, methodology, uncertainty, governance gates, and limitations. Do not make clinical recommendations or imply external certification. ${queryPrompt}`
+            : queryPrompt,
         }),
       });
 
@@ -80,10 +96,10 @@ export const AIClinicalSynthesis: React.FC<AIClinicalSynthesisProps> = ({
               <span>EVIDENCE-GROUNDED REASONING & DIFFERENTIAL SYNTHESIS</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white font-cinzel mt-1">
-              Live Clinical AI Decision Engine
+              {isPatientLens ? 'Ask a plain-language evidence question' : isClinicianLens ? 'Ask a structured clinical evidence question' : isResearcherLens ? 'Ask a reproducible evidence question' : isPolicyLens ? 'Ask a population and equity evidence question' : isAuditLens ? 'Ask a claim-verification question' : 'Ask a registry-grounded evidence question'}
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Grounded exclusively in verifiable registry identifiers (PMID, DOI, CTRI, AYUSH, NCT) with non-hallucination governance
+              {isPatientLens ? 'Ask what the evidence says, what is uncertain, and what safety questions to discuss with a clinician.' : isClinicianLens ? 'Ask one focused question; the synthesis will prioritize evidence grade, contraindications, uncertainty, sources, and monitoring questions.' : isResearcherLens ? 'Ask one focused question; the synthesis will separate source-backed findings, assumptions, uncertainty, and reproducibility limits.' : isPolicyLens ? 'Ask one population question; the synthesis will distinguish evidence from scenario assumptions about access, affordability, and equity.' : isAuditLens ? 'Ask one claim question; the synthesis will separate sources, methods, uncertainty, governance gates, and stated limitations.' : 'Frame one focused question, then verify the source record behind every conclusion.'}
             </p>
           </div>
 
@@ -94,6 +110,16 @@ export const AIClinicalSynthesis: React.FC<AIClinicalSynthesisProps> = ({
           </div>
         </div>
       </div>
+
+      <WorkspaceGuide
+        title="Ask one evidence question at a time"
+        steps={[
+          'Choose the condition that gives the question its context.',
+          'State the comparison, safety concern, or uncertainty you need to examine.',
+          'Verify every cited source before using the synthesis in research work.',
+        ]}
+        boundary="Generated synthesis supports research review and is not medical advice."
+      />
 
       {/* Query Bar & Presets */}
       <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-4">
@@ -117,14 +143,14 @@ export const AIClinicalSynthesis: React.FC<AIClinicalSynthesisProps> = ({
 
           <div className="md:col-span-2">
             <label className="block text-xs font-mono uppercase text-slate-400 mb-1">
-              Clinical Inquiry / Multi-Paradigm Differential
+              {isPatientLens ? 'Your question' : isClinicianLens ? 'Clinical review question' : isResearcherLens ? 'Research audit question' : isPolicyLens ? 'Policy and equity question' : isAuditLens ? 'Claim verification question' : 'Clinical Inquiry / Multi-Paradigm Differential'}
             </label>
             <textarea
               rows={3}
               value={queryPrompt}
               onChange={(e) => setQueryPrompt(e.target.value)}
               className="w-full bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg p-2.5 font-sans focus:border-indigo-500 focus:outline-none"
-              placeholder="Ask for interaction dynamics, dose optimization, or comparative evidence..."
+              placeholder={isPatientLens ? 'For example: What should I ask my clinician about this combination?' : isClinicianLens ? 'For example: What contraindications, interaction risks, and monitoring questions apply to this combination?' : isResearcherLens ? 'For example: Which source records and assumptions support this comparison, and what would limit replication?' : isPolicyLens ? 'For example: Which affordability and access assumptions shape the estimated impact of this evidence program?' : isAuditLens ? 'For example: Which source records, governance gates, and limitations support this claim?' : 'Ask for interaction dynamics, dose optimization, or comparative evidence...'}
             />
           </div>
         </div>

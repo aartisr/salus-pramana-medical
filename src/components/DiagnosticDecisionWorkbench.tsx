@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { medicalConditions, treatmentEvidenceList } from '../data/salusRepositoryData';
 import { calculateDoseCandidates } from '../services/doseResponseOptimizer';
+import { WorkspaceGuide } from './WorkspaceGuide';
 import { PersonaMode } from '../types/salus';
 import { ShieldCheck, UserCheck, AlertOctagon, Sparkles, Sliders, CheckCircle2, AlertTriangle, ArrowRight, HeartHandshake } from 'lucide-react';
 
@@ -11,6 +12,8 @@ interface DiagnosticDecisionWorkbenchProps {
 export const DiagnosticDecisionWorkbench: React.FC<DiagnosticDecisionWorkbenchProps> = ({
   selectedPersona,
 }) => {
+  const isPatientLens = selectedPersona === 'patient';
+  const isClinicianLens = selectedPersona === 'clinician';
   const [selectedConditionId, setSelectedConditionId] = useState<string>(medicalConditions[0].conditionId);
   const [patientAge, setPatientAge] = useState<number>(54);
   const [patientEGFR, setPatientEGFR] = useState<number>(68);
@@ -123,10 +126,10 @@ export const DiagnosticDecisionWorkbench: React.FC<DiagnosticDecisionWorkbenchPr
               <span>POINT-OF-CARE CLINICAL DECISION SUPPORT</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white font-cinzel mt-1">
-              Multi-Paradigm Diagnostic & Regimen Workbench
+              {isPatientLens ? 'Review treatment safety questions' : isClinicianLens ? 'Build a clinical safety review' : 'Assess a simulated regimen, step by step'}
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Combines patient biomarkers with real-time contraindication matrices and Hill Equation dose optimization
+              {isPatientLens ? 'Choose the treatments you want to discuss, then review possible warnings to bring to a qualified clinician or pharmacist.' : isClinicianLens ? 'Review patient factors, selected interventions, contraindications, and modelled dose-response boundaries in one auditable workspace.' : 'Set simulated patient factors, choose interventions, and review the safety scan before exploring dose-response scenarios.'}
             </p>
           </div>
 
@@ -137,6 +140,22 @@ export const DiagnosticDecisionWorkbench: React.FC<DiagnosticDecisionWorkbenchPr
           </div>
         </div>
       </div>
+
+      <WorkspaceGuide
+        title={isClinicianLens ? 'Review patient factors, safety signals, and provenance' : 'Build a profile, select a regimen, then check safety'}
+        steps={isClinicianLens ? [
+          'Confirm the simulated renal, age, and pregnancy context before interpreting any alert.',
+          'Select only the interventions under review, then inspect every contraindication and source.',
+          'Use dose-response output as a model boundary—not a prescription—and document clinical judgment separately.',
+        ] : [
+          'Set the simulated patient factors and clinical indication.',
+          'Choose only the interventions you intend to evaluate together.',
+          'Review the safety scan before considering dose-response scenarios.',
+        ]}
+        boundary="The patient profile is simulated. Do not use this workspace to make a real treatment decision."
+      />
+
+      {isClinicianLens ? <div className="rounded-xl border border-indigo-500/35 bg-indigo-950/20 px-4 py-3 text-sm text-slate-200"><strong className="text-indigo-300">Clinical review mode:</strong> safety signals and source-level uncertainty inform review; they do not replace local protocols, medication reconciliation, or clinical judgment.</div> : null}
 
       {/* Main Grid: Patient Profile & Regimen Builder */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -291,7 +310,12 @@ export const DiagnosticDecisionWorkbench: React.FC<DiagnosticDecisionWorkbenchPr
           </div>
 
           {/* Hill Equation Sigmoidal Dose-Response Optimizer */}
-          {leadTreatment && (
+          {isPatientLens ? (
+            <div className="rounded-2xl border border-indigo-500/30 bg-indigo-950/20 p-5 text-sm text-slate-200">
+              <h3 className="font-cinzel font-bold text-white">Dose decisions stay with your clinical team</h3>
+              <p className="mt-2 leading-relaxed">This view intentionally does not present dose recommendations. Use the safety scan above to prepare questions for a clinician or pharmacist.</p>
+            </div>
+          ) : leadTreatment && (
             <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>

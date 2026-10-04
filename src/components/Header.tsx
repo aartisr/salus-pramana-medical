@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { Award, Download, BookOpen, LogIn, LogOut, UserCheck } from 'lucide-react';
+import { LogIn, LogOut, UserCheck } from 'lucide-react';
 import { PersonaMode } from '../types/salus';
 import { primaryFeatures } from '../app/feature-registry';
+import { getPersonaLens } from '../app/persona-lenses';
 import { AUTH_CHANGED_EVENT, authSnapshot, beginLogin, sanitizeReturnPath, signOut } from '../client/services/auth/session';
-import { WorkflowGuide } from './WorkflowGuide';
 import { FeatureNavigator } from './FeatureNavigator';
 
 interface HeaderProps {
@@ -23,12 +23,20 @@ export const Header: React.FC<HeaderProps> = ({
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const [auth, setAuth] = React.useState(authSnapshot);
   const [authMessage, setAuthMessage] = React.useState('');
+  const primaryNavRef = React.useRef<HTMLElement | null>(null);
+  const activeLens = getPersonaLens(selectedPersona);
 
   React.useEffect(() => {
     const updateAuth = () => setAuth(authSnapshot());
     window.addEventListener(AUTH_CHANGED_EVENT, updateAuth);
     return () => window.removeEventListener(AUTH_CHANGED_EVENT, updateAuth);
   }, []);
+
+  React.useEffect(() => {
+    primaryNavRef.current
+      ?.querySelector<HTMLElement>('[aria-current="page"]')
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [pathname]);
 
   const startLogin = () => {
     const returnTo = sanitizeReturnPath(pathname);
@@ -44,56 +52,9 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/90 backdrop-blur-md">
-      {/* Top Banner */}
-      <div className="border-b border-amber-500/20 bg-gradient-to-r from-amber-950/40 via-slate-900/60 to-indigo-950/40 px-3 sm:px-4 py-1.5 text-xs">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center space-x-2 text-amber-300 min-w-0">
-            <span className="flex h-2 w-2 shrink-0 rounded-full bg-amber-400 animate-ping" />
-            <span className="font-semibold tracking-wider uppercase text-[10px] sm:text-[11px] font-mono truncate">
-              Grounded in Peer-Reviewed Registries & Open Evidence Audit (PubMed • CTRI • Cochrane)
-            </span>
-            <span className="hidden lg:inline text-slate-400">|</span>
-            <span className="hidden lg:inline text-slate-300">
-              Repository: <strong className="text-amber-200">salus-pramana-medical</strong> by{' '}
-              <a
-                href="https://ai-aarti.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-amber-300 underline hover:text-amber-200 font-medium"
-              >
-                Aarti S Ravikumar
-              </a>
-            </span>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-3 text-slate-300 shrink-0">
-            <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-2 py-0.5 text-amber-300 font-mono text-[10px] sm:text-[11px] border border-amber-500/30">
-              <Award className="h-3 w-3 text-amber-400" />
-              Evaluation Benchmark: <strong>9.92 / 10.0</strong>
-            </span>
-            <button
-              onClick={onOpenCitationModal}
-              className="inline-flex items-center gap-1.5 rounded bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-300 hover:text-white px-2 py-0.5 sm:px-2.5 text-[11px] sm:text-xs transition border border-indigo-700/50"
-              title="Academic citations & AI discoverability metadata"
-            >
-              <BookOpen className="h-3 w-3 text-amber-400" />
-              <span className="hidden sm:inline">Cite / AIO</span>
-              <span className="sm:hidden">Cite</span>
-            </button>
-            <button
-              onClick={onOpenExportModal}
-              className="inline-flex items-center gap-1.5 rounded bg-slate-800 hover:bg-slate-700 px-2 py-0.5 sm:px-2.5 text-[11px] sm:text-xs text-slate-200 transition border border-slate-700"
-            >
-              <Download className="h-3 w-3 text-indigo-400" />
-              <span className="hidden sm:inline">Export Dossier</span>
-              <span className="sm:hidden">Export</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Header Row */}
-      <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-3 sm:px-4 py-2.5 sm:py-3">
+    <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/95 shadow-sm backdrop-blur-xl">
+      {/* A compact identity row keeps the site usable while leaving room for content. */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 sm:px-4 py-2">
         {/* Brand */}
         <div className="flex items-center space-x-2.5 sm:space-x-3">
           <img
@@ -101,11 +62,11 @@ export const Header: React.FC<HeaderProps> = ({
             alt=""
             width="40"
             height="40"
-            className="h-9 w-9 shrink-0 object-contain drop-shadow-sm sm:h-10 sm:w-10"
+            className="h-8 w-8 shrink-0 object-contain drop-shadow-sm sm:h-9 sm:w-9"
           />
           <div>
             <div className="flex items-center space-x-2">
-              <h1 className="text-base sm:text-lg font-bold tracking-tight text-white font-cinzel">
+              <h1 className="text-base font-bold tracking-tight text-white font-cinzel sm:text-lg">
                 SALUS <span className="text-amber-400 font-sans font-light">PRAMANA</span>
               </h1>
               <span className="rounded-full bg-indigo-500/20 px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold text-indigo-300 border border-indigo-500/30">
@@ -118,8 +79,9 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Persona Selector */}
-        <div className="flex w-full sm:w-auto items-center space-x-2 bg-slate-900/80 p-1 rounded-xl border border-slate-800 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Persona selector is useful context on larger screens; feature directory is the mobile navigator. */}
+          <div className="hidden md:flex w-auto items-center space-x-2 bg-slate-900/80 p-1 rounded-xl border border-slate-800">
           <div className="flex items-center gap-1.5 px-2 text-xs text-slate-400 shrink-0">
             <UserCheck className="h-3.5 w-3.5 text-amber-400" />
             <span className="hidden md:inline">Active Lens:</span>
@@ -135,12 +97,18 @@ export const Header: React.FC<HeaderProps> = ({
               </option>
             ))}
           </select>
+          </div>
+          <span className="hidden xl:inline text-[11px] text-slate-400 max-w-44 leading-tight" title={activeLens.purpose}>{activeLens.shortLabel}</span>
+          <button type="button" onClick={auth.authenticated ? signOut : startLogin} className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-slate-700 px-2.5 py-2 text-xs font-semibold text-slate-200 transition hover:bg-slate-800 sm:px-3" title={auth.authenticated ? 'Sign out' : auth.configured ? 'Sign in' : 'Sign in is unavailable'}>
+            {auth.authenticated ? <LogOut className="h-4 w-4" aria-hidden="true" /> : <LogIn className="h-4 w-4" aria-hidden="true" />}
+            <span className="hidden lg:inline">{auth.authenticated ? 'Sign out' : auth.configured ? 'Sign in' : 'Sign in unavailable'}</span>
+          </button>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="mx-auto flex max-w-7xl overflow-x-auto px-4 pb-1 scrollbar-none">
-        <nav aria-label="Primary research navigation" className="flex space-x-1">
+      {/* Horizontal scroll is intentional: no destination is squeezed, truncated, or inaccessible. */}
+      <div className="hidden border-t border-slate-800/80 bg-slate-900/55 md:block">
+        <nav ref={primaryNavRef} aria-label="Primary research navigation" className="hidden w-full gap-1 overflow-x-auto scroll-smooth px-3 py-1.5 md:flex sm:px-4 [scrollbar-width:thin]">
           {primaryFeatures.map((feature) => {
             const Icon = feature.icon;
             const isActive = pathname === feature.href;
@@ -148,7 +116,8 @@ export const Header: React.FC<HeaderProps> = ({
               <Link
                 key={feature.id}
                 to={feature.href as '/'}
-                className={`group flex items-center space-x-2 whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-medium transition-all ${
+                aria-current={isActive ? 'page' : undefined}
+                className={`group flex shrink-0 items-center space-x-2 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400/40'
                     : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border border-transparent'
@@ -170,15 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
           })}
         </nav>
       </div>
-      <div className="border-t border-slate-800/80 bg-slate-900/60">
-        <nav aria-label="Evidence and governance" className="mx-auto flex max-w-7xl flex-wrap items-center gap-1 px-4 py-2 text-xs">
-          <span className="ml-auto">
-            {auth.authenticated ? <button type="button" onClick={signOut} className="inline-flex min-h-9 items-center gap-2 rounded border border-slate-700 px-3 py-2 text-slate-200 hover:bg-slate-800"><LogOut className="h-4 w-4" aria-hidden="true" /> Sign out</button> : <button type="button" onClick={startLogin} className="inline-flex min-h-9 items-center gap-2 rounded border border-amber-500/50 px-3 py-2 text-amber-200 hover:bg-amber-950"><LogIn className="h-4 w-4" aria-hidden="true" /> {auth.configured ? 'Sign in' : 'Sign in unavailable'}</button>}
-          </span>
-          {authMessage ? <span role="alert" className="basis-full px-3 py-1 text-red-300">{authMessage}</span> : null}
-        </nav>
-      </div>
-      <WorkflowGuide />
+      {authMessage ? <p role="alert" className="border-t border-slate-800 bg-rose-950/30 px-4 py-2 text-center text-xs text-rose-300">{authMessage}</p> : null}
       <FeatureNavigator exportEvidence={onOpenExportModal} openCitations={onOpenCitationModal} />
     </header>
   );

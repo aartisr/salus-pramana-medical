@@ -1,5 +1,7 @@
 import { RepositoryCodeArchitecture } from '../components/RepositoryCodeArchitecture';
+import { useAppState } from '../app/app-context';
 
 export function ArchitectureRoute() {
-  return <RepositoryCodeArchitecture />;
+  const { selectedPersona } = useAppState();
+  return <RepositoryCodeArchitecture selectedPersona={selectedPersona} />;
 }

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { simulateInteractionDynamics } from '../services/odeInteractionSolver';
 import { PersonaMode } from '../types/salus';
 import { MathRenderer } from './MathRenderer';
+import { WorkspaceGuide } from './WorkspaceGuide';
 import { Brain, Sliders, ShieldAlert, Clock, Zap, RefreshCw, AlertTriangle, CheckCircle2, Play } from 'lucide-react';
 
 interface ODESimulationLabProps {
@@ -15,6 +16,9 @@ export const ODESimulationLab: React.FC<ODESimulationLabProps> = ({
   initialInterventionA = 'Metformin Hydrochloride (1000 mg)',
   initialInterventionB = 'Daruharidra / Berberine Extract (500 mg)',
 }) => {
+  const isPatientLens = selectedPersona === 'patient';
+  const isClinicianLens = selectedPersona === 'clinician';
+  const isResearcherLens = selectedPersona === 'researcher';
   const [interventionA, setInterventionA] = useState<string>(initialInterventionA);
   const [interventionB, setInterventionB] = useState<string>(initialInterventionB);
   const [interactionStrength, setInteractionStrength] = useState<number>(0.45);
@@ -126,14 +130,22 @@ export const ODESimulationLab: React.FC<ODESimulationLabProps> = ({
               <span>4TH-ORDER RUNGE-KUTTA DYNAMICAL PHARMACOKINETICS</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white font-cinzel mt-1">
-              Cross-Paradigm ODE Interaction Simulation Lab
+              {isPatientLens ? 'Check a possible treatment interaction' : isClinicianLens ? 'Model interaction timing and clinical risk' : isResearcherLens ? 'Inspect interaction assumptions and trajectories' : 'Explore an interaction model'}
             </h2>
-            <div className="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-2">
-              <span>Coupled Non-Linear RK4 System:</span>
-              <MathRenderer math="\frac{dc_1}{dt} = -k_1 c_1 - \beta c_1 c_2" className="text-amber-300 font-mono text-xs" />
-              <span className="text-slate-600">and</span>
-              <MathRenderer math="\frac{dc_2}{dt} = -k_2 c_2" className="text-teal-300 font-mono text-xs" />
-            </div>
+            {isPatientLens ? (
+              <p className="mt-1 max-w-2xl text-xs leading-relaxed text-slate-300">Choose two treatments to see an educational estimate of when their effects may overlap. Take any safety concern to a qualified clinician or pharmacist.</p>
+            ) : isClinicianLens ? (
+              <p className="mt-1 max-w-2xl text-xs leading-relaxed text-slate-300">Review the pair, clearance assumptions, peak-risk window, and source-linked safety context. This model supports reconciliation and monitoring discussion; it does not generate dosing orders.</p>
+            ) : isResearcherLens ? (
+              <p className="mt-1 max-w-2xl text-xs leading-relaxed text-slate-300">Inspect the coupled RK4 system, input parameters, time horizon, and generated trajectories. Change one assumption at a time to preserve an auditable comparison.</p>
+            ) : (
+              <div className="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-2">
+                <span>Transparent pharmacokinetic model:</span>
+                <MathRenderer math="\frac{dc_1}{dt} = -k_1 c_1 - \beta c_1 c_2" className="text-amber-300 font-mono text-xs" />
+                <span className="text-slate-600">and</span>
+                <MathRenderer math="\frac{dc_2}{dt} = -k_2 c_2" className="text-teal-300 font-mono text-xs" />
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -166,12 +178,30 @@ export const ODESimulationLab: React.FC<ODESimulationLabProps> = ({
         </div>
       </div>
 
+      <WorkspaceGuide
+        title={isClinicianLens ? 'Review the pair, risk window, and monitoring context' : isResearcherLens ? 'Fix inputs, inspect trajectories, then record assumptions' : 'Set the pair, review the risk curve, then adjust assumptions'}
+        steps={isClinicianLens ? [
+          'Confirm the intervention names and relevant patient context outside this model.',
+          'Review peak risk, timing, and concentration curves before changing assumptions.',
+          'Use source records and local protocol to decide any monitoring or escalation.',
+        ] : isResearcherLens ? [
+          'Select a preset or enter a pair, then record the exact intervention strings.',
+          'Inspect β, elimination rates, staggering, and time horizon before comparing curves.',
+          'Interpret the trajectory as a deterministic model output with stated—not inferred—assumptions.',
+        ] : [
+          'Begin with a preset or name the two interventions to examine.',
+          'Read the peak-risk result and concentration curves.',
+          'Adjust timing or model parameters only to explore a clearly stated assumption.',
+        ]}
+        boundary="This is an educational pharmacokinetic model, not a dosing or prescribing tool."
+      />
+
       {/* Main Simulation Workspace (Grid) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Controls Column */}
         <div className="lg:col-span-4 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-4">
-          <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider flex items-center gap-2">
-            <Sliders className="h-4 w-4 text-amber-400" /> ODE Parameters
+            <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider flex items-center gap-2">
+              <Sliders className="h-4 w-4 text-amber-400" /> {isPatientLens ? 'Interaction details' : 'ODE Parameters'}
           </h3>
 
           <div className="space-y-3 text-xs">
@@ -231,6 +261,7 @@ export const ODESimulationLab: React.FC<ODESimulationLabProps> = ({
               <span className="text-[10px] text-slate-500">Separates intake times to avoid simultaneous C_max peaks</span>
             </div>
 
+            {!isPatientLens ? <>
             {/* Elimination Rates */}
             <div className="grid grid-cols-2 gap-2 pt-2">
               <div>
@@ -275,6 +306,10 @@ export const ODESimulationLab: React.FC<ODESimulationLabProps> = ({
                 className="w-full accent-indigo-500"
               />
             </div>
+            </> : <details className="border-t border-slate-800 pt-3 text-xs">
+              <summary className="cursor-pointer font-semibold text-indigo-300">Advanced model settings</summary>
+              <p className="mt-2 text-slate-400">Model clearance rates and simulation duration are held at evidence-demo defaults in this view.</p>
+            </details>}
           </div>
         </div>
 

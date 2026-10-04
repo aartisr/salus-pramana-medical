@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { nobelEvaluationDossier } from '../data/nobelEvaluationData';
 import { NobelScoreMetric, PersonaMode } from '../types/salus';
 import { NobelMathematicalDefense } from './NobelMathematicalDefense';
+import { WorkspaceGuide } from './WorkspaceGuide';
 import { Award, ShieldAlert, CheckCircle2, TrendingUp, Cpu, HeartPulse, Globe2, Sparkles, Scale, BookOpen, Layers, Zap, ArrowRight, ExternalLink, Activity } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -20,6 +21,7 @@ export const NobelEvaluationSuite: React.FC<NobelEvaluationSuiteProps> = ({
   onNavigateToWorkbench,
   onNavigateToHealthEquity,
 }) => {
+  const isAuditLens = selectedPersona === 'nobel_juror';
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeMetricId, setActiveMetricId] = useState<string>(nobelEvaluationDossier.metrics[0].id);
 
@@ -55,7 +57,7 @@ export const NobelEvaluationSuite: React.FC<NobelEvaluationSuiteProps> = ({
             </div>
 
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white font-cinzel">
-              SALUS Pramana Medical: <span className="text-amber-400">Global Health Service & Empirical Evidence Rigor</span>
+              {isAuditLens ? <>Audit the claim: <span className="text-amber-400">scope, evidence, and limitation</span></> : <>Independent evaluation dossier: <span className="text-amber-400">scope, evidence, and method</span></>}
             </h2>
 
             <p className="text-sm md:text-base leading-relaxed text-slate-300 font-sans">
@@ -120,6 +122,22 @@ export const NobelEvaluationSuite: React.FC<NobelEvaluationSuiteProps> = ({
           </div>
         </div>
       </div>
+
+      <WorkspaceGuide
+        title={isAuditLens ? 'Audit scope, evidence, and governance before score' : 'Read the evaluation in three passes'}
+        steps={isAuditLens ? [
+          'Read the transparency note and distinguish author-conducted benchmarks from external certification.',
+          'Inspect the relevant dimension, source basis, and limitations before interpreting a score.',
+          'Open the mathematical defense and governance evidence when verifying a specific claim.',
+        ] : [
+          'Start with the transparency note and the scope of the benchmark.',
+          'Review the relevant dimension rather than scanning every score.',
+          'Open the mathematical defense only when you need the underlying method.',
+        ]}
+        boundary="This is an author-conducted benchmark, not an external accreditation or clinical certification."
+      />
+
+      {isAuditLens ? <div className="rounded-xl border border-amber-500/35 bg-amber-950/20 px-4 py-3 text-sm text-slate-200"><strong className="text-amber-300">Audit mode:</strong> scorecards are secondary evidence. Verify the benchmark scope, primary source record, stated methodology, governance gate, and limitation for the specific claim under review.</div> : null}
 
       {/* 4 Pillars of Transcendental Impact (Grid) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

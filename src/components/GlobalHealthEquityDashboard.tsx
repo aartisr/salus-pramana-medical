@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { D3WorldMap } from './D3WorldMap';
+import { WorkspaceGuide } from './WorkspaceGuide';
 import {
   countryHealthEquityProfiles,
   globalHealthEquitySummary,
@@ -37,6 +38,7 @@ export const GlobalHealthEquityDashboard: React.FC<GlobalHealthEquityDashboardPr
   onNavigateToStudio,
   onNavigateToODELab,
 }) => {
+  const isPolicyLens = selectedPersona === 'policy_maker';
   const [selectedMetric, setSelectedMetric] = useState<EquityMetricKey>('gheiScore');
   const [selectedCountry, setSelectedCountry] = useState<CountryHealthEquityProfile>(
     countryHealthEquityProfiles[0] // Default to India
@@ -63,6 +65,11 @@ export const GlobalHealthEquityDashboard: React.FC<GlobalHealthEquityDashboardPr
     }, 2800);
     return () => clearInterval(interval);
   }, []);
+
+  // Policy review begins with affordability, the most actionable equity signal.
+  useEffect(() => {
+    if (isPolicyLens) setSelectedMetric('outOfPocketCostPct');
+  }, [isPolicyLens]);
 
   // Policy Simulation Calculations
   const simulatedImpact = useMemo(() => {
@@ -118,16 +125,16 @@ export const GlobalHealthEquityDashboard: React.FC<GlobalHealthEquityDashboardPr
             </div>
 
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white font-cinzel">
-              Global Health Equity Index: <span className="text-emerald-400">Democratizing Medical Truth</span>
+              {isPolicyLens ? <>Plan equitable evidence access, <span className="text-emerald-400">country by country</span></> : <>Explore health equity, <span className="text-emerald-400">country by country</span></>}
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-              Visualizing the real-time global divide across <strong className="text-white">6.42 billion people</strong> utilizing Traditional & Complementary Medicine alongside allopathic pharmacotherapy. SALUS Pramana provides the open, zero-cost scientific bridge that eliminates lethal drug collisions and secures healthcare equity.
+              {isPolicyLens ? 'Begin with out-of-pocket burden, then compare coverage, workforce, and traditional-medicine reliance. Test deployment scenarios only with their assumptions and units visible.' : 'Compare the indicators behind access, affordability, and traditional-medicine reliance. Select a map layer, then a country, to keep each conclusion connected to its inputs.'}
             </p>
           </div>
 
           {/* Live Telemetry Ticker Box */}
-          <div className="w-full rounded-2xl border border-slate-800 bg-slate-950/90 p-4 shadow-xl space-y-2 lg:w-auto lg:min-w-[260px]">
+          <div className="hidden w-full rounded-2xl border border-slate-800 bg-slate-950/90 p-4 shadow-xl space-y-2 lg:block lg:w-auto lg:min-w-[260px]">
             <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
               <span className="flex items-center gap-1.5 text-emerald-400">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
@@ -153,8 +160,13 @@ export const GlobalHealthEquityDashboard: React.FC<GlobalHealthEquityDashboardPr
           </div>
         </div>
 
-        {/* Global Summary KPI Tiles */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-slate-800/80">
+        {/* Context metrics are available on demand; the map remains the first task. */}
+        <details className="group border-t border-slate-800/80 pt-3">
+          <summary className="cursor-pointer list-none flex items-center justify-between rounded-lg text-xs font-mono font-semibold text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+            <span>Global context and benchmark indicators</span>
+            <ChevronRight className="h-4 w-4 text-slate-400 transition-transform group-open:rotate-90" aria-hidden="true" />
+          </summary>
+        <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3 space-y-1">
             <span className="text-[10px] font-mono text-slate-400 block uppercase">Traditional Med Reliance</span>
             <div className="text-xl sm:text-2xl font-extrabold text-teal-300 font-mono">
@@ -187,13 +199,30 @@ export const GlobalHealthEquityDashboard: React.FC<GlobalHealthEquityDashboardPr
             <span className="text-[10px] text-slate-400">Target: 85+ by 2030</span>
           </div>
         </div>
+        </details>
       </div>
+
+      <WorkspaceGuide
+        title={isPolicyLens ? 'Start with affordability, then test a stated scenario' : 'Start with the map, then inspect a country'}
+        steps={isPolicyLens ? [
+          'Compare out-of-pocket burden first, then examine coverage and workforce indicators.',
+          'Select a country to inspect policy context, active traditions, and the visible data inputs.',
+          'Use the deployment calculator as a scenario model; retain its adoption and unit assumptions in every comparison.',
+        ] : [
+          'Choose the map layer that answers your question.',
+          'Select a country to see its indicators and assumptions.',
+          'Use the policy simulator only when you want to test a stated scenario.',
+        ]}
+        boundary="Population estimates are scenario outputs, not forecasts or clinical recommendations."
+      />
+
+      {isPolicyLens ? <div className="rounded-xl border border-emerald-500/35 bg-emerald-950/20 px-4 py-3 text-sm text-slate-200"><strong className="text-emerald-300">Policy review mode:</strong> affordability is selected by default. Compare indicators before using the deployment calculator, and treat its results as modelled scenarios rather than forecasts.</div> : null}
 
       {/* Interactive Metric Filter Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800">
         <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
           <Sliders className="h-4 w-4 text-emerald-400" />
-          <span>Select Map Layer:</span>
+          <span>{isPolicyLens ? 'Choose Policy Indicator:' : 'Select Map Layer:'}</span>
         </div>
 
         {/* Metric Selector Pills */}
@@ -398,10 +427,10 @@ export const GlobalHealthEquityDashboard: React.FC<GlobalHealthEquityDashboardPr
               <span>INTERACTIVE WHO / GLOBAL HEALTH MINISTRY POLICY SIMULATION</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-white font-cinzel mt-1">
-              Global Deployment Impact Calculator
+              {isPolicyLens ? 'Policy deployment scenario calculator' : 'Global Deployment Impact Calculator'}
             </h3>
             <p className="text-xs text-slate-300 mt-0.5">
-              Simulate the global epidemiological and economic return on deploying SALUS Pramana across Low-and-Middle-Income Countries (LMICs)
+              {isPolicyLens ? 'Test a stated adoption assumption and inspect modelled health, affordability, and safety outputs with their units visible.' : 'Simulate the global epidemiological and economic return on deploying SALUS Pramana across Low-and-Middle-Income Countries (LMICs)'}
             </p>
           </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { medicalConditions, treatmentEvidenceList } from '../data/salusRepositoryData';
+import { WorkspaceGuide } from './WorkspaceGuide';
 import { computeConditionIntelligence } from '../services/pramanaCalculus';
 import { MedicalCondition, TreatmentEvidence, PersonaMode, MedicalSystem } from '../types/salus';
 import { Activity, ShieldCheck, Filter, Search, BookOpen, ChevronRight, CheckCircle2, AlertTriangle, Sparkles, Database, ExternalLink, Sliders } from 'lucide-react';
@@ -13,6 +14,9 @@ export const ClinicalIntelligenceStudio: React.FC<ClinicalIntelligenceStudioProp
   selectedPersona,
   onSelectInterventionForODE,
 }) => {
+  const isPatientLens = selectedPersona === 'patient';
+  const isClinicianLens = selectedPersona === 'clinician';
+  const isResearcherLens = selectedPersona === 'researcher';
   const [selectedConditionId, setSelectedConditionId] = useState<string>(medicalConditions[0].conditionId);
   const [selectedSystemFilter, setSelectedSystemFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -56,7 +60,7 @@ export const ClinicalIntelligenceStudio: React.FC<ClinicalIntelligenceStudioProp
               <span>SALUS PRAMANA CROSS-SYSTEM CLINICAL INTELLIGENCE</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white font-cinzel mt-1">
-              {activeCondition.standardName}
+              {isPatientLens ? `Evidence overview: ${activeCondition.standardName}` : isClinicianLens ? `Clinical evidence review: ${activeCondition.standardName}` : isResearcherLens ? `Evidence and uncertainty audit: ${activeCondition.standardName}` : activeCondition.standardName}
             </h2>
             <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-400">
               <span className="rounded bg-indigo-500/20 px-2 py-0.5 text-indigo-300 font-mono font-semibold border border-indigo-500/30">
@@ -91,8 +95,8 @@ export const ClinicalIntelligenceStudio: React.FC<ClinicalIntelligenceStudioProp
           </div>
         </div>
 
-        {/* Traditional Nosology & Cross-Tradition Mapping */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-slate-800/80 text-xs">
+        {/* Patient view keeps unfamiliar terminology out of the first decision. */}
+        {isPatientLens ? <p className="border-t border-slate-800/80 pt-3 text-sm leading-relaxed text-slate-300">This overview compares available research across care traditions. A stronger score means stronger support in the records—it does not mean a treatment is right for you.</p> : <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-slate-800/80 text-xs">
           <div className="rounded-lg bg-slate-950/60 p-3 border border-slate-800">
             <span className="text-[11px] font-mono text-amber-400 font-bold uppercase tracking-wide block">
               Ayurvedic Nosology
@@ -113,8 +117,29 @@ export const ClinicalIntelligenceStudio: React.FC<ClinicalIntelligenceStudioProp
             </span>
             <p className="text-slate-200 font-medium mt-0.5">{activeCondition.naturopathicContext || 'N/A'}</p>
           </div>
-        </div>
+        </div>}
       </div>
+
+      <WorkspaceGuide
+        title={isPatientLens ? 'Start with the evidence summary' : isClinicianLens ? 'Review decision status, then source records' : isResearcherLens ? 'Start with the aggregate, then audit each contribution' : 'Start with a condition, then compare evidence'}
+        steps={isClinicianLens ? [
+          'Confirm the condition and read the recommendation class with its confidence interval.',
+          'Filter the ledger by evidence grade or care system to inspect the clinical record.',
+          'Open the source and interaction model before using a finding in care review.',
+        ] : isResearcherLens ? [
+          'Record the selected condition, data timestamp, and aggregate confidence interval.',
+          'Use the ledger filters to inspect grade, design, bias, recency, and source records.',
+          'Compare system breakdowns without treating evidence grades as interchangeable.',
+        ] : [
+          'Choose the clinical indication you want to examine.',
+          'Read the evidence summary before filtering individual records.',
+          'Open a source record or run an interaction simulation when a question warrants it.',
+        ]}
+        boundary="Scores summarize the available records; they do not replace individual clinical judgment."
+      />
+
+      {isClinicianLens ? <div className="rounded-xl border border-indigo-500/35 bg-indigo-950/20 px-4 py-3 text-sm text-slate-200"><strong className="text-indigo-300">Clinical review mode:</strong> recommendation classes summarize the repository. Verify the registry source, patient-specific contraindications, and local guidance before acting.</div> : null}
+      {isResearcherLens ? <div className="rounded-xl border border-amber-500/35 bg-amber-950/20 px-4 py-3 text-sm text-slate-200"><strong className="text-amber-300">Research audit mode:</strong> use the ledger to inspect each score contribution, source identifier, study design, bias signal, and recency weight before interpreting an aggregate.</div> : null}
 
       {/* Aggregate Condition Intelligence Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

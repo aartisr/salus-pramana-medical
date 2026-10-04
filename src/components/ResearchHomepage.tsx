@@ -74,6 +74,12 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
   const [recentSearches, setRecentSearches] = useState<RecentSearchItem[]>([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1);
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const isPatientLens = selectedPersona === 'patient';
+  const isClinicianLens = selectedPersona === 'clinician';
+  const isResearcherLens = selectedPersona === 'researcher';
+  const isPolicyLens = selectedPersona === 'policy_maker';
+  const isAuditLens = selectedPersona === 'nobel_juror';
 
   // Load Recent Searches from IndexedDB
   const refreshRecentSearches = async () => {
@@ -358,7 +364,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
 
   return (
     <div className="space-y-12 pb-24">
-      {/* SECTION 1: Prestigious Medical Research Institute Hero */}
+      {/* SECTION 1: Mission, search, and a clear first action */}
       <div className="relative overflow-hidden rounded-3xl border border-amber-500/30 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 p-6 sm:p-10 lg:p-12 shadow-2xl">
         {/* Glow ambient backdrops */}
         <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
@@ -366,67 +372,39 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
         <div className="absolute -bottom-32 left-1/3 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-6 max-w-5xl">
-          {/* Institutional Badge */}
+          {/* Institutional badge */}
           <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-3.5 py-1.5 text-xs font-mono font-semibold text-amber-300 backdrop-blur-md">
             <Award className="h-4 w-4 text-amber-400" />
-            <span>GLOBAL SCIENTIFIC COMMONS FOR EVIDENCE-AWARE INTEGRATIVE MEDICINE</span>
+            <span>OPEN, EVIDENCE-AWARE INTEGRATIVE MEDICINE</span>
             <span className="text-amber-500/80">•</span>
-            <span className="text-amber-200">Gold-Standard Benchmark: 9.92/10.0</span>
+            <span className="text-amber-200">Traceable claims. Explicit uncertainty.</span>
           </div>
 
-          {/* Main Hero Title */}
+          {/* Main hero title */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight ink-primary font-cinzel leading-tight">
-            The Evidence Behind Every <span className="heading-accent">Path to Healing</span>
+            {isPatientLens ? <>Understand the evidence before you <span className="heading-accent">make a care choice</span></> : isClinicianLens ? <>Start with evidence. <span className="heading-accent">End with safer care.</span></> : isResearcherLens ? <>Inspect the evidence. <span className="heading-accent">Reproduce the reasoning.</span></> : isPolicyLens ? <>Plan from evidence. <span className="heading-accent">Measure the equity impact.</span></> : isAuditLens ? <>Test the claim. <span className="heading-accent">Inspect the evidence trail.</span></> : <>See the evidence before you <span className="heading-accent">choose a path</span></>}
           </h1>
 
-          {/* Core Scientific Thesis */}
-          <p className="text-base sm:text-lg lg:text-xl text-slate-300 font-serif italic leading-relaxed max-w-4xl">
-            "Integrative medicine needs a transparent evidence operating system, not another opinion engine. SALUS unifies Allopathy, Ayurveda, Siddha, and Naturopathy without pretending all evidence is equivalent—every claim is inspectable, every citation is traceable, and every recommendation is constrained by published mathematics."
+          <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed max-w-3xl">
+            {isPatientLens
+              ? 'Start with a condition or treatment. SALUS shows what the research says, how certain it is, and when a safety question needs a clinician.'
+              : isClinicianLens
+              ? 'Review intervention evidence, contraindications, and interaction risk with the source record and uncertainty visible at the point of review.'
+              : isResearcherLens
+              ? 'Trace each finding from registry source to evidence grade, uncertainty, model assumption, and reproducible calculation.'
+              : isPolicyLens
+              ? 'Compare access, affordability, evidence coverage, and modelled population impact before testing a clearly stated deployment scenario.'
+              : isAuditLens
+              ? 'Inspect the source record, evidence grade, uncertainty, governance gate, and stated limitation behind every claim.'
+              : 'Search condition and treatment evidence across medical traditions. SALUS makes the source, evidence grade, uncertainty, and safety boundaries visible—without treating unlike evidence as equal.'}
           </p>
 
-          <div className="text-xs sm:text-sm text-slate-400 font-sans flex flex-wrap items-center gap-2">
-            <span>
-              Authored by:{' '}
-              <a
-                href="https://ai-aarti.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-amber-300 font-bold hover:text-amber-200 underline inline-flex items-center gap-1 transition"
-              >
-                Aarti S Ravikumar
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            </span>
-            <span>•</span>
-            <span className="text-slate-300">Pioneer Charter School of Science II</span>
-            <span>•</span>
-            <a
-              href="https://github.com/aartisr/salus-pramana-medical.git"
-              target="_blank"
-              rel="noreferrer"
-              className="text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1 underline font-mono"
-            >
-              GitHub: salus-pramana-medical
-              <ExternalLink className="h-3 w-3" />
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-slate-400">
+            <span className="text-slate-300">{isPatientLens ? 'For learning and discussion with a qualified clinician—not individual medical advice.' : 'For research and learning—not individual medical advice.'}</span>
+            <span aria-hidden="true">•</span>
+            <a href="https://github.com/aartisr/salus-pramana-medical.git" target="_blank" rel="noreferrer" className="text-indigo-300 hover:text-indigo-200 inline-flex items-center gap-1 underline transition">
+              Inspect the open research record <ExternalLink className="h-3 w-3" />
             </a>
-          </div>
-
-          {/* Hero Notification CTA */}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <button
-              onClick={() => setIsNotificationModalOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-indigo-500/20 hover:from-amber-500/30 hover:to-indigo-500/30 border border-amber-500/50 hover:border-amber-400 px-3.5 py-1.5 text-xs font-mono font-semibold text-amber-300 transition shadow-lg shadow-amber-500/10 group"
-            >
-              <BellRing className="h-3.5 w-3.5 text-amber-400 animate-pulse group-hover:scale-110 transition-transform" />
-              <span>Get Notified of New Evidence</span>
-              {searchQuery.trim() ? (
-                <span className="rounded bg-slate-900/90 px-1.5 py-0.5 text-[10px] text-amber-200 border border-amber-500/30 font-sans">
-                  for "{searchQuery}"
-                </span>
-              ) : (
-                <span className="text-[10px] text-slate-400 font-sans">(Email Alerts)</span>
-              )}
-            </button>
           </div>
 
           {/* GLOBAL EVIDENCE SEARCH BAR */}
@@ -440,6 +418,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                 <Search className="h-5 w-5" />
               </div>
               <input
+                ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onFocus={() => setIsSearchFocused(true)}
@@ -475,7 +454,8 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                     setSelectedSuggestionIndex(-1);
                   }
                 }}
-                placeholder="Search any condition (e.g. Diabetes, BA00) or treatment (Metformin, Berberine, Ashwagandha)..."
+                aria-label="Search evidence by condition, code, or treatment"
+                placeholder="Search a condition, ICD-11 code, or treatment"
                 className="w-full bg-transparent py-3.5 pr-10 text-sm text-white placeholder-slate-400 focus:outline-none font-sans"
               />
               {searchQuery && (
@@ -537,7 +517,7 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
                 <span className="text-slate-400 font-mono text-[11px] flex items-center gap-1">
                   <Sparkles className="h-3 w-3 text-amber-400" /> Quick Index:
                 </span>
-                {quickSearchPresets.map((preset, idx) => (
+                {quickSearchPresets.slice(0, 4).map((preset, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSelectQuery(preset.query)}
@@ -822,44 +802,36 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
             )}
           </div>
 
-          {/* Action CTAs */}
+          {/* One primary action, one next-step choice, and quiet utility actions */}
           <div className="pt-2 flex flex-wrap items-center gap-3">
             <button
-              onClick={() => onNavigateToTab('health-equity')}
+              onClick={() => searchInputRef.current?.focus()}
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 px-5 py-3 text-xs sm:text-sm font-bold text-white shadow-xl shadow-emerald-600/30 transition transform hover:-translate-y-0.5"
             >
-              <Globe2 className="h-4 w-4" />
-              Explore Global Health Equity Map (D3)
+              <Search className="h-4 w-4" />
+              Search the evidence
               <ArrowRight className="h-4 w-4" />
-            </button>
-
-            <button
-              onClick={() => onNavigateToTab('nobel-dossier')}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 px-5 py-3 text-xs sm:text-sm font-bold text-slate-950 shadow-xl shadow-amber-600/30 transition transform hover:-translate-y-0.5"
-            >
-              <Award className="h-4 w-4 text-slate-950" />
-              Read Scientific Audit & Verification Dossier
             </button>
 
             <button
               onClick={() => onNavigateToTab('intelligence-studio')}
               className="inline-flex items-center gap-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 px-5 py-3 text-xs sm:text-sm font-semibold text-slate-200 border border-slate-700 transition"
             >
-              <Activity className="h-4 w-4 text-indigo-400" />
-              Launch Cross-System Studio
+              <Activity className="h-4 w-4 text-indigo-300" />
+              Compare across systems
             </button>
 
             <button
               onClick={() => setIsNotificationModalOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-500/40 hover:border-amber-400 px-5 py-3 text-xs sm:text-sm font-semibold transition shadow-md"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-amber-300 hover:text-amber-200 transition"
             >
-              <BellRing className="h-4 w-4 text-amber-400" />
-              <span>Get Notified of New Evidence</span>
+              <BellRing className="h-3.5 w-3.5" />
+              Evidence alerts
             </button>
 
             <button
               onClick={handleShareResearch}
-              className={`inline-flex items-center gap-2 rounded-xl px-5 py-3 text-xs sm:text-sm font-semibold transition border ${
+              className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition ${
                 copiedShareLink
                   ? 'bg-emerald-600 text-white border-emerald-400 shadow-lg shadow-emerald-600/30'
                   : 'bg-slate-900/90 hover:bg-slate-800 text-amber-300 border-amber-500/40 hover:border-amber-400 shadow-md'
@@ -880,10 +852,6 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
             </button>
           </div>
 
-          {/* Interactive D3 Force Graph of Inter-Paradigm Citations */}
-          <div className="pt-4">
-            <InterParadigmCitationGraph />
-          </div>
         </div>
 
         {/* Live Empirical Research Ticker */}
@@ -922,7 +890,52 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
         </div>
       </div>
 
-      {/* SECTION 2: 6-Pillar Scientific Charter */}
+      {/* SECTION 2: three recognisable starting paths */}
+      <section aria-labelledby="choose-path-heading" className="space-y-5">
+        <div className="max-w-2xl space-y-2">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">START WITH YOUR QUESTION</span>
+          <h2 id="choose-path-heading" className="text-2xl sm:text-3xl font-bold text-white font-cinzel">{isPatientLens ? 'Start with the question you have today' : isClinicianLens ? 'Choose the clinical review you need' : isResearcherLens ? 'Choose the evidence question you need to audit' : isPolicyLens ? 'Choose the population question you need to answer' : isAuditLens ? 'Choose the claim you need to verify' : 'Three ways to begin, one evidence standard'}</h2>
+          <p className="text-sm text-slate-300 leading-relaxed">{isPatientLens ? 'Find evidence, check a possible interaction, or understand access to care. Sources and uncertainty stay close to every conclusion.' : isClinicianLens ? 'Review evidence, assess interaction risk, or inspect equity context. Each route keeps clinical safety and provenance in view.' : isResearcherLens ? 'Inspect sources, compare systems, or test model assumptions. Every route exposes the evidence trail behind its output.' : isPolicyLens ? 'Start with equity indicators, inspect the country context, then test an explicit adoption scenario and its assumptions.' : isAuditLens ? 'Inspect the benchmark, source records, and governance gates before reading any modelled outcome or impact statement.' : 'Choose the task in front of you. Each workspace keeps sources and uncertainty close to the conclusion.'}</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button onClick={() => searchInputRef.current?.focus()} className="group text-left rounded-2xl border border-amber-500/35 bg-slate-900/80 p-5 space-y-3 hover:border-amber-400 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400">
+            <div className="rounded-xl bg-amber-500/15 p-2.5 text-amber-300 w-fit"><Search className="h-5 w-5" /></div>
+            <h3 className="font-bold text-white text-lg">Find evidence</h3>
+            <p className="text-sm text-slate-300 leading-relaxed">Search conditions, interventions, and registry records before comparing options.</p>
+            <span className="inline-flex items-center gap-1 text-sm font-semibold text-amber-300">Search the registry <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition" /></span>
+          </button>
+          <button onClick={() => onNavigateToTab('ode-lab')} className="group text-left rounded-2xl border border-teal-500/35 bg-slate-900/80 p-5 space-y-3 hover:border-teal-400 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400">
+            <div className="rounded-xl bg-teal-500/15 p-2.5 text-teal-300 w-fit"><ShieldCheck className="h-5 w-5" /></div>
+            <h3 className="font-bold text-white text-lg">Assess interaction safety</h3>
+            <p className="text-sm text-slate-300 leading-relaxed">Model herb–drug timing and concentration risk with transparent assumptions.</p>
+            <span className="inline-flex items-center gap-1 text-sm font-semibold text-teal-300">Open the safety lab <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition" /></span>
+          </button>
+          <button onClick={() => onNavigateToTab('health-equity')} className="group text-left rounded-2xl border border-emerald-500/35 bg-slate-900/80 p-5 space-y-3 hover:border-emerald-400 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+            <div className="rounded-xl bg-emerald-500/15 p-2.5 text-emerald-300 w-fit"><Globe2 className="h-5 w-5" /></div>
+            <h3 className="font-bold text-white text-lg">Explore global equity</h3>
+            <p className="text-sm text-slate-300 leading-relaxed">See how evidence access, cost, and health burden vary across regions.</p>
+            <span className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-300">View the equity map <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition" /></span>
+          </button>
+        </div>
+      </section>
+
+      {/* Advanced methods stay available without competing with the first visit. */}
+      <details className="group rounded-3xl border border-slate-800 bg-slate-900/55 p-5 sm:p-7">
+        <summary className="cursor-pointer list-none flex flex-wrap items-center justify-between gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-lg">
+          <div>
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">FOR DEEPER REVIEW</span>
+            <h2 className="mt-1 text-xl sm:text-2xl font-bold text-white font-cinzel">Methods, governance, and every SALUS workspace</h2>
+            <p className="mt-1 text-sm text-slate-300">Inspect the scientific charter, proof engine, registry rules, citation graph, and complete workstation directory.</p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm font-semibold text-slate-200 group-open:hidden">Explore details <ChevronRight className="h-4 w-4" /></span>
+          <span className="hidden group-open:inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm font-semibold text-slate-200">Close details <ChevronRight className="h-4 w-4 rotate-90" /></span>
+        </summary>
+        <div className="pt-8 space-y-12">
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4 sm:p-6">
+            <InterParadigmCitationGraph />
+          </div>
+
+      {/* SECTION 3: 6-Pillar Scientific Charter */}
       <div className="space-y-4">
         <div className="text-center max-w-3xl mx-auto space-y-2">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">
@@ -1357,6 +1370,8 @@ export const ResearchHomepage: React.FC<ResearchHomepageProps> = ({
           </div>
         </div>
       </div>
+        </div>
+      </details>
 
       {/* Math Foundations & LaTeX Proofs Modal */}
       <MathFoundationsModal

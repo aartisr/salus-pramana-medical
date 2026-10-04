@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { generateSyntheticCalibrationReport, SyntheticCalibrationReport } from '../services/calibrationReportService';
+import { WorkspaceGuide } from './WorkspaceGuide';
+import { PersonaMode } from '../types/salus';
 import { FileSpreadsheet, ShieldCheck, RefreshCw, CheckCircle2, TrendingUp, AlertCircle, Sparkles } from 'lucide-react';
 
-export const CalibrationDriftHub: React.FC = () => {
+interface CalibrationDriftHubProps {
+  selectedPersona?: PersonaMode;
+}
+
+export const CalibrationDriftHub: React.FC<CalibrationDriftHubProps> = ({ selectedPersona = 'nobel_juror' }) => {
   const [report, setReport] = useState<SyntheticCalibrationReport>(generateSyntheticCalibrationReport());
   const [isRecomputing, setIsRecomputing] = useState<boolean>(false);
+  const isAuditLens = selectedPersona === 'nobel_juror';
 
   const handleRecompute = () => {
     setIsRecomputing(true);
@@ -25,10 +32,10 @@ export const CalibrationDriftHub: React.FC = () => {
               <span>EMPIRICAL CALIBRATION & STATISTICAL DRIFT AUDIT</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white font-cinzel mt-1">
-              Pramana Calibration Snapshot & Governance Ledger
+              {isAuditLens ? 'Calibration evidence and governance gates' : 'Pramana Calibration Snapshot & Governance Ledger'}
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Verifies Brier scores, Expected Calibration Error (ECE), and 95% interval coverage across N={report.totalSyntheticTrials.toLocaleString()} trials
+              {isAuditLens ? `Inspect Brier score, Expected Calibration Error (ECE), interval coverage, and drift status across N=${report.totalSyntheticTrials.toLocaleString()} synthetic trials.` : `Verifies Brier scores, Expected Calibration Error (ECE), and 95% interval coverage across N=${report.totalSyntheticTrials.toLocaleString()} trials`}
             </p>
           </div>
 
@@ -42,6 +49,22 @@ export const CalibrationDriftHub: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <WorkspaceGuide
+        title={isAuditLens ? 'Verify gates, inspect bins, then read the verdict' : 'Read the status first, then inspect the calibration evidence'}
+        steps={isAuditLens ? [
+          'Check the stated status and the thresholds attached to each top-line measure.',
+          'Inspect reliability bins to verify where calibration is aligned or diverges.',
+          'Read the verdict as a synthetic demonstration artifact, not production validation.',
+        ] : [
+          'Check the overall drift status and top-line calibration measures.',
+          'Inspect reliability bins if a measure needs explanation.',
+          'Run a new synthetic audit only when testing the demonstration model.',
+        ]}
+        boundary="This workspace uses synthetic calibration data to demonstrate governance controls."
+      />
+
+      {isAuditLens ? <div className="rounded-xl border border-teal-500/35 bg-teal-950/20 px-4 py-3 text-sm text-slate-200"><strong className="text-teal-300">Governance audit mode:</strong> these measures use synthetic data. Treat them as verification of the demonstration controls, not evidence of real-world clinical calibration.</div> : null}
 
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GitBranch, Code, FileText, Database, Shield, Layers, Server, Check, Copy } from 'lucide-react';
+import { WorkspaceGuide } from './WorkspaceGuide';
+import { PersonaMode } from '../types/salus';
 
-export const RepositoryCodeArchitecture: React.FC = () => {
+interface RepositoryCodeArchitectureProps {
+  selectedPersona?: PersonaMode;
+}
+
+export const RepositoryCodeArchitecture: React.FC<RepositoryCodeArchitectureProps> = ({ selectedPersona = 'nobel_juror' }) => {
   const [activeTab, setActiveTab] = useState<'math' | 'schemas' | 'architecture' | 'source_tree'>('math');
   const [copiedFormula, setCopiedFormula] = useState<string | null>(null);
+  const isResearcherLens = selectedPersona === 'researcher';
+  const isAuditLens = selectedPersona === 'nobel_juror';
+
+  useEffect(() => {
+    if (isAuditLens) setActiveTab('schemas');
+  }, [isAuditLens]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -22,10 +34,10 @@ export const RepositoryCodeArchitecture: React.FC = () => {
               <span>SALUS PRAMANA TECHNICAL & MATHEMATICAL BLUEPRINT</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white font-cinzel mt-1">
-              Codebase Architecture & Pramana Calculus Specification
+              {isResearcherLens ? 'Reproducibility workspace: model, contracts, and implementation' : isAuditLens ? 'Audit trail: validation contracts and implementation evidence' : 'Codebase Architecture & Pramana Calculus Specification'}
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Verified implementation of deterministic Bayesian evidence calculus and zero-cost serverless infrastructure
+              {isResearcherLens ? 'Trace a result from formal equation to validation contract, source tree, and deployment boundary.' : isAuditLens ? 'Start with validation contracts, then inspect equations, infrastructure, and source structure for the claim under review.' : 'Verified implementation of deterministic Bayesian evidence calculus and zero-cost serverless infrastructure'}
             </p>
           </div>
 
@@ -66,6 +78,23 @@ export const RepositoryCodeArchitecture: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <WorkspaceGuide
+        title={isResearcherLens ? 'Trace the method from equation to implementation' : isAuditLens ? 'Start with the validation contract, then trace the implementation' : 'Choose the technical question before opening a specification'}
+        steps={isResearcherLens ? [
+          'Read the calculus specification and note every stated parameter and transformation.',
+          'Inspect domain contracts to see how evidence provenance and validation are enforced.',
+          'Trace the source tree and infrastructure only after the research question is defined.',
+        ] : isAuditLens ? [
+          'Inspect contracts first to verify what inputs, identifiers, and constraints are enforced.',
+          'Compare equations with their documented implementation boundaries.',
+          'Use the source tree and infrastructure views to verify where the controls are applied.',
+        ] : [
+          'Use Calculus for scoring and uncertainty rules.',
+          'Use Contracts for data validation and provenance constraints.',
+          'Use Architecture or Source Tree to trace the implementation path.',
+        ]}
+      />
 
       {/* Tab 1: Calculus Math Specification */}
       {activeTab === 'math' && (
@@ -150,7 +179,7 @@ export const RepositoryCodeArchitecture: React.FC = () => {
 
       {/* Tab 2: Zod Domain Contracts */}
       {activeTab === 'schemas' && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-6 space-y-4">
+        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/90 p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-white text-base font-cinzel">
               packages/domain/src/index.ts — Validation Contract
@@ -160,7 +189,7 @@ export const RepositoryCodeArchitecture: React.FC = () => {
             </span>
           </div>
 
-          <pre className="rounded-xl bg-slate-950 p-4 text-xs font-mono text-slate-300 overflow-x-auto border border-slate-800 leading-relaxed">
+          <pre className="max-w-full rounded-xl bg-slate-950 p-4 text-xs font-mono text-slate-300 overflow-x-auto border border-slate-800 leading-relaxed">
 {`export const evidenceGradeSchema = z.enum(["A", "B", "C"]);
 
 export const registryIdentifierSchema = z
@@ -222,7 +251,7 @@ export const treatmentEvidenceSchema = z.object({
             </div>
           </div>
 
-          <pre className="rounded-xl bg-slate-950 p-4 text-xs font-mono text-slate-300 overflow-x-auto border border-slate-800 leading-relaxed">
+          <pre className="max-w-full rounded-xl bg-slate-950 p-4 text-xs font-mono text-slate-300 overflow-x-auto border border-slate-800 leading-relaxed">
 {`AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: SALUS Pramana Medical Evidence Platform (Zero Cost Free Tier)
@@ -260,7 +289,7 @@ Resources:
             Monorepo Directory Layout & Verified Module Boundaries
           </h3>
 
-          <pre className="rounded-xl bg-slate-950 p-4 text-xs font-mono text-slate-300 overflow-x-auto border border-slate-800 leading-relaxed">
+          <pre className="max-w-full rounded-xl bg-slate-950 p-4 text-xs font-mono text-slate-300 overflow-x-auto border border-slate-800 leading-relaxed">
 {`salus-pramana-medical/
 ├── apps/
 │   └── web/                     # React 19 + Vite + Tailwind UI
