@@ -20,6 +20,7 @@ export function createDefaultRepositories(now: () => Date): ServerRepositories {
   return {
     async listConditions() { return repository.listConditions(); },
     async getCondition(conditionId) { return (await repository.getCondition(conditionId)) ?? undefined; },
+    async getEvidence(evidenceId, includeDrafts) { return (await repository.getEvidence(evidenceId, includeDrafts)) ?? undefined; },
     async createCondition(condition, audit) { return repository.createConditionWithAudit(condition as never, auditRecord(audit, now)); },
     async listEvidence(conditionId, includeDrafts) { return (await repository.listEvidence({ conditionId, includeDrafts, limit: 100 })).items; },
     async createEvidence(evidence, audit) {

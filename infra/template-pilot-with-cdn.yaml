@@ -1,0 +1,261 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'SALUS Pramana low-cost AWS pilot: private static site, CloudFront, HTTP API, Lambda, and DynamoDB.'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedPattern: '^[a-z0-9-]+$'
+    Description: Short environment name, such as dev or prod.
+  AllowedOrigin:
+    Type: String
+    Default: ''
+    Description: Optional additional browser origin for API CORS. Same-origin CloudFront traffic does not need it.
+  BudgetAlertEmail:
+    Type: String
+    Description: Required billing-alert email. AWS will require email-subscription confirmation.
+
+Conditions:
+  HasAllowedOrigin: !Not [!Equals [!Ref AllowedOrigin, '']]
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    MemorySize: 512
+    Timeout: 10
+    Tracing: Disabled
+    Environment:
+      Variables:
+        NODE_ENV: production
+        PERSISTENCE_ADAPTER: dynamodb
+        CONDITIONS_TABLE: !Ref ConditionsTable
+        EVIDENCE_TABLE: !Ref EvidenceTable
+        AUDIT_TABLE: !Ref AuditTable
+        STRICT_GOVERNANCE: 'true'
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration: { Status: Enabled }
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireNoncurrentVersions
+            Status: Enabled
+            NoncurrentVersionExpiration: { NoncurrentDays: 30 }
+
+  ConditionsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: conditionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: conditionId
+          KeyType: HASH
+      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      SSESpecification: { SSEEnabled: true }
+
+  EvidenceTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: evidenceId
+          AttributeType: S
+        - AttributeName: conditionId
+          AttributeType: S
+        - AttributeName: evidenceId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: evidenceId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: byCondition
+          KeySchema:
+            - AttributeName: conditionId
+              KeyType: HASH
+            - AttributeName: evidenceId
+              KeyType: RANGE
+          Projection: { ProjectionType: ALL }
+          ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      SSESpecification: { SSEEnabled: true }
+
+  AuditTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: auditId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: auditId
+          KeyType: HASH
+      TimeToLiveSpecification: { AttributeName: ttl, Enabled: true }
+      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      SSESpecification: { SSEEnabled: true }
+
+  SalusApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowHeaders: [Authorization, Content-Type, X-Correlation-Id]
+        AllowMethods: [GET, POST, PATCH, OPTIONS]
+        AllowOrigins: !If [HasAllowedOrigin, [!Ref AllowedOrigin], []]
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/server/aws-lambda.ts]
+        Target: es2022
+        Minify: true
+        Sourcemap: false
+    Properties:
+      CodeUri: ../
+      Handler: src/server/aws-lambda.handler
+      ReservedConcurrentExecutions: 5
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref ConditionsTable }
+        - DynamoDBCrudPolicy: { TableName: !Ref EvidenceTable }
+        - DynamoDBCrudPolicy: { TableName: !Ref AuditTable }
+      Events:
+        Root:
+          Type: HttpApi
+          Properties: { ApiId: !Ref SalusApi, Path: /api, Method: ANY }
+        Proxy:
+          Type: HttpApi
+          Properties: { ApiId: !Ref SalusApi, Path: '/api/{proxy+}', Method: ANY }
+
+  ApiFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: ApiFunction
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${ApiFunction}'
+      RetentionInDays: 14
+
+  PilotBudget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: !Sub '${AWS::StackName}-monthly-pilot-budget'
+        BudgetLimit: { Amount: 0.01, Unit: USD }
+        TimeUnit: MONTHLY
+        BudgetType: COST
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            ThresholdType: PERCENTAGE
+            Threshold: 100
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref BudgetAlertEmail
+        - Notification:
+            NotificationType: FORECASTED
+            ComparisonOperator: GREATER_THAN
+            ThresholdType: PERCENTAGE
+            Threshold: 100
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref BudgetAlertEmail
+
+  SiteOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${AWS::StackName}-site-oac'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  SiteDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: site
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt SiteOriginAccessControl.Id
+            S3OriginConfig: { OriginAccessIdentity: '' }
+          - Id: api
+            DomainName: !Sub '${SalusApi}.execute-api.${AWS::Region}.amazonaws.com'
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols: [TLSv1.2]
+        DefaultCacheBehavior:
+          TargetOriginId: site
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD, OPTIONS]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: api
+            ViewerProtocolPolicy: https-only
+            AllowedMethods: [GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE]
+            CachedMethods: [GET, HEAD]
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5dca5f2b3f
+            OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+        ViewerCertificate: { CloudFrontDefaultCertificate: true }
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:GetObject
+            Resource: !Sub '${SiteBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${SiteDistribution}'
+
+Outputs:
+  SiteUrl:
+    Description: Public CloudFront URL.
+    Value: !Sub 'https://${SiteDistribution.DomainName}'
+  SiteBucketName:
+    Value: !Ref SiteBucket
+  DistributionId:
+    Value: !Ref SiteDistribution
+  ApiUrl:
+    Description: Direct HTTP API URL; normal clients should use the same-origin /api path through CloudFront.
+    Value: !Sub 'https://${SalusApi}.execute-api.${AWS::Region}.amazonaws.com'

@@ -5,6 +5,11 @@ export interface ServerConfig {
   port: number;
   corsAllowedOrigins: string[];
   persistenceAdapter: PersistenceAdapter;
+  conditionsTable?: string;
+  evidenceTable?: string;
+  auditTable?: string;
+  monitoringTable?: string;
+  staticAssetDirectory?: string;
   cognitoIssuer?: string;
   cognitoAudience?: string;
   strictGovernance?: boolean;
@@ -44,6 +49,11 @@ export function loadServerConfig(environment: NodeJS.ProcessEnv = process.env): 
     port: parsePort(environment.PORT),
     corsAllowedOrigins: parseOrigins(environment.CORS_ALLOWED_ORIGINS, nodeEnv),
     persistenceAdapter: parsePersistenceAdapter(environment.PERSISTENCE_ADAPTER, nodeEnv),
+    conditionsTable: environment.CONDITIONS_TABLE,
+    evidenceTable: environment.EVIDENCE_TABLE,
+    auditTable: environment.AUDIT_TABLE,
+    monitoringTable: environment.MONITORING_TABLE,
+    staticAssetDirectory: environment.STATIC_ASSET_DIRECTORY,
     cognitoIssuer: environment.COGNITO_ISSUER,
     cognitoAudience: environment.COGNITO_AUDIENCE,
     strictGovernance: environment.STRICT_GOVERNANCE === 'true',

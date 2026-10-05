@@ -17,6 +17,10 @@ export function repositoryFixture() {
   const repositories: ServerRepositories = {
     async listConditions() { return [...conditions.values()]; },
     async getCondition(id) { return conditions.get(id); },
+    async getEvidence(id, includeDrafts = false) {
+      const row = evidence.get(id);
+      return row && (includeDrafts || row.publicationStatus === 'published' || row.publicationStatus === undefined) ? row : undefined;
+    },
     async createCondition(row, audit) { conditions.set(row.conditionId, row); audits.push(audit); return row; },
     async listEvidence(conditionId, includeDrafts = false) { return [...evidence.values()].filter((row) => (!conditionId || row.conditionId === conditionId) && (includeDrafts || row.publicationStatus === 'published' || row.publicationStatus === undefined)); },
     async createEvidence(row, audit) { if (evidence.has(row.evidenceId)) return undefined; evidence.set(row.evidenceId, row); audits.push(audit); return row; },

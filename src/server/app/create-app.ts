@@ -25,6 +25,7 @@ export interface AuditInput { action: string; actorEmail: string; targetEvidence
 export interface ServerRepositories {
   listConditions(): Promise<MedicalCondition[]>;
   getCondition(conditionId: string): Promise<MedicalCondition | undefined>;
+  getEvidence(evidenceId: string, includeDrafts?: boolean): Promise<TreatmentEvidence | undefined>;
   createCondition(condition: MedicalCondition, audit: AuditInput): Promise<MedicalCondition>;
   listEvidence(conditionId?: string, includeDrafts?: boolean): Promise<TreatmentEvidence[]>;
   createEvidence(evidence: TreatmentEvidence, audit: AuditInput): Promise<TreatmentEvidence | undefined>;
@@ -110,7 +111,7 @@ export function createApp(dependencies: AppDependencies) {
   registerIntelligenceRoutes(app, repositories, intelligence, config.strictGovernance ?? false, now);
 
   if (config.nodeEnv === 'production') {
-    const distDirectory = path.resolve(process.cwd(), 'dist');
+    const distDirectory = config.staticAssetDirectory ?? path.resolve(process.cwd(), 'dist');
     app.use(express.static(distDirectory));
     app.get('*', (request, response, next) => {
       if (request.path.startsWith('/api/') || path.extname(request.path) || !request.accepts('html')) return next();

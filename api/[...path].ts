@@ -1,5 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { createApp, type ClinicalAiProvider } from '../src/server/app/create-app';
+import { createRuntimeRepositories } from '../src/server/app/runtime-repositories';
 import { loadServerConfig } from '../src/server/config/runtime';
 
 function createClinicalAiProvider(): ClinicalAiProvider | undefined {
@@ -18,10 +19,19 @@ function createClinicalAiProvider(): ClinicalAiProvider | undefined {
   };
 }
 
+let appPromise: ReturnType<typeof createVercelApp> | undefined;
+
+async function createVercelApp() {
+  const config = loadServerConfig();
+  const repositories = await createRuntimeRepositories(config, () => new Date());
+  return createApp({ config, repositories, clinicalAiProvider: createClinicalAiProvider() });
+}
+
 // Vercel routes every /api/* request here. The Express app retains its /api
-// normalization middleware, so the same route implementation serves local
-// development and Vercel Functions.
-export default createApp({
-  config: loadServerConfig(),
-  clinicalAiProvider: createClinicalAiProvider(),
-});
+// normalization middleware, while production persistence is resolved through
+// the same DynamoDB runtime used by AWS Lambda.
+export default async function handler(request: Parameters<Awaited<ReturnType<typeof createVercelApp>>>[0], response: Parameters<Awaited<ReturnType<typeof createVercelApp>>>[1]) {
+  appPromise ??= createVercelApp();
+  const app = await appPromise;
+  return app(request, response);
+}

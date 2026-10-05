@@ -18,6 +18,7 @@ export type DynamoOperation =
   | { kind: "validate"; tables: DynamoTables };
 export interface DynamoResult { items?: Record<string, unknown>[]; item?: Record<string, unknown>; attributes?: Record<string, unknown>; lastEvaluatedKey?: Record<string, unknown> }
 export interface DynamoExecutor { execute(operation: DynamoOperation): Promise<DynamoResult> }
+export { AwsDynamoExecutor } from './aws-executor';
 
 function mapError(error: unknown, message: string): RepositoryError {
   if (error instanceof RepositoryError) return error;

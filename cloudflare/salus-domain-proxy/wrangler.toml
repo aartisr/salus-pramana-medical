@@ -1,0 +1,9 @@
+name = "salus-myocardianregen-proxy"
+main = "src/index.ts"
+compatibility_date = "2026-10-04"
+workers_dev = false
+
+# This must be deployed from the Cloudflare account that manages ai-aarti.com.
+routes = [
+  { pattern = "myocardianregen.ai-aarti.com", custom_domain = true }
+]

@@ -1,0 +1,159 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'SALUS Pramana: Always Free AWS runtime using Lambda Function URL and DynamoDB only.'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedPattern: '^[a-z0-9-]+$'
+    Description: Short environment name, such as dev.
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Architectures: [arm64]
+    MemorySize: 512
+    Timeout: 10
+    ReservedConcurrentExecutions: 2
+    Tracing: Disabled
+    Environment:
+      Variables:
+        NODE_ENV: production
+        PERSISTENCE_ADAPTER: dynamodb
+        CONDITIONS_TABLE: !Ref ConditionsTable
+        EVIDENCE_TABLE: !Ref EvidenceTable
+        AUDIT_TABLE: !Ref AuditTable
+        STATIC_ASSET_DIRECTORY: /opt
+        STRICT_GOVERNANCE: 'true'
+
+Resources:
+  ConditionsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: conditionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: conditionId
+          KeyType: HASH
+      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      SSESpecification: { SSEEnabled: true }
+
+  EvidenceTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: evidenceId
+          AttributeType: S
+        - AttributeName: conditionId
+          AttributeType: S
+        - AttributeName: conditionEvidenceKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: evidenceId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: byCondition
+          KeySchema:
+            - AttributeName: conditionId
+              KeyType: HASH
+            - AttributeName: conditionEvidenceKey
+              KeyType: RANGE
+          Projection: { ProjectionType: ALL }
+          ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      SSESpecification: { SSEEnabled: true }
+
+  AuditTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BillingMode: PROVISIONED
+      AttributeDefinitions:
+        - AttributeName: auditId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: auditId
+          KeyType: HASH
+      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 }
+      TimeToLiveSpecification: { AttributeName: ttl, Enabled: true }
+      SSESpecification: { SSEEnabled: true }
+
+  SiteAssets:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub '${AWS::StackName}-site-assets'
+      Description: Vite production assets served by the SALUS Lambda Function URL.
+      ContentUri: ../dist
+      CompatibleRuntimes: [nodejs22.x]
+      CompatibleArchitectures: [arm64]
+      RetentionPolicy: Retain
+
+  SalusFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints: [src/server/aws-lambda.ts]
+        Target: es2022
+        Minify: true
+        Sourcemap: false
+    Properties:
+      CodeUri: ../
+      Handler: src/server/aws-lambda.handler
+      Layers: [!Ref SiteAssets]
+      # An explicit role prevents SAM from attaching the default CloudWatch Logs
+      # policy. SALUS keeps its strict runtime limited to Lambda, DynamoDB, and IAM.
+      Role: !GetAtt SalusExecutionRole.Arn
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: BUFFERED
+
+  SalusExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: salus-clinical-data-only
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:DescribeTable
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Scan
+                  - dynamodb:TransactWriteItems
+                Resource:
+                  - !GetAtt ConditionsTable.Arn
+                  - !GetAtt EvidenceTable.Arn
+                  - !GetAtt AuditTable.Arn
+              - Effect: Allow
+                Action: dynamodb:Query
+                Resource: !Sub '${EvidenceTable.Arn}/index/byCondition'
+
+Outputs:
+  SiteUrl:
+    Description: Public HTTPS endpoint serving the complete SALUS SPA and API.
+    Value: !GetAtt SalusFunctionUrl.FunctionUrl
+  ConditionsTableName:
+    Value: !Ref ConditionsTable
+  EvidenceTableName:
+    Value: !Ref EvidenceTable
+  AuditTableName:
+    Value: !Ref AuditTable

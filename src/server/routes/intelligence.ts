@@ -1,5 +1,5 @@
 import type { Express } from 'express';
-import type { IntelligenceServices, ServerRepositories, TreatmentEvidence } from '../app/create-app';
+import type { IntelligenceServices, ServerRepositories } from '../app/create-app';
 import { requireDraftAccess } from '../auth/middleware';
 
 function mode(value: unknown): 'public' | 'clinician' { return value === 'clinician' ? 'clinician' : 'public'; }
@@ -32,7 +32,9 @@ export function registerIntelligenceRoutes(app: Express, repositories: ServerRep
   app.get('/intelligence/evidence/:evidenceId', async (request, response, next) => {
     try {
       if (!requireDraftAccess(request, response)) return;
-      const rows = await repositories.listEvidence(undefined, request.query.includeDrafts === 'true');
+      const evidence = await repositories.getEvidence(request.params.evidenceId, request.query.includeDrafts === 'true');
+      if (!evidence) return response.status(404).json({ error: 'Evidence not found' });
+      const rows = await repositories.listEvidence(evidence.conditionId, request.query.includeDrafts === 'true');
       const result = services.computeEvidence(request.params.evidenceId, rows, mode(request.query.mode));
       if (!result) return response.status(404).json({ error: 'Evidence not found' });
       return response.json(result);
@@ -60,8 +62,7 @@ export function registerIntelligenceRoutes(app: Express, repositories: ServerRep
   const evidenceComputation = (kind: 'trajectory' | 'dose') => async (request: any, response: any) => {
     try {
       if (!requireDraftAccess(request, response)) return;
-      const rows: TreatmentEvidence[] = await repositories.listEvidence(undefined, request.query.includeDrafts === 'true');
-      const evidence = rows.find((row) => row.evidenceId === request.params.evidenceId);
+      const evidence = await repositories.getEvidence(request.params.evidenceId, request.query.includeDrafts === 'true');
       if (!evidence) return response.status(404).json({ error: 'Evidence not found' });
       if (kind === 'trajectory') return response.json({ evidenceId: evidence.evidenceId, trajectory: services.simulateTrajectory(evidence, bounded(request.query.hours, 72)), generatedAt: now().toISOString() });
       return response.json(services.optimizeDose(evidence));

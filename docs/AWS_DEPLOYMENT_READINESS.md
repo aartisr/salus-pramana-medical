@@ -1,14 +1,16 @@
 # AWS Free Tier Deployment Readiness
 
-**Status:** planning guide — do not deploy the current active tree to AWS yet.  
+**Status:** foundational AWS implementation is now present; do not treat this as a production authorization.
 **Audience:** the person preparing the AWS account and the engineer implementing the deployment.  
 **Last reviewed:** 2026-10-01.
 
-SALUS is a Vite single-page application with an Express API. The active source tree has Cognito-aware authentication code and a DynamoDB repository abstraction, but it does **not** yet contain AWS infrastructure-as-code (IaC), a Lambda entry point, an AWS SDK DynamoDB executor, or production repository wiring. This document is the source of truth for preparing a safe, small-scale AWS deployment.
+SALUS is a Vite single-page application with an Express API. The active source tree now contains AWS SAM infrastructure-as-code, a Lambda adapter, an AWS SDK v3 DynamoDB executor, and production repository wiring. The deployable pilot instructions are in [AWS_DEPLOYMENT_FREE_TIER.md](AWS_DEPLOYMENT_FREE_TIER.md). This document remains the source of truth for the clinical, authentication, security, and operational requirements that must be completed before a production launch.
 
 > Historical files under `public/reports/` describe a retired monorepo and refer to paths such as `infra/template.yaml`, `apps/web`, and `services/api` that no longer exist. They must not be used as deployment instructions.
 
 ## 1. Target architecture
+
+> The default deployment path has changed to the strict Always Free architecture in [AWS_DEPLOYMENT_FREE_TIER.md](AWS_DEPLOYMENT_FREE_TIER.md): Lambda Function URL + Lambda asset layer + DynamoDB. The CloudFront/S3/API Gateway design below is retained as a future paid-scale reference only; it must not be used for the Always Free deployment.
 
 Use one AWS Region for the pilot. Keep the browser and API behind one CloudFront distribution so that the client can continue to call its existing relative `/api/*` URLs.
 
@@ -75,11 +77,11 @@ Do not expose an S3 website endpoint, run an EC2 instance, put the Lambda in a V
 
 ## 4. Engineering work required before deployment
 
-All items in this section are blocking work. The repository must implement and test them before a production stack is provisioned.
+Some items in this section are now implemented in the repository; the remaining items are still production blockers. A development stack may be provisioned after the deployment guide is followed, but production launch remains gated by the authorization and governance requirements below.
 
 ### A. Add production IaC
 
-Create a version-controlled IaC stack (AWS SAM, CDK, or Terraform; SAM is a good fit for this Lambda-first architecture) that creates all required resources below. The deployment must be repeatable from a clean AWS account and must not depend on manually created production resources.
+The version-controlled SAM stack is `infra/template.yaml`, and the scripted deployment entry point is `npm run deploy:aws`. It provisions the low-cost static-site/API/DynamoDB baseline. Cognito, budgets, alarms, a custom domain, and production release approvals remain deliberate account-level work.
 
 - S3 bucket with all public access blocked, versioning enabled, encryption enabled, and a lifecycle policy for old noncurrent versions.
 - CloudFront distribution with OAC, the S3 origin, API Gateway origin, HTTPS redirect, compression, sensible cache policies, SPA 403/404 fallback to `/index.html`, and a separate no-cache `/api/*` behavior.
@@ -91,13 +93,13 @@ Create a version-controlled IaC stack (AWS SAM, CDK, or Terraform; SAM is a good
 
 ### B. Convert the Express server to Lambda
 
-`src/server/index.ts` calls `app.listen`, which cannot be the Lambda runtime entry point. Add a Lambda adapter (for example a maintained Express-to-Lambda adapter), expose a `handler`, and keep local `npm run start` behavior separate.
+`src/server/aws-lambda.ts` is the Lambda entry point and retains `src/server/index.ts` for local `app.listen` use. The Lambda initializes production persistence from its execution role during cold start.
 
 Build and test the Lambda artifact for Node.js 22.x. Set a modest initial timeout (for example 10 seconds) and memory allocation, then size it from CloudWatch duration metrics after load testing. Do not use provisioned concurrency in the free-tier pilot.
 
 ### C. Implement the DynamoDB runtime, not only the abstraction
 
-The code has `DynamoClinicalRepository` and `selectPersistence`, but no `@aws-sdk` dependency, executor implementation, table environment variables, or server wiring. Add all of the following:
+The code now has an AWS SDK v3 DynamoDB executor, table environment settings, and server wiring. Before production launch, validate the table permissions and migration/seed process against a dedicated development account.
 
 - AWS SDK v3 DynamoDB Document Client executor translating `scan`, `query`, `get`, `put`, `update`, and transactional operations in `src/persistence/dynamodb`.
 - A repository factory selected by `PERSISTENCE_ADAPTER=dynamodb` during production startup.
@@ -118,7 +120,7 @@ Create the following tables for initial production. Keep them separate during th
 
 The current repository scans tables for some list operations. Before meaningful growth, replace broad scans with bounded queries, pagination, and indexes designed from actual UI access patterns. A DynamoDB GSI enables queries on an alternate key; indexes add storage and write consumption. [DynamoDB secondary-index guidance](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html)
 
-For the free-tier pilot, use provisioned capacity only if its fixed free allocation comfortably covers the workload. DynamoDB on-demand is easier to operate but is usage-priced. The ongoing DynamoDB free tier includes 25 RCUs, 25 WCUs, and 25 GB storage under its stated conditions. [DynamoDB pricing](https://aws.amazon.com/dynamodb/pricing/)
+The implemented free-tier pilot uses provisioned capacity: 5 RCUs and 5 WCUs for each table plus 5/5 for the evidence index (20 RCUs and 20 WCUs total). This fits within DynamoDB's current ongoing free-tier allocation of 25 RCUs, 25 WCUs, and 25 GB storage under its stated conditions. Do not change the template to on-demand capacity or enable point-in-time recovery without a separate cost review. [DynamoDB pricing](https://aws.amazon.com/dynamodb/pricing/)
 
 ### E. Fix and validate Cognito token verification
 

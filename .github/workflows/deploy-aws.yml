@@ -1,0 +1,61 @@
+name: Deploy SALUS to AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack_name:
+        description: CloudFormation stack name
+        required: true
+        default: salus-dev
+        type: string
+      aws_region:
+        description: AWS Region
+        required: true
+        default: us-east-1
+        type: choice
+        options:
+          - us-east-1
+          - us-east-2
+          - us-west-2
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Build and deploy with Node 22.19
+    runs-on: ubuntu-latest
+    environment: aws-production
+    steps:
+      - name: Check out the reviewed revision
+        uses: actions/checkout@v4
+
+      - name: Set up the deployment Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Validate the reviewed source
+        run: |
+          npm run typecheck
+          npm test
+
+      - name: Configure AWS credentials through GitHub OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Install AWS SAM CLI
+        uses: aws-actions/setup-sam@v2
+
+      - name: Deploy the reviewed revision
+        env:
+          AWS_STACK_NAME: ${{ inputs.stack_name }}
+          AWS_REGION: ${{ inputs.aws_region }}
+        run: npm run deploy:aws
